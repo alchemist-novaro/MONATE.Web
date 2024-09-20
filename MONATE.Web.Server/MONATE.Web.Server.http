@@ -1,0 +1,6 @@
+@MONATE.Web.Server_HostAddress = http://localhost:5177
+
+GET {{MONATE.Web.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

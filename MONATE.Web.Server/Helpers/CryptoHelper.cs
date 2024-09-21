@@ -43,11 +43,10 @@
             try
             {
                 // Split cipherText into IV, associated data, encrypted data, and tag
-                var iv = Convert.FromHexString(cipherText[..(NonceSize * 2)]);
-                var assocData = Convert.FromHexString(cipherText[(NonceSize * 2)..((NonceSize + AssocDataSize) * 2)]);
-                var encryptedData = Convert.FromHexString(cipherText[((NonceSize + AssocDataSize) * 2)..(TagSize * 2)]);
-                var tag = Convert.FromHexString(cipherText[(TagSize * 2)..]);
-
+                var iv = Convert.FromHexString(cipherText[..(NonceSize << 1)]);
+                var assocData = Convert.FromHexString(cipherText[(NonceSize << 1)..((NonceSize + AssocDataSize) << 1)]);
+                var encryptedData = Convert.FromHexString(cipherText[((NonceSize + AssocDataSize) << 1)..(cipherText.Length - (TagSize << 1))]);
+                var tag = Convert.FromHexString(cipherText[(cipherText.Length - (TagSize << 1))..]);
                 var keyBytes = Convert.FromHexString(key);
 
                 using var cipher = new ChaCha20Poly1305(keyBytes);

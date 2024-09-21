@@ -1,38 +1,22 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-import { RegionProvider } from './region-provider/region-provider';
-import DisplayRegion from './region-provider/display-region';
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    Navigate,
+} from 'react-router-dom'
 
-function App() {
-    const [forecasts, setForecasts] = useState();
+import Dashboard from './pages/dashboard'
+import NotFound from './not-found/not-found'
 
-    useEffect(() => {
-       populateWeatherData();
-    }, []);
-
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <div>
-            <RegionProvider>
-               <DisplayRegion />
-            </RegionProvider>
-        </div>;
-
+const App = () => {
     return (
-        <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
-        </div>
-    );
-    
-    async function populateWeatherData() {
-       const response = await fetch('weatherforecast');
-       const data = await response.json();
-       setForecasts(data);
-
-       console.log('success');
-    }
+        <Router>
+            <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </Router>
+    )
 }
 
 export default App;

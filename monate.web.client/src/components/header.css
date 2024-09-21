@@ -1,0 +1,35 @@
+/* Default header styles */
+.header {
+    background-color: #1f2f2f77;
+    color: white;
+    padding: 5px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: background-color 0.3s ease, padding 0.3s ease;
+}
+
+/* Header styles when scrolled */
+.header.scrolled {
+    background-color: #4CAF50; /* New background color when scrolled */
+    color: white;
+    padding: 3px; /* Reduce padding when scrolled */
+    box-shadow: 0px 4px 2px -2px gray; /* Add shadow when scrolled */
+}
+
+.header nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.header nav ul li {
+    display: inline;
+}
+
+.header nav ul li a {
+    text-decoration: none;
+    color: inherit;
+}

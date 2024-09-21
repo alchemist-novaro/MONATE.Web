@@ -1,9 +1,11 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import { RegionProvider } from './region-provider/region-provider'
-import './index.css'
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import App from './App';
+import store from './globals/redux_store';
 
-createRoot(document.getElementById('root')).render(
-    <App />,
-)
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+    <Provider store={ store }>
+        <App />
+    </Provider>
+);

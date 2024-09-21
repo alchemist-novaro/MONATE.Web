@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 import Dashboard from './pages/dashboard'
-import NotFound from './not-found/not-found'
+import NotFound from './pages/not-found'
 
 const App = () => {
     return (

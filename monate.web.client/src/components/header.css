@@ -3,10 +3,13 @@
     color: white;
     padding: 6px;
     position: fixed;
+    height: 60px;
     top: 0;
     left: 0;
     width: 100%;
-    transition: background-color 0.3s ease, padding 0.3s ease;
+    transition: background-color 0.3s ease, height 0.3s ease;
+    display: flex;
+    align-items: center;
 }
 
 .header-dark:hover {
@@ -14,27 +17,31 @@
 }
 
 .header-light {
-    background-color: #ffffff77;
+    background-color: #dfefef77;
     color: #1f2f2f;
     padding: 6px;
     position: fixed;
+    height: 60px;
     top: 0;
     left: 0;
     width: 100%;
-    transition: background-color 0.3s ease, padding 0.3s ease;
+    transition: background-color 0.3s ease, height 0.3s ease;
+    display: flex;
+    align-items: center;
 }
 
 .header-light:hover {
-    background-color: #ffffff;
+    background-color: #dfefef;
 }
 
 .header-scrolled {
-    padding: 2px;
+    height: 40px;
 }
 
 .header-nav {
     flex: 0 0 auto;
     display: flex;
+    width: 100%;
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
@@ -62,7 +69,7 @@
 }
 
 .header-light-link-title:active {
-    color: #2f3f3f;
+    color: #4f5f5f;
 }
 
 .header-right {

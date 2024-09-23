@@ -7,22 +7,21 @@ export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_LIGHT = 'SET_LIGHT';
 export const SET_REGION = 'SET_REGION';
 
-// Initial state of the 'env' variable
-const initialState = {
-    password: '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
-    light: true,
-    region: null
-};
-
-// Get initial region information
-const initRegion = () => {
-    const response = axios.get('https://ipinfo.io/json?token=c5118d2d404912');
+// Async function to get initial region information
+export const initRegion = async () => {
+    const response = await axios.get('https://ipinfo.io/json?token=c5118d2d404912');
     return response.data;
 };
 
-// Reducer function to handle 'env' updates
+// Initial state
+const initialState = {
+    password: '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
+    light: true,
+    region: null,
+};
+
+// Reducer function
 const reducer = (state = initialState, action) => {
-    initialState.region = initRegion();
     switch (action.type) {
         case SET_PASSWORD:
             return {
@@ -33,53 +32,63 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 light: action.payload,
-            }
+            };
         case SET_REGION:
             return {
                 ...state,
                 region: action.payload,
-            }
+            };
         default:
             return state;
     }
 };
 
-// Set redux values
-export const setPassword = (password) => {
-    useDispatch({
-        type: SET_PASSWORD,
-        payload: password,
-    });
+// Action Creators
+export const setPassword = (password) => ({
+    type: SET_PASSWORD,
+    payload: password,
+});
+
+export const setLight = (light) => ({
+    type: SET_LIGHT,
+    payload: light,
+});
+
+export const setRegion = (region) => ({
+    type: SET_REGION,
+    payload: region,
+});
+
+// Custom Hooks for Saving Redux Values (in React components)
+export const useSavePassword = () => {
+    const dispatch = useDispatch();
+    return (password) => dispatch(setPassword(password));
 };
 
-export const setLight = (light) => {
-    useDispatch({
-        type: SET_LIGHT,
-        payload: light,
-    });
+export const useSaveLight = () => {
+    const dispatch = useDispatch();
+    return (light) => dispatch(setLight(light));
 };
 
-export const setRegion = (region) => {
-    useDispatch({
-        type: SET_REGION,
-        payload: region,
-    });
+export const useSaveRegion = () => {
+    const dispatch = useDispatch();
+    return (region) => dispatch(setRegion(region));
 };
 
-// Get redux values
-export const getPassword = () => {
+// Custom Hooks for Getting Redux Values (in React components)
+export const usePassword = () => {
     return useSelector((state) => state.password);
-}
+};
 
-export const getLight = () => {
+export const useLight = () => {
     return useSelector((state) => state.light);
-}
+};
 
-export const getRegion = () => {
+export const useRegion = () => {
     return useSelector((state) => state.region);
-}
+};
 
-// Create storage
+// Create Redux Store
 const store = createStore(reducer);
 
 export default store;

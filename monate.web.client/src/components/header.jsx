@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DisplayRegion from './display-region';
 import './header.css';
 
 const Header = () => {
@@ -31,7 +32,14 @@ const Header = () => {
 
     return (
         <header className={headerClasses.join(' ')}>
-            
+            <nav>
+                <ul>
+                    <li><a href='/'>Home</a></li>
+                    <li><a href='/'>Home</a></li>
+                    <li><a href='/'>Home</a></li>
+                    <li><DisplayRegion /></li>
+                </ul>
+            </nav>
         </header>
     );
 };

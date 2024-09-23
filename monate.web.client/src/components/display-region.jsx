@@ -1,7 +1,19 @@
-import { getRegion } from '../globals/redux_store'
+import { useState, useEffect } from 'react';
+import { useRegion, useSaveRegion, initRegion } from '../globals/redux_store';
 
 const DisplayRegion = () => {
-    const region = getRegion();
+    const saveRegion = useSaveRegion();
+    const region = useRegion();
+
+    useEffect(() => {
+        const fetchRegion = async () => {
+            if (region === null) {
+                const regionData = await initRegion();
+                saveRegion(regionData);
+            }
+        };
+        fetchRegion();
+    }, []);
 
     return (
         <div>
@@ -11,7 +23,7 @@ const DisplayRegion = () => {
                     {region.country && (
                         <div>
                             <img
-                                src={`https://flagcdn.com/48x36/${region.country.toLowerCase()}.png`}
+                                src={`https://flagcdn.com/w40/${region.country.toLowerCase()}.png`}
                                 alt={`Flag of ${region.country}`}
                             />
                         </div>

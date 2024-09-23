@@ -1,0 +1,23 @@
+.body-dark {
+    height: 3000px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    box-sizing: border-box;
+    padding: 0px;
+    background-color: black;
+}
+
+.body-light {
+    height: 3000px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    box-sizing: border-box;
+    padding: 0px;
+    background-color: white;
+}

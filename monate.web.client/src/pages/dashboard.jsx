@@ -1,14 +1,16 @@
-import Header from '../components/header.jsx'
+import Header from '../components/header.jsx';
+import { useLight } from '../globals/redux_store.jsx';
 
-function Dashboard() {
-    const contents =
-        <div>
-        </div>;
+import './dashboard.css';
+
+const Dashboard = (props) => {
+    const lightMode = useLight();
 
     return (
-        <div>
-            <Header />
-            {contents}
+        <div className={lightMode ? 'body-light' : 'body-dark'}>
+            <div>
+                <Header />
+            </div>
         </div>
     );
 }

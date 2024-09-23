@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_LIGHT = 'SET_LIGHT';
 export const SET_REGION = 'SET_REGION';
+export const SET_USERNAME = 'SET_USERNAME';
+export const SET_AVATAR = 'SET_AVATAR';
 
 // Async function to get initial region information
 export const initRegion = async () => {
@@ -16,8 +18,10 @@ export const initRegion = async () => {
 // Initial state
 const initialState = {
     password: '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
-    light: true,
+    light: false,
     region: null,
+    userName: null,
+    avatar: null,
 };
 
 // Reducer function
@@ -38,6 +42,16 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 region: action.payload,
             };
+        case SET_USERNAME:
+            return {
+                ...state,
+                userName: action.payload,
+            };
+        case SET_AVATAR:
+            return {
+                ...state,
+                avatar: action.payload,
+            }
         default:
             return state;
     }
@@ -59,6 +73,16 @@ export const setRegion = (region) => ({
     payload: region,
 });
 
+export const setUserName = (userName) => ({
+    type: SET_USERNAME,
+    payload: userName,
+});
+
+export const setAvatar = (avatar) => ({
+    type: SET_USERNAME,
+    payload: avatar,
+});
+
 // Custom Hooks for Saving Redux Values (in React components)
 export const useSavePassword = () => {
     const dispatch = useDispatch();
@@ -75,6 +99,16 @@ export const useSaveRegion = () => {
     return (region) => dispatch(setRegion(region));
 };
 
+export const useSaveUserName = () => {
+    const dispatch = useDispatch();
+    return (userName) => dispatch(setUserName(userName));
+}
+
+export const useSaveAvatar = () => {
+    const dispatch = useDispatch();
+    return (avatar) => dispatch(setUserName(avatar));
+}
+
 // Custom Hooks for Getting Redux Values (in React components)
 export const usePassword = () => {
     return useSelector((state) => state.password);
@@ -87,6 +121,14 @@ export const useLight = () => {
 export const useRegion = () => {
     return useSelector((state) => state.region);
 };
+
+export const useUserName = () => {
+    return useSelector((state) => state.userName);
+}
+
+export const useAvatar = () => {
+    return useSelector((state) => state.avatar);
+}
 
 // Create Redux Store
 const store = createStore(reducer);

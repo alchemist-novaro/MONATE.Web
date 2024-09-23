@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useRegion, useSaveRegion, initRegion } from '../globals/redux_store';
 
+import './display-region.css'
+
 const DisplayRegion = () => {
     const saveRegion = useSaveRegion();
     const region = useRegion();
@@ -21,7 +23,7 @@ const DisplayRegion = () => {
                 <div>
                     {/* Display Country Flag */}
                     {region.country && (
-                        <div>
+                        <div className='region-div'>
                             <img
                                 src={`https://flagcdn.com/w40/${region.country.toLowerCase()}.png`}
                                 alt={`Flag of ${region.country}`}

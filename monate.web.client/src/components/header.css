@@ -81,7 +81,7 @@
 
 .header-region {
     text-align: right;
-    padding-right: 1rem;
+    padding-right: 2rem;
     align-content: center;
 }
 
@@ -116,4 +116,12 @@
     background-color: deeppink;
     object-fit: cover;
     border: 1px solid #28c;
+}
+
+.header-log-in-button {
+    right: 20px;
+}
+
+.header-sign-up-button {
+    right: 20px;
 }

@@ -7,10 +7,10 @@ const AnimatedBackgrounds = () => {
     const lightMode = useLight();
 
     const backgrounds = [
-        `/public/backgrounds/${lightMode ? 'light' : 'dark'} (1).jpg`,
-        `/public/backgrounds/${lightMode ? 'light' : 'dark'} (2).jpg`,
-        `/public/backgrounds/${lightMode ? 'light' : 'dark'} (3).jpg`,
-        `/public/backgrounds/${lightMode ? 'light' : 'dark'} (4).jpg`,
+        `/backgrounds/${lightMode ? 'light' : 'dark'} (1).jpg`,
+        `/backgrounds/${lightMode ? 'light' : 'dark'} (2).jpg`,
+        `/backgrounds/${lightMode ? 'light' : 'dark'} (3).jpg`,
+        `/backgrounds/${lightMode ? 'light' : 'dark'} (4).jpg`,
     ];
 
     const [currentBackground, setCurrentBackground] = useState(0);

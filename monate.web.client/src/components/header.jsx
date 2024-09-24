@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Button from '@mui/material/Button';
 
 import DisplayRegion from './display-region';
 import { useLight, useAvatar, useUserName, useSaveLight } from '../globals/redux_store';
@@ -127,10 +128,8 @@ const Header = (props) => {
                         </div>
                     ) : (
                         <div>
-                            <div>
-                            </div>
-                            <div>
-                            </div>
+                            <Button variant='text' className='header-log-in-button' style={{ color: lightMode ? '#60f' : '#fff', }}>Log in</Button>
+                            <Button variant='text' className='header-sign-up-button' style={{ color: lightMode ? '#60f' : '#fff', }}>Sign up</Button>
                         </div>
                     )}
                     <FormControlLabel control={<LightModeSwitch defaultChecked={!lightMode} onChange={handleChange} />} />

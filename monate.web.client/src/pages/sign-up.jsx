@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { useLight, useEmail, useSaveEmail } from '../globals/redux_store';
 import { MyTextField } from '../components/my-controls';
 import { GoogleIcon, MonateIcon, AppleIcon } from '../components/svg-icons';
@@ -61,7 +63,7 @@ const SignUp = (props) => {
                                 required
                                 name='Email Address'
                                 id='emial-address'
-                                style={{ marginTop: 'calc(7vh - 12px)', width: '30vw' }}
+                                style={{ marginTop: 'calc(8vh - 12px)', width: '30vw' }}
                                 error={emailError}
                                 autoComplete='username'
                                 onChange={handleEmailChange}
@@ -86,31 +88,34 @@ const SignUp = (props) => {
                                 type='password'
                                 onChange={handlePasswordValidChange}
                             />
+                            <FormControlLabel control={<Checkbox defaultChecked style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf' }} />}
+                                style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf', marginTop: 'calc(2.5vh - 12px)' }}
+                                label="I agree to sign up with this email." />
                             <Button
                                 varient='contained'
                                 style={{
-                                    marginTop: 'calc(5vh - 12px)', width: '17vw', height: '5vh', fontSize: '3vh',
-                                    color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#1f2f2f' : '#cfdfdf' }}
+                                    marginTop: 'calc(1vh - 12px)', width: '17vw', height: '5vh', fontSize: '3vh',
+                                    color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#3f4f4f' : '#afbfbf' }}
                             >Submit</Button>
                             <Button
                                 varient='contained'
                                 style={{
-                                    marginTop: 'calc(10vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.5vh',
-                                    color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#3f4f4f' : '#cfdfdf'
+                                    marginTop: 'calc(7vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',
+                                    color: lightMode ? '#3f4f4f' : '#cfdfdf', backgroundColor: lightMode ? '#cfdfdf' : '#1f2f2f'
                                 }}
                             >
-                                <div style={{ display: 'flex', flexDirection: 'row', flexDirection: 'row', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                     <GoogleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Google</span>
                                 </div>
                             </Button>
                             <Button
                                 varient='contained'
                                 style={{
-                                    marginTop: 'calc(3vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.5vh',
-                                    color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#3f4f4f' : '#cfdfdf'
+                                    marginTop: 'calc(3vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',
+                                    color: lightMode ? '#3f4f4f' : '#cfdfdf', backgroundColor: lightMode ? '#cfdfdf' : '#1f2f2f'
                                 }}
                             >
-                                <div style={{ display: 'flex', flexDirection: 'row', flexDirection: 'row', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                     <AppleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Apple</span>
                                 </div>
                             </Button>

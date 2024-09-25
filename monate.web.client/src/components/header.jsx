@@ -48,7 +48,7 @@ const Header = (props) => {
             <nav className='header-nav'>
                 <div>
                     <Link to='/' className={(lightMode ? 'header-light-link-title Large' : 'header-dark-link-title Large') + ' header-title-link'}>
-                        <div className='header-title'><MonateIcon />ONATE</div>
+                        <div className='header-title'><MonateIcon width='45px' height='45px' />ONATE</div>
                     </Link>
                 </div>
                 <div className='header-right'>

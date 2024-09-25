@@ -7,6 +7,7 @@ export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_LIGHT = 'SET_LIGHT';
 export const SET_REGION = 'SET_REGION';
 export const SET_USERNAME = 'SET_USERNAME';
+export const SET_EMAIL = 'SET_EMAIL';
 export const SET_AVATAR = 'SET_AVATAR';
 
 // Async function to get initial region information
@@ -21,6 +22,7 @@ const initialState = {
     light: false,
     region: null,
     userName: null,
+    email: null,
     avatar: null,
 };
 
@@ -47,6 +49,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 userName: action.payload,
             };
+        case SET_EMAIL:
+            return {
+                ...state,
+                email: action.payload,
+            }
         case SET_AVATAR:
             return {
                 ...state,
@@ -78,6 +85,11 @@ export const setUserName = (userName) => ({
     payload: userName,
 });
 
+export const setEmail = (email) => ({
+    type: SET_EMAIL,
+    payload: email,
+});
+
 export const setAvatar = (avatar) => ({
     type: SET_USERNAME,
     payload: avatar,
@@ -104,9 +116,14 @@ export const useSaveUserName = () => {
     return (userName) => dispatch(setUserName(userName));
 }
 
+export const useSaveEmail = () => {
+    const dispatch = useDispatch();
+    return (email) => dispatch(setEmail(email));
+}
+
 export const useSaveAvatar = () => {
     const dispatch = useDispatch();
-    return (avatar) => dispatch(setUserName(avatar));
+    return (avatar) => dispatch(setAvatar(avatar));
 }
 
 // Custom Hooks for Getting Redux Values (in React components)
@@ -124,6 +141,10 @@ export const useRegion = () => {
 
 export const useUserName = () => {
     return useSelector((state) => state.userName);
+}
+
+export const useEmail = () => {
+    return useSelector((state) => state.email);
 }
 
 export const useAvatar = () => {

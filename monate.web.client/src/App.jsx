@@ -8,12 +8,14 @@ import './style.css';
 
 import Dashboard from './pages/dashboard';
 import NotFound from './pages/not-found';
+import SignUp from './pages/sign-up';
 
-const App = () => {
+const App = (props) => {
     return (
         <Router>
             <Routes>
                 <Route exact path="/" element={<Dashboard />} />
+                <Route exact path="/signup" element={<SignUp />} />
                 <Route exact path="*" element={<NotFound />} />
             </Routes>
         </Router>

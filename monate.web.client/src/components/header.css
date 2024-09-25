@@ -48,9 +48,21 @@
     align-items: center;
 }
 
+.header-title-link {
+    display: flex;
+    flex-direction: row;
+}
+
+.header-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 40px;
+}
+
 .header-dark-link-title {
     transition: 0.3s;
-    color: white;
+    color: #dfefef;
     margin-left: 2rem;
     font-weight: 600;
     text-decoration: none;

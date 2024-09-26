@@ -1,66 +1,62 @@
-import * as crypto from 'crypto';
+import sodium from 'libsodium-wrappers-sumo';
 
-function splitEncryptedText(encryptedText) {
-    return {
-        encryptedDataString: encryptedText.slice(56, -32),
-        ivString: encryptedText.slice(0, 24),
-        assocDataString: encryptedText.slice(24, 56),
-        tagString: encryptedText.slice(-32),
-    }
-}
-
-export default class CryptoHelper {
+class CryptionHelper {
     encoding = 'hex';
+    key = null;
 
-    // process.env.PASSWORD should be a 32 BYTE key
-    key = process.env.PASSWORD;
+    async initialize() {
+        await sodium.ready; // Ensure libsodium is ready
+        const passwordHex = sessionStorage.getItem('password');
+        if (!passwordHex) {
+            throw new Error("Password not found in session storage.");
+        }
+        this.key = sodium.from_hex(passwordHex); // Convert hex string to Uint8Array
+    }
 
-    encrypt(plaintext) {
+    async encrypt(plaintext) {
+        if (!this.key) {
+            throw new Error("Key not initialized. Ensure libsodium is ready and key is set.");
+        }
         try {
-            const iv = crypto.randomBytes(12);
-            const assocData = crypto.randomBytes(16);
-            const cipher = crypto.createCipheriv('chacha20-poly1305', this.key, iv, {
-                authTagLength: 16,
-            });
+            const iv = sodium.randombytes_buf(12); // Random 12-byte nonce
+            const assocData = sodium.randombytes_buf(16); // Random associated data
 
-            cipher.setAAD(assocData, { plaintextLength: Buffer.byteLength(plaintext) });
+            const cipherText = sodium.crypto_aead_chacha20poly1305_ietf_encrypt(
+                sodium.from_string(plaintext), // Message to encrypt
+                assocData,                     // Associated data (optional)
+                null,                          // No additional data used
+                iv,                            // Nonce (IV)
+                this.key                       // Secret key
+            );
 
-            const encrypted = Buffer.concat([
-                cipher.update(
-                    plaintext, 'utf-8'
-                ),
-                cipher.final(),
-            ]);
-            const tag = cipher.getAuthTag();
-
-            return iv.toString(this.encoding) + assocData.toString(this.encoding) + encrypted.toString(this.encoding) + tag.toString(this.encoding);
-
+            return sodium.to_hex(iv) + sodium.to_hex(assocData) + sodium.to_hex(cipherText);
         } catch (e) {
             console.error(e);
         }
-    };
+    }
 
-    decrypt(cipherText) {
-        const {
-            encryptedDataString,
-            ivString,
-            assocDataString,
-            tagString,
-        } = splitEncryptedText(cipherText);
-
+    async decrypt(cipherText) {
+        if (!this.key) {
+            throw new Error("Key not initialized. Ensure libsodium is ready and key is set.");
+        }
         try {
-            const iv = Buffer.from(ivString, this.encoding);
-            const encryptedText = Buffer.from(encryptedDataString, this.encoding);
-            const tag = Buffer.from(tagString, this.encoding);
+            const iv = sodium.from_hex(cipherText.slice(0, 24)); // First 12 bytes for nonce
+            const assocData = sodium.from_hex(cipherText.slice(24, 56)); // Next 16 bytes for AAD
+            const encryptedData = sodium.from_hex(cipherText.slice(56)); // Remaining bytes for encrypted data
 
-            const decipher = crypto.createDecipheriv('chacha20-poly1305', this.key, iv, { authTagLength: 16 });
-            decipher.setAAD(Buffer.from(assocDataString, this.encoding), { plaintextLength: encryptedDataString.length });
-            decipher.setAuthTag(Buffer.from(tag));
+            const decrypted = sodium.crypto_aead_chacha20poly1305_ietf_decrypt(
+                null,                // No additional data
+                encryptedData,      // Encrypted message
+                assocData,          // Associated data (AAD)
+                iv,                 // Nonce (IV)
+                this.key            // Secret key
+            );
 
-            const decrypted = decipher.update(encryptedText);
-            return Buffer.concat([decrypted, decipher.final()]).toString();
+            return sodium.to_string(decrypted); // Convert decrypted Uint8Array back to string
         } catch (e) {
             console.error(e);
         }
     }
 }
+
+export default CryptionHelper;

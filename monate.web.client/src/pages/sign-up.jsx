@@ -8,6 +8,7 @@ import { useLight, useEmail, useSaveEmail } from '../globals/redux_store';
 import { MyTextField } from '../components/my-controls';
 import { GoogleIcon, MonateIcon, AppleIcon } from '../components/svg-icons';
 import ModeSwitch from '../components/mode-switch';
+import CryptionHelper from '../../helpers/cryption-helper';
 import './sign-up.css';
 
 const SignUp = (props) => {
@@ -21,6 +22,8 @@ const SignUp = (props) => {
     const [passwordValid, setPasswordValid] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const signupImage = `/sign-up/mails/mail-${lightMode ? 'light' : 'dark'}.jpg`;
 
     const handleEmailChange = (e) => {
@@ -33,6 +36,44 @@ const SignUp = (props) => {
 
     const handlePasswordValidChange = (e) => {
         setPasswordValid(e.target.value);
+    }
+
+    const handleSubmit = async(e) => {
+        e.preventDefault();
+        if (!emailRegex.test(emailAddr)) {
+            setEmailError('Email format is not correct.');
+            return;
+        }
+        else setEmailError('');
+        if (passwordValid != passwordInput) {
+            setPasswordError('Input password correctly.');
+            return;
+        }
+        else setPasswordError('');
+
+        const cryptor = new CryptionHelper();
+        await cryptor.initialize();
+        const userMail = {
+            email: await cryptor.encrypt(emailAddr),
+            password: await cryptor.encrypt(passwordInput),
+        };
+
+        try {
+            const response = await fetch(`usermail`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userMail),
+            });
+
+            console.log(response);
+
+            const result = await response.json();
+            console.log('Success:', result);
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     return (
@@ -93,6 +134,7 @@ const SignUp = (props) => {
                                 label="I agree to sign up with this email." />
                             <Button
                                 varient='contained'
+                                onClick={handleSubmit}
                                 style={{
                                     marginTop: 'calc(1vh - 12px)', width: '17vw', height: '5vh', fontSize: '3vh',
                                     color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#3f4f4f' : '#afbfbf' }}

@@ -11,6 +11,10 @@ import NotFound from './pages/not-found';
 import SignUp from './pages/sign-up';
 
 const App = (props) => {
+    sessionStorage.setItem('password', '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF');
+
+    console.log('started');
+
     return (
         <Router>
             <Routes>
@@ -19,7 +23,7 @@ const App = (props) => {
                 <Route exact path="*" element={<NotFound />} />
             </Routes>
         </Router>
-    )
+    );
 }
 
 export default App;

@@ -2,6 +2,7 @@ namespace MONATE.Web.Server.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using MONATE.Web.Server.Data;
+    using MONATE.Web.Server.Helpers;
 
     [ApiController]
     [Route("[controller]")]
@@ -34,9 +35,21 @@ namespace MONATE.Web.Server.Controllers
         {
             if (userMail == null)
             {
-                return BadRequest(new { message = "Invalid email data.", data = new UserMail() });
+                return BadRequest(new { message = "Invalid email data." });
             }
-            return Ok(new { message = "User email received.", data = userMail });
+
+            try
+            {
+                var cryptor = new CryptionHelper();
+                var email = cryptor.Decrypt(userMail.Email);
+                var password = cryptor.Decrypt(userMail.Password);
+
+                return Ok(new { email = email, password = password });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

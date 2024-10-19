@@ -19,6 +19,7 @@ export const initRegion = async () => {
 
 // Initial state
 const initialState = {
+    password: null,
     light: false,
     region: null,
     userName: null,

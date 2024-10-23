@@ -8,6 +8,7 @@ import { useLight, useEmail, useSaveEmail } from '../globals/redux_store';
 import { MyTextField } from '../components/my-controls';
 import { GoogleIcon, MonateIcon, AppleIcon } from '../components/svg-icons';
 import ModeSwitch from '../components/mode-switch';
+import { useAlert } from '../components/alerts';
 import CryptionHelper from '../../helpers/cryption-helper';
 import './sign-up.css';
 
@@ -15,6 +16,7 @@ const SignUp = (props) => {
     const lightMode = useLight();
     const email = useEmail();
     const saveEmail = useSaveEmail();
+    const { showAlert } = useAlert();
 
     const [emailAddr, setEmailAddr] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -55,24 +57,28 @@ const SignUp = (props) => {
         await cryptor.initialize();
         const userMail = {
             email: await cryptor.encrypt(emailAddr),
-            password: await cryptor.encrypt(passwordInput),
         };
 
         try {
-            const response = await fetch(`usermail`, {
+            const response = await fetch(`verifyemail`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(userMail),
+            }).then(response => {
+                if (!response.ok) {
+                    showAlert({ severity: 'error', message: 'Request failed!' });
+                    return;
+                }
+                else {
+                    showAlert({ severity: 'success', message: 'Verification code sent.' });
+                }
             });
 
             console.log(response);
-
-            const result = await response.json();
-            console.log('Success:', result);
         } catch (error) {
-            console.error('Error:', error);
+            showAlert({ severity: 'error', message: error.message });
         }
     }
 

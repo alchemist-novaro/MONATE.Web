@@ -41,6 +41,7 @@
                     lock (lockVerifyValueDict)
                     {
                         verifyValueDict[email] = code;
+                        Console.WriteLine(code);
                     }
                     return true;
                 }

@@ -6,34 +6,28 @@ namespace MONATE.Web.Server.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class UserMailController : ControllerBase
+    public class VerifyEmailController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        private readonly ILogger<VerifyEmailController> _logger;
 
-        private readonly ILogger<UserMailController> _logger;
-
-        public UserMailController(ILogger<UserMailController> logger)
+        public VerifyEmailController(ILogger<VerifyEmailController> logger)
         {
             _logger = logger;
         }
 
         [HttpGet(Name = "GetUserMail")]
-        public UserMail Get()
+        public VerifyEmail Get()
         {
-            return new UserMail
+            return new VerifyEmail
             {
                 Email = "monate615@gmail.com",
-                Password = "wkdwktks",
             };
         }
 
         [HttpPost(Name = "PostUserMail")]
-        public IActionResult Post([FromBody] UserMail userMail)
+        public IActionResult Post([FromBody] VerifyEmail email)
         {
-            if (userMail == null)
+            if (email == null || string.IsNullOrEmpty(email.Email))
             {
                 return BadRequest(new { message = "Invalid email data." });
             }
@@ -41,10 +35,12 @@ namespace MONATE.Web.Server.Controllers
             try
             {
                 var cryptor = new CryptionHelper();
-                var email = cryptor.Decrypt(userMail.Email);
-                var password = cryptor.Decrypt(userMail.Password);
+                var emailAddr = cryptor.Decrypt(email.Email);
 
-                return Ok(new { email = email, password = password });
+                if (VerifyEmailHelper.SendVerificationCode(emailAddr))
+                    return Ok();
+                else
+                    return BadRequest();
             }
             catch (Exception ex)
             {

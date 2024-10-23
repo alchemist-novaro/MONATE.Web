@@ -71,7 +71,7 @@ const SignUp = (props) => {
 
         try {
             const response = await fetch(`verifyemail`, {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },

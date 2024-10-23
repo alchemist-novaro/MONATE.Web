@@ -34,9 +34,9 @@
             {
                 try
                 {
-                    client.Connect(mySmtpHost, mySmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
-                    client.Authenticate(myEmail, myEmailPassword);
-                    client.Send(message);
+                    // client.Connect(mySmtpHost, mySmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                    // client.Authenticate(myEmail, myEmailPassword);
+                    // client.Send(message);
 
                     lock (lockVerifyValueDict)
                     {

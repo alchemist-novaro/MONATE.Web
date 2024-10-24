@@ -10,6 +10,7 @@ import { GoogleIcon, MonateIcon, AppleIcon } from '../components/svg-icons';
 import ModeSwitch from '../components/mode-switch';
 import { useAlert } from '../components/alerts';
 import CryptionHelper from '../../helpers/cryption-helper';
+import MailVerificationDialog from '../components/mail-verification-dialog';
 import './sign-up.css';
 
 const SignUp = (props) => {
@@ -23,6 +24,7 @@ const SignUp = (props) => {
     const [passwordInput, setPasswordInput] = useState('');
     const [passwordValid, setPasswordValid] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [openMailVerifyDialog, setOpenMailVerifyDialog] = useState(false);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -38,6 +40,14 @@ const SignUp = (props) => {
 
     const handlePasswordValidChange = (e) => {
         setPasswordValid(e.target.value);
+    }
+
+    const handleMailVerifyDialogClose = () => {
+        setOpenMailVerifyDialog(false);
+    }
+
+    const handleMailVerifySuccess = () => {
+        setOpenMailVerifyDialog(false);
     }
 
     const handleSubmit = async(e) => {
@@ -61,22 +71,23 @@ const SignUp = (props) => {
 
         try {
             const response = await fetch(`verifyemail`, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(userMail),
             }).then(response => {
                 if (!response.ok) {
-                    showAlert({ severity: 'error', message: 'Request failed!' });
+                    const data = await response.json();
+                    showAlert({ severity: 'error', message: data.message });
                     return;
                 }
                 else {
+                    saveEmail(emailAddr);
+                    setOpenMailVerifyDialog(true);
                     showAlert({ severity: 'success', message: 'Verification code sent.' });
                 }
             });
-
-            console.log(response);
         } catch (error) {
             showAlert({ severity: 'error', message: error.message });
         }
@@ -109,7 +120,8 @@ const SignUp = (props) => {
                             <MyTextField
                                 required
                                 name='Email Address'
-                                id='emial-address'
+                                id='email-address'
+                                type='email'
                                 style={{ marginTop: 'calc(8vh - 12px)', width: '30vw' }}
                                 error={emailError}
                                 autoComplete='username'
@@ -171,6 +183,11 @@ const SignUp = (props) => {
                     </div>
                 </div>
             </span>
+            <MailVerificationDialog
+                onClose={handleMailVerifyDialogClose}
+                onVerifySuccess={handleMailVerifySuccess}
+                open={openMailVerifyDialog}
+            />
         </div>
     );
 };

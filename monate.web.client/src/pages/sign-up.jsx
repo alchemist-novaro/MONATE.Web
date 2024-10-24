@@ -76,18 +76,18 @@ const SignUp = (props) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(userMail),
-            }).then(response => {
-                if (!response.ok) {
-                    const data = response.json();
-                    showAlert({ severity: 'error', message: data.message });
-                    return;
-                }
-                else {
-                    saveEmail(emailAddr);
-                    setOpenMailVerifyDialog(true);
-                    showAlert({ severity: 'success', message: 'Verification code sent.' });
-                }
             });
+
+            if (!response.ok) {
+                const data = await response.json();
+                showAlert({ severity: 'error', message: data.message });
+                return;
+            }
+            else {
+                saveEmail(emailAddr);
+                setOpenMailVerifyDialog(true);
+                showAlert({ severity: 'success', message: 'Verification code sent.' });
+            }
         } catch (error) {
             showAlert({ severity: 'error', message: error.message });
         }

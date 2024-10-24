@@ -5,8 +5,6 @@ namespace MONATE.Web.Server.Controllers
     using MONATE.Web.Server.Data;
     using MONATE.Web.Server.Helpers;
     using MONATE.Web.Server.Logics;
-    using Org.BouncyCastle.Crypto.Operators;
-    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     [ApiController]
     [Route("[controller]")]
@@ -20,7 +18,7 @@ namespace MONATE.Web.Server.Controllers
         }
 
         [HttpPost(Name = "PostVerifyMail")]
-        public IActionResult Post([FromBody] VerifyEmail email)
+        public async Task<IActionResult> Post([FromBody] VerifyEmail email)
         {
             if (email == null || string.IsNullOrEmpty(email.Email))
             {
@@ -31,6 +29,10 @@ namespace MONATE.Web.Server.Controllers
             {
                 var cryptor = new CryptionHelper();
                 var emailAddr = cryptor.Decrypt(email.Email);
+
+                var userPassword = await GetUserPasswordByEmailAsync(emailAddr);
+                if (userPassword != null)
+                    return BadRequest(new { message = "Your email is already used for signup." });
 
                 if (VerifyEmailHelper.SendVerificationCode(emailAddr))
                     return Ok();
@@ -73,6 +75,8 @@ namespace MONATE.Web.Server.Controllers
                     }
                     else
                     {
+                        return BadRequest(new { message = "Your email is already verified." });
+
                         userPassword.Password = newPassword;
                         Console.WriteLine(newPassword);
                     }

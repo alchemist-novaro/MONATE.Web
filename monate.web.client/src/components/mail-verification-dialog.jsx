@@ -59,6 +59,12 @@ const MailVerificationDialog = (props) => {
             }
             else {
                 onVerifySuccess();
+                const data = await response.json();
+                const newPassword = await cryptor.decrypt(data.password);
+                sessionStorage.setItem('password', newPassword);
+
+                console.log(sessionStorage.getItem('password'));
+
                 showAlert({ severity: 'success', message: 'Verified successfully.' });
             }
         } catch (error) {

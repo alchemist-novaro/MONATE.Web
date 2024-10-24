@@ -15,17 +15,8 @@ namespace MONATE.Web.Server.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetUserMail")]
-        public VerifyEmail Get()
-        {
-            return new VerifyEmail
-            {
-                Email = "monate615@gmail.com",
-            };
-        }
-
-        [HttpPost(Name = "PostUserMail")]
-        public IActionResult Post([FromBody] VerifyEmail email)
+        [HttpGet(Name = "GetVerifyMail")]
+        public IActionResult Get([FromBody] VerifyEmail email)
         {
             if (email == null || string.IsNullOrEmpty(email.Email))
             {
@@ -41,6 +32,31 @@ namespace MONATE.Web.Server.Controllers
                     return Ok();
                 else
                     return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost(Name = "PostVerifyMail")]
+        public IActionResult Post([FromBody] VerifyData data)
+        {
+            if (data == null || string.IsNullOrEmpty(data.Email) || data.Code.Length != 6)
+            {
+                return BadRequest(new { message = "Invalid verification data." });
+            }
+
+            try
+            {
+                var cryptor = new CryptionHelper();
+                var emailAddr = cryptor.Decrypt(data.Email);
+                var code = cryptor.Decrypt(data.Code);
+
+                if (VerifyEmailHelper.VerifyEmail(emailAddr, code))
+                    return Ok();
+                else
+                    return BadRequest(new { message = "Verify code is not correct." });
             }
             catch (Exception ex)
             {

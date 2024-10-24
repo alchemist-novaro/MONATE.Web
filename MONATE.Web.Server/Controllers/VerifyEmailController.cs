@@ -39,10 +39,10 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
-        [HttpPost(Name = "PostVerifyMail/VerifyCode")]
-        public IActionResult PostVerifyCode([FromBody] VerifyData data)
+        [HttpPost("VerifyCode", Name = "PostVerifyMail/VerifyCode")]
+        public IActionResult VerifyCode([FromBody] VerifyData data)
         {
-            if (data == null || string.IsNullOrEmpty(data.Email) || data.Code.Length != 6)
+            if (data == null || string.IsNullOrEmpty(data.Email) || string.IsNullOrEmpty(data.Code))
             {
                 return BadRequest(new { message = "Invalid verification data." });
             }

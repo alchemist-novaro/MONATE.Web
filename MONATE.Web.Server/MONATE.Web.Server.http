@@ -4,8 +4,3 @@ POST {{MONATE.Web.Server_HostAddress}}/VerifyEmail/
 Accept: application/json
 
 ###
-
-POST {{MONATE.Web.Server_HostAddress}}/VerifyEmail/VerifyCode
-Accept: application/json
-
-###

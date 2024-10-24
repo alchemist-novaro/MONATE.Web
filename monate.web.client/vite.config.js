@@ -47,10 +47,6 @@ export default defineConfig({
                 target,
                 secure: false
             },
-            '^/verifyemail/code': {
-                target,
-                secure: false
-            }
         },
         port: 5173,
         https: {

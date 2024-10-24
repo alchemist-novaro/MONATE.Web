@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { MyTextField } from '../components/my-controls';
-import { useEmail } from '../globals/redux_store';
+import { useEmail, useLight } from '../globals/redux_store';
 import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from '../components/alerts';
 
@@ -17,6 +17,8 @@ const MailVerificationDialog = (props) => {
     const { showAlert } = useAlert();
 
     const emailAddr = useEmail();
+    const lightMode = useLight();
+
     const [verifyCode, setVerifyCode] = useState('');
     const [error, setError] = useState('');
 
@@ -42,7 +44,7 @@ const MailVerificationDialog = (props) => {
         };
 
         try {
-            const response = await fetch(`verifyemail/code`, {
+            const response = await fetch(`verifyemail/verifycode`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,27 +70,55 @@ const MailVerificationDialog = (props) => {
         <Dialog
             open={open}
             onClose={onClose}
+            PaperProps={{
+                style: {
+                    backgroundColor: lightMode ? '#efffff' : '#0f1f1f',
+                    padding: '25px',
+                    borderRadius: '25px'
+                }
+            }}
         >
-            <DialogTitle>Subscribe</DialogTitle>
+            <DialogTitle
+                style={{
+                    marginTop: '20px',
+                    fontSize: '40px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    color: lightMode ? '#0f1f1f' : '#efffff'
+                }}>Verify Code</DialogTitle>
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText style={{ color: lightMode ? '#0f1f1f' : '#efffff' }}>
                     Please enter your 6 numbers of verification code.
                 </DialogContentText>
-                <MyTextField
-                    autoFocus
-                    required
-                    margin='dense'
-                    name='verifyCode'
-                    id='verifyCode'
-                    variant='standard'
-                    error={error}
-                    onChange={handleChange}
-                />
+                <div style={{
+                    marginTop: '20px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    height: '60px',
+                }} >
+                    <MyTextField
+                        autoFocus
+                        required
+                        margin='dense'
+                        name='Verification Code'
+                        id='verifyCode'
+                        variant='standard'
+                        error={error}
+                        onChange={handleChange} />
+                </div>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
+            <DialogActions style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center'
+            }} >
+                <Button onClick={onClose} style={{ color: lightMode ? '#0f1f1f' : '#efffff', fontSize: '17px' }}>Cancel</Button>
+                <Button onClick={handleSubmit} style={{ color: lightMode ? '#0f1f1f' : '#efffff', marginLeft: '20px', fontSize: '17px' }}>Submit</Button>
             </DialogActions>
+            <br/>
         </Dialog>
     )
 };

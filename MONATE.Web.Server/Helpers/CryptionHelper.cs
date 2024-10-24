@@ -8,6 +8,11 @@
     {
         public readonly byte[] key;
 
+        public string RandomPassword
+        {
+            get => Convert.ToHexString(SodiumCore.GetRandomBytes(32));
+        }
+
         public CryptionHelper()
         {
             var password = Environment.GetEnvironmentVariable("PASSWORD");

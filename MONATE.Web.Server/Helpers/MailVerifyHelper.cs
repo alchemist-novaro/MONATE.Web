@@ -7,8 +7,10 @@
 
     public static class VerifyEmailHelper
     {
-        private static readonly Dictionary<string, string> verifyValueDict = new Dictionary<string, string>();
-        private static object lockVerifyValueDict = new object();
+        private static readonly Dictionary<string, string> verifyCodeDict = new Dictionary<string, string>();
+        private static readonly Dictionary<string, int> verifyTrialCountDict = new Dictionary<string, int>();
+        private static readonly Dictionary<string, DateTime> verifyLastTrialDict = new Dictionary<string, DateTime>();
+        private static object lockVerifyCodeDict = new object();
 
         public static bool SendVerificationCode(string email)
         {
@@ -30,6 +32,14 @@
                 Text = body,
             };
 
+            lock (lockVerifyCodeDict)
+            {
+                VerifyTrialCounts(email);
+
+                verifyCodeDict[email] = code;
+                Console.WriteLine(code);
+            }
+
             using (var client = new SmtpClient(new ProtocolLogger("smtp.log")))
             {
                 try
@@ -37,12 +47,6 @@
                     // client.Connect(mySmtpHost, mySmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
                     // client.Authenticate(myEmail, myEmailPassword);
                     // client.Send(message);
-
-                    lock (lockVerifyValueDict)
-                    {
-                        verifyValueDict[email] = code;
-                        Console.WriteLine(code);
-                    }
                     return true;
                 }
                 catch
@@ -58,12 +62,30 @@
 
         public static bool VerifyEmail(string email, string code)
         {
-            lock (lockVerifyValueDict)
+            lock (lockVerifyCodeDict)
             {
-                if (!verifyValueDict.ContainsKey(email)) { return false; }
-                if (verifyValueDict[email] != code) { return false; }
-                return true;
+                VerifyTrialCounts(email);
+
+                if (!verifyCodeDict.ContainsKey(email)) { return false; }
+                if (verifyCodeDict[email] != code) { return false; }
+
+                verifyCodeDict.Remove(email);
+                verifyLastTrialDict.Remove(email);
+                verifyTrialCountDict.Remove(email);
             }
+
+            return true;
+        }
+
+        private static void VerifyTrialCounts(string email)
+        {
+            verifyTrialCountDict[email] =
+                (!verifyTrialCountDict.ContainsKey(email)
+                || (DateTime.Now - verifyLastTrialDict[email]) > new TimeSpan(24, 0, 0))
+                ? 0 : (verifyTrialCountDict[email] + 1);
+            verifyLastTrialDict[email] = DateTime.Now;
+            if (verifyTrialCountDict[email] > 5)
+                throw new Exception("The trial has been exceed. Try after 24 hours.");
         }
 
         private static string GenerateRandom6DigitString()

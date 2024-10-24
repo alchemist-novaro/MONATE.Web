@@ -8,7 +8,7 @@
     {
         public readonly byte[] key;
 
-        public string RandomPassword
+        public static string RandomPassword
         {
             get => Convert.ToHexString(SodiumCore.GetRandomBytes(32));
         }

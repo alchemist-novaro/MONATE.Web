@@ -1,9 +1,12 @@
 namespace MONATE.Web.Server.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using MONATE.Web.Server.Data;
     using MONATE.Web.Server.Helpers;
     using MONATE.Web.Server.Logics;
+    using Org.BouncyCastle.Crypto.Operators;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     [ApiController]
     [Route("[controller]")]
@@ -41,7 +44,7 @@ namespace MONATE.Web.Server.Controllers
         }
 
         [HttpPost("VerifyCode", Name = "PostVerifyMail/VerifyCode")]
-        public IActionResult VerifyCode([FromBody] VerifyData data)
+        public async Task<IActionResult> VerifyCode([FromBody] VerifyData data)
         {
             if (data == null || string.IsNullOrEmpty(data.Email) || string.IsNullOrEmpty(data.Code))
             {
@@ -55,7 +58,28 @@ namespace MONATE.Web.Server.Controllers
                 var code = cryptor.Decrypt(data.Code);
 
                 if (VerifyEmailHelper.VerifyEmail(emailAddr, code))
-                    return Ok();
+                {
+                    var newPassword = CryptionHelper.RandomPassword;
+                    var cryptedNewPassword = cryptor.Encrypt(newPassword);
+
+                    var userPassword = await GetUserPasswordByEmailAsync(emailAddr);
+                    if (userPassword == null)
+                    {
+                        _context.UserPasswords.Add(new UserPassword
+                        {
+                            Email = emailAddr,
+                            Password = newPassword,
+                        });
+                    }
+                    else
+                    {
+                        userPassword.Password = newPassword;
+                        Console.WriteLine(newPassword);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new { password = cryptedNewPassword });
+                }
                 else
                     return BadRequest(new { message = "Verify code is not correct." });
             }
@@ -63,6 +87,11 @@ namespace MONATE.Web.Server.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        private async Task<UserPassword> GetUserPasswordByEmailAsync(string email)
+        {
+            return await _context.UserPasswords.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

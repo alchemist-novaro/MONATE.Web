@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -41,7 +42,7 @@ const MailVerificationDialog = (props) => {
         };
 
         try {
-            const response = await fetch(`verifyemail`, {
+            const response = await fetch(`verifyemail/code`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -26,7 +26,7 @@ const MailVerificationDialog = (props) => {
         }
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async() => {
         if (verifyCode.length !== 6)
             return;
 
@@ -46,7 +46,7 @@ const MailVerificationDialog = (props) => {
                 body: JSON.stringify(verifyData),
             }).then(response => {
                 if (!response.ok) {
-                    const data = await response.json();
+                    const data = response.json();
                     showAlert({ severity: 'error', message: data.message });
                     return;
                 }

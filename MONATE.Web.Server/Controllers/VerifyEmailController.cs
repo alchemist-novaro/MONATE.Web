@@ -3,16 +3,17 @@ namespace MONATE.Web.Server.Controllers
     using Microsoft.AspNetCore.Mvc;
     using MONATE.Web.Server.Data;
     using MONATE.Web.Server.Helpers;
+    using MONATE.Web.Server.Logics;
 
     [ApiController]
     [Route("[controller]")]
     public class VerifyEmailController : ControllerBase
     {
-        private readonly ILogger<VerifyEmailController> _logger;
+        private readonly MonateDbContext _context;
 
-        public VerifyEmailController(ILogger<VerifyEmailController> logger)
+        public VerifyEmailController(MonateDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         [HttpPost(Name = "PostVerifyMail")]

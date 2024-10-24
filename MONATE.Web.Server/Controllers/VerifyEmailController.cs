@@ -15,8 +15,8 @@ namespace MONATE.Web.Server.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetVerifyMail")]
-        public IActionResult Get([FromBody] VerifyEmail email)
+        [HttpPost(Name = "PostVerifyMail")]
+        public IActionResult Post([FromBody] VerifyEmail email)
         {
             if (email == null || string.IsNullOrEmpty(email.Email))
             {
@@ -39,8 +39,8 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
-        [HttpPost(Name = "PostVerifyMail")]
-        public IActionResult Post([FromBody] VerifyData data)
+        [HttpPost(Name = "PostVerifyMail/VerifyCode")]
+        public IActionResult PostVerifyCode([FromBody] VerifyData data)
         {
             if (data == null || string.IsNullOrEmpty(data.Email) || data.Code.Length != 6)
             {

@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-GET {{MONATE.Web.Server_HostAddress}}/VerifyEmail/
+POST {{MONATE.Web.Server_HostAddress}}/VerifyEmail/VerifyCode
 Accept: application/json
 
 ###

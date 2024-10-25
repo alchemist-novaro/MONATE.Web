@@ -2,7 +2,8 @@ namespace MONATE.Web.Server.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using MONATE.Web.Server.Data;
+    using MONATE.Web.Server.Data.SignUp;
+    using MONATE.Web.Server.Data.UserInfo;
     using MONATE.Web.Server.Helpers;
     using MONATE.Web.Server.Logics;
 

@@ -1,4 +1,4 @@
-﻿namespace MONATE.Web.Server.Data
+﻿namespace MONATE.Web.Server.Data.SignUp
 {
     public class VerifyEmail
     {

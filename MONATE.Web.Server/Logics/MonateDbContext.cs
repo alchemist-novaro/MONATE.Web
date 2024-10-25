@@ -1,7 +1,7 @@
 ﻿namespace MONATE.Web.Server.Logics
 {
     using Microsoft.EntityFrameworkCore;
-    using MONATE.Web.Server.Data;
+    using MONATE.Web.Server.Data.UserInfo;
 
     public class MonateDbContext : DbContext
     {

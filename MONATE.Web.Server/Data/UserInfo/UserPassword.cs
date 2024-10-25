@@ -1,4 +1,4 @@
-﻿namespace MONATE.Web.Server.Data
+﻿namespace MONATE.Web.Server.Data.UserInfo
 {
     public class UserPassword
     {

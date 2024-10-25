@@ -1,5 +1,5 @@
 import Header from '../components/header.jsx';
-import { useLight } from '../globals/redux_store.jsx';
+import { useLight } from '../globals/redux-store.jsx';
 import AnimatedBackgrounds from '../components/animated-backgrounds.jsx';
 
 import './dashboard.css';

@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import DisplayRegion from './display-region';
 import ModeSwitch from './mode-switch';
 import { MonateIcon } from './svg-icons';
-import { useLight, useAvatar, useUserName } from '../globals/redux_store';
+import { useLight, useAvatar, useUserName } from '../globals/redux-store';
 
 import './header.css';
 

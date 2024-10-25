@@ -2,12 +2,11 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useLight, useSaveEmail } from '../globals/redux_store';
+import { useLight, useSaveEmail } from '../globals/redux-store';
 import { MyTextField } from './my-controls';
 import { GoogleIcon, AppleIcon } from './svg-icons';
 import { useAlert } from './alerts';
 import CryptionHelper from '../../helpers/cryption-helper';
-import '../pages/sign-up.css';
 
 const MailInfoControl = (props) => {
     const { setOpenMailVerifyDialog } = props;
@@ -80,73 +79,71 @@ const MailInfoControl = (props) => {
     }
 
     return (
-        <div className={lightMode ? 'signup-main-light-inputs' : 'signup-main-dark-inputs'}>
-            <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <MyTextField
-                    required
-                    name='Email Address'
-                    id='email-address'
-                    type='email'
-                    style={{ marginTop: 'calc(8vh - 12px)', width: '30vw' }}
-                    error={emailError}
-                    autoComplete='username'
-                    onChange={handleEmailChange}
-                />
-                <MyTextField
-                    required
-                    name='Password'
-                    id='password'
-                    style={{ marginTop: 'calc(5vh - 12px)', width: '30vw' }}
-                    error={passwordError}
-                    type='password'
-                    autoComplete='new-password'
-                    onChange={handlePasswordInputChange}
-                />
-                <MyTextField
-                    required
-                    name='Password Validation'
-                    id='password-validation'
-                    style={{ marginTop: 'calc(3vh - 12px)', width: '30vw' }}
-                    error={passwordError}
-                    autoComplete='new-password'
-                    type='password'
-                    onChange={handlePasswordValidChange}
-                />
-                <FormControlLabel control={<Checkbox defaultChecked style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf' }} />}
-                    style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf', marginTop: 'calc(2.5vh - 12px)' }}
-                    label="I agree to sign up with this email." />
-                <Button
-                    varient='contained'
-                    onClick={handleSubmit}
-                    style={{
-                        marginTop: 'calc(1vh - 12px)', width: '17vw', height: '5vh', fontSize: '3vh',
-                        color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#3f4f4f' : '#afbfbf'
-                    }}
-                >Submit</Button>
-                <Button
-                    varient='contained'
-                    style={{
-                        marginTop: 'calc(7vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',
-                        color: lightMode ? '#3f4f4f' : '#cfdfdf', backgroundColor: lightMode ? '#cfdfdf' : '#1f2f2f'
-                    }}
-                >
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <GoogleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Google</span>
-                    </div>
-                </Button>
-                <Button
-                    varient='contained'
-                    style={{
-                        marginTop: 'calc(3vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',
-                        color: lightMode ? '#3f4f4f' : '#cfdfdf', backgroundColor: lightMode ? '#cfdfdf' : '#1f2f2f'
-                    }}
-                >
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <AppleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Apple</span>
-                    </div>
-                </Button>
-            </form>
-        </div>
+        <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <MyTextField
+                required
+                name='Email Address'
+                id='email-address'
+                type='email'
+                style={{ marginTop: 'calc(8vh - 12px)', width: '30vw' }}
+                error={emailError}
+                autoComplete='username'
+                onChange={handleEmailChange}
+            />
+            <MyTextField
+                required
+                name='Password'
+                id='password'
+                style={{ marginTop: 'calc(5vh - 12px)', width: '30vw' }}
+                error={passwordError}
+                type='password'
+                autoComplete='new-password'
+                onChange={handlePasswordInputChange}
+            />
+            <MyTextField
+                required
+                name='Password Validation'
+                id='password-validation'
+                style={{ marginTop: 'calc(3vh - 12px)', width: '30vw' }}
+                error={passwordError}
+                autoComplete='new-password'
+                type='password'
+                onChange={handlePasswordValidChange}
+            />
+            <FormControlLabel control={<Checkbox defaultChecked style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf' }} />}
+                style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf', marginTop: 'calc(2.5vh - 12px)' }}
+                label="I agree to sign up with this email." />
+            <Button
+                varient='contained'
+                onClick={handleSubmit}
+                style={{
+                    marginTop: 'calc(1vh - 12px)', width: '17vw', height: '5vh', fontSize: '3vh',
+                    color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#3f4f4f' : '#afbfbf'
+                }}
+            >Submit</Button>
+            <Button
+                varient='contained'
+                style={{
+                    marginTop: 'calc(7vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',
+                    color: lightMode ? '#3f4f4f' : '#cfdfdf', backgroundColor: lightMode ? '#cfdfdf' : '#1f2f2f'
+                }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <GoogleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Google</span>
+                </div>
+            </Button>
+            <Button
+                varient='contained'
+                style={{
+                    marginTop: 'calc(3vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',
+                    color: lightMode ? '#3f4f4f' : '#cfdfdf', backgroundColor: lightMode ? '#cfdfdf' : '#1f2f2f'
+                }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <AppleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Apple</span>
+                </div>
+            </Button>
+        </form>
     )
 };
 

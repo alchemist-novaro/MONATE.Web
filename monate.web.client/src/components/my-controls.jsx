@@ -1,5 +1,7 @@
+import * as React from 'react';
 import TextField from '@mui/material/TextField';
-import { useLight } from '../globals/redux_store';
+import { IMaskInput } from 'react-imask';
+import { useLight } from '../globals/redux-store';
 
 export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete }) => {
     const lightMode = useLight();
@@ -46,3 +48,67 @@ export const MyTextField = ({ required, name, value, id, style, onChange, error,
         />
     );
 };
+
+export const ZipCodeMask = React.forwardRef(function TextMaskCustom(props, ref) {
+    const { onChange, ...other } = props;
+    return (
+        <IMaskInput
+            {...other}
+            mask="#0000"
+            definitions={{
+                '#': /[1-9]/,
+            }}
+            inputRef={ref}
+            onAccept={(value) => onChange({ target: { name: props.name, value } })}
+            overwrite
+        />
+    );
+});
+
+export const CreditCardNumberMask = React.forwardRef(function TextMaskCustom(props, ref) {
+    const { onChange, ...other } = props;
+    return (
+        <IMaskInput
+            {...other}
+            mask="#000 0000 0000 0000"
+            definitions={{
+                '#': /[1-9]/,
+            }}
+            inputRef={ref}
+            onAccept={(value) => onChange({ target: { name: props.name, value } })}
+            overwrite
+        />
+    );
+});
+
+export const CreditCardCVVMask = React.forwardRef(function TextMaskCustom(props, ref) {
+    const { onChange, ...other } = props;
+    return (
+        <IMaskInput
+            {...other}
+            mask="#00"
+            definitions={{
+                '#': /[1-9]/,
+            }}
+            inputRef={ref}
+            onAccept={(value) => onChange({ target: { name: props.name, value } })}
+            overwrite
+        />
+    );
+});
+
+export const CreditCardDateMask = React.forwardRef(function TextMaskCustom(props, ref) {
+    const { onChange, ...other } = props;
+    return (
+        <IMaskInput
+            {...other}
+            mask="#0/00"
+            definitions={{
+                '#': /[1-9]/,
+            }}
+            inputRef={ref}
+            onAccept={(value) => onChange({ target: { name: props.name, value } })}
+            overwrite
+        />
+    );
+});

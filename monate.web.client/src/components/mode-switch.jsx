@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import { useLight, useSaveLight } from '../globals/redux_store';
+import { useLight, useSaveLight } from '../globals/redux-store';
 
 const ModeSwitch = (props) => {
     const lightMode = useLight();

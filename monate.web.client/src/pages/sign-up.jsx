@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useLight } from '../globals/redux_store';
+import Button from '@mui/material/Button';
+import { useLight } from '../globals/redux-store';
 import { MonateIcon } from '../components/svg-icons';
 import ModeSwitch from '../components/mode-switch';
 import MailVerificationDialog from '../components/mail-verification-dialog';
-import MailInfoControl from '../components/mail-info-control'
+import MailInfoControl from '../components/mail-info-control';
+import LocationInfoControl from '../components/location-info-control';
 import './sign-up.css';
 
 const SignUp = (props) => {
     const lightMode = useLight();
 
     const [openMailVerifyDialog, setOpenMailVerifyDialog] = useState(false);
-    const [signUpMode, setSignUpMode] = useState('mail-info');
+    const [signUpMode, setSignUpMode] = useState('location-info');
 
     const signupImage = `/sign-up/mails/mail-${lightMode ? 'light' : 'dark'}.jpg`;
 
@@ -21,7 +23,11 @@ const SignUp = (props) => {
 
     const handleMailVerifySuccess = () => {
         setOpenMailVerifyDialog(false);
-        setSignUpMode('payment-info');
+        setSignUpMode('location-info');
+    }
+
+    const handleNext = () => {
+
     }
 
     return (
@@ -46,12 +52,18 @@ const SignUp = (props) => {
                     <div className={(lightMode ? 'signup-main-light-title' : 'signup-main-dark-title') + ' Large'}>
                         Sign Up
                     </div>
-                    {signUpMode === 'mail-info' ?
-                        <MailInfoControl setOpenMailVerifyDialog={setOpenMailVerifyDialog} />
-                        : <div>
-
-                        </div>
-                    }
+                    <div className={lightMode ? 'signup-main-light-inputs' : 'signup-main-dark-inputs'}>
+                        {signUpMode === 'mail-info' ?
+                            <MailInfoControl setOpenMailVerifyDialog={setOpenMailVerifyDialog} />
+                            : <div>
+                                {signUpMode === 'location-info' ?
+                                    <LocationInfoControl />
+                                    : <div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
             </span>
             <MailVerificationDialog

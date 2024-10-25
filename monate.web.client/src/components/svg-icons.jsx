@@ -1,5 +1,5 @@
 import SvgIcon from '@mui/material/SvgIcon';
-import { useLight } from '../globals/redux_store';
+import { useLight } from '../globals/redux-store';
 
 export const MonateIcon = ({width, height}) => {
     const lightMode = useLight();

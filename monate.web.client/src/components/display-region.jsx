@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRegion, useSaveRegion, initRegion } from '../globals/redux_store';
+import { useRegion, useSaveRegion, initRegion } from '../globals/redux-store';
 
 import './display-region.css'
 

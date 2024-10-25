@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLight } from '../globals/redux_store';
+import { useLight } from '../globals/redux-store';
 
 import "./animated-backgrounds.css";
 

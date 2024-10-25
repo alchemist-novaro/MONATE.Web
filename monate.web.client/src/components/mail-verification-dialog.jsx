@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { MyTextField } from '../components/my-controls';
-import { useEmail, useLight } from '../globals/redux_store';
+import { useEmail, useLight } from '../globals/redux-store';
 import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from '../components/alerts';
 
@@ -109,9 +109,9 @@ const MailVerificationDialog = (props) => {
                         autoFocus
                         required
                         margin='dense'
-                        name='Verification Code'
                         id='verifyCode'
                         variant='standard'
+                        textAlign='center'
                         error={error}
                         onChange={handleChange} />
                 </div>

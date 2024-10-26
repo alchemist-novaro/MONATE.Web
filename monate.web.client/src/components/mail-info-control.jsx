@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useLight, useSaveEmail } from '../globals/redux-store';
+import { useLight, useSaveEmail, useSavePassword } from '../globals/redux-store';
 import { MyTextField } from './my-controls';
 import { GoogleIcon, AppleIcon } from './svg-icons';
 import { useAlert } from './alerts';
@@ -13,6 +13,7 @@ const MailInfoControl = (props) => {
 
     const lightMode = useLight();
     const saveEmail = useSaveEmail();
+    const savePassword = useSavePassword();
     const { showAlert } = useAlert();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,7 +47,10 @@ const MailInfoControl = (props) => {
             setPasswordError('Input password correctly.');
             return;
         }
-        else setPasswordError('');
+        else {
+            setPasswordError('');
+            savePassword(passwordInput);
+        }
 
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
@@ -55,7 +59,7 @@ const MailInfoControl = (props) => {
         };
 
         try {
-            const response = await fetch(`verifyemail`, {
+            const response = await fetch(`register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

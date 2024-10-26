@@ -1,20 +1,13 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { MyTextField } from './my-controls';
-import { useLight } from '../globals/redux-store';
+import { useLight, useRegion } from '../globals/redux-store';
 
 const LocationInfoControl = (props) => {
     const { onNext } = props;
 
     const lightMode = useLight();
-
-    const [firstNameError, setFirstNameError] = useState('');
-    const [lastNameError, setLastNameError] = useState('');
-    const [addressError, setAddressError] = useState('');
-    const [cityError, setCityError] = useState('');
-    const [stateError, setStateError] = useState('');
-    const [zipCodeError, setZipCodeError] = useState('');
-    const [countryError, setCountryError] = useState('');
+    const region = useRegion();
 
     const firstNameChanged = (e) => {
 
@@ -60,7 +53,6 @@ const LocationInfoControl = (props) => {
                     name='First Name'
                     id='first-name'
                     style={{ width: 'calc(15vw - 10px)' }}
-                    error={firstNameError}
                     onChange={firstNameChanged}
                 />
                 <MyTextField
@@ -68,7 +60,6 @@ const LocationInfoControl = (props) => {
                     name='Last Name'
                     id='last-name'
                     style={{ marginLeft: '20px', width: 'calc(15vw - 10px)' }}
-                    error={lastNameError}
                     onChange={lastNameChanged}
                 />
             </div>
@@ -77,7 +68,6 @@ const LocationInfoControl = (props) => {
                 name='Address Line 1'
                 id='address-line-1'
                 style={{ marginTop: 'calc(3vh - 12px)', width: '30vw' }}
-                error={addressError}
                 onChange={address1Changed}
             />
             <MyTextField
@@ -92,7 +82,6 @@ const LocationInfoControl = (props) => {
                     name='City'
                     id='city'
                     style={{ width: 'calc(15vw - 10px)' }}
-                    error={cityError}
                     onChange={cityChanged}
                 />
                 <MyTextField
@@ -100,7 +89,6 @@ const LocationInfoControl = (props) => {
                     name='State'
                     id='state'
                     style={{ marginLeft: '20px', width: 'calc(15vw - 10px)' }}
-                    error={stateError}
                     onChange={stateChanged}
                 />
             </div>
@@ -110,15 +98,15 @@ const LocationInfoControl = (props) => {
                     name='Zip / Postal Code'
                     id='zip-code'
                     style={{ width: 'calc(15vw - 10px)' }}
-                    error={zipCodeError}
                     onChange={zipCodeChanged}
                 />
                 <MyTextField
                     required
+                    disabled
+                    value={region ? region.country : ''}
                     name='Country'
                     id='country'
                     style={{ marginLeft: '20px', width: 'calc(15vw - 10px)' }}
-                    error={countryError}
                     onChange={countryChanged}
                 />
             </div>

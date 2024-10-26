@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { MyTextField } from '../components/my-controls';
-import { useEmail, useLight } from '../globals/redux-store';
+import { useEmail, useLight, usePassword } from '../globals/redux-store';
 import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from '../components/alerts';
 
@@ -18,6 +18,7 @@ const MailVerificationDialog = (props) => {
 
     const emailAddr = useEmail();
     const lightMode = useLight();
+    const password = usePassword();
 
     const [verifyCode, setVerifyCode] = useState('');
     const [error, setError] = useState('');
@@ -40,11 +41,12 @@ const MailVerificationDialog = (props) => {
         await cryptor.initialize();
         const verifyData = {
             email: await cryptor.encrypt(emailAddr),
+            emailPassword: await cryptor.encrypt(password),
             code: await cryptor.encrypt(verifyCode),
         };
 
         try {
-            const response = await fetch(`verifyemail/verifycode`, {
+            const response = await fetch(`register/verifycode`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,8 +64,6 @@ const MailVerificationDialog = (props) => {
                 const data = await response.json();
                 const newPassword = await cryptor.decrypt(data.password);
                 sessionStorage.setItem('password', newPassword);
-
-                console.log(sessionStorage.getItem('password'));
 
                 showAlert({ severity: 'success', message: 'Verified successfully.' });
             }

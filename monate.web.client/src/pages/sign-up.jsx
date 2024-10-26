@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import { useLight } from '../globals/redux-store';
+import { useLight, useRegion, useSaveRegion, initRegion } from '../globals/redux-store';
 import { MonateIcon } from '../components/svg-icons';
 import ModeSwitch from '../components/mode-switch';
 import MailVerificationDialog from '../components/mail-verification-dialog';
@@ -11,9 +11,11 @@ import './sign-up.css';
 
 const SignUp = (props) => {
     const lightMode = useLight();
+    const region = useRegion();
+    const saveRegion = useSaveRegion();
 
     const [openMailVerifyDialog, setOpenMailVerifyDialog] = useState(false);
-    const [signUpMode, setSignUpMode] = useState('location-info');
+    const [signUpMode, setSignUpMode] = useState('mail-info');
 
     const signupImage = `/sign-up/mails/mail-${lightMode ? 'light' : 'dark'}.jpg`;
 
@@ -21,8 +23,15 @@ const SignUp = (props) => {
         setOpenMailVerifyDialog(false);
     }
 
-    const handleMailVerifySuccess = () => {
+    const handleMailVerifySuccess = async() => {
         setOpenMailVerifyDialog(false);
+        const fetchRegion = async () => {
+            if (region === null) {
+                const regionData = await initRegion();
+                saveRegion(regionData);
+            }
+        };
+        await fetchRegion();
         setSignUpMode('location-info');
     }
 

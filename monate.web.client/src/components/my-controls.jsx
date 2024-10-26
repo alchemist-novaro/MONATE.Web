@@ -3,12 +3,13 @@ import TextField from '@mui/material/TextField';
 import { IMaskInput } from 'react-imask';
 import { useLight } from '../globals/redux-store';
 
-export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete }) => {
+export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled }) => {
     const lightMode = useLight();
 
     return (
         <TextField
             required={required}
+            disabled={disabled}
             id={id}
             label={name}
             defaultValue={value}
@@ -32,9 +33,15 @@ export const MyTextField = ({ required, name, value, id, style, onChange, error,
                     '&.Mui-focused fieldset': {
                         borderColor: lightMode ? '#1f2f2f' : '#cfdfdf',
                     },
+                    '&.Mui-disabled fieldset': {
+                        borderColor: '#7f8f8f',
+                    }
                 },
                 input: {
                     color: lightMode ? '#1f2f2f' : '#cfdfdf',
+                },
+                '& .MuiOutlinedInput-input.Mui-disabled': {
+                    WebkitTextFillColor: '#7f8f8f',
                 },
                 '& .MuiInputLabel-root': {
                     color: '#7f8f8f',
@@ -43,6 +50,9 @@ export const MyTextField = ({ required, name, value, id, style, onChange, error,
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
                     color: lightMode ? '#1f2f2f' : '#cfdfdf',
+                },
+                '& .MuiInputLabel-root.Mui-disabled': {
+                    color: '#7f8f8f',
                 },
             }}
         />

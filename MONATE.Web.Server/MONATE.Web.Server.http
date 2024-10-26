@@ -1,6 +1,6 @@
 @MONATE.Web.Server_HostAddress = http://localhost:5177
 
-POST {{MONATE.Web.Server_HostAddress}}/VerifyEmail/
+POST {{MONATE.Web.Server_HostAddress}}/Register/
 Accept: application/json
 
 ###

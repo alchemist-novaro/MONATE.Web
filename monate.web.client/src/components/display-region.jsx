@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRegion, useSaveRegion, initRegion } from '../globals/redux-store';
 
 import './display-region.css'

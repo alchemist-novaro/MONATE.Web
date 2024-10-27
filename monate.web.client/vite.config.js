@@ -43,7 +43,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/register': {
+            '^/user': {
                 target,
                 secure: false
             },

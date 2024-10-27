@@ -8,7 +8,7 @@ import './style.css';
 
 import Dashboard from './pages/dashboard';
 import NotFound from './pages/not-found';
-import SignUp from './pages/sign-up';
+import Sign from './pages/sign';
 import AlertProvider from './components/alerts';
 
 const App = (props) => {
@@ -21,7 +21,8 @@ const App = (props) => {
             <Router>
                 <Routes>
                     <Route exact path="/" element={<Dashboard />} />
-                    <Route exact path="/signup" element={<SignUp />} />
+                    <Route exact path="/signup" element={<Sign signUp />} />
+                    <Route exact path="/login" element={<Sign />} />
                     <Route exact path="*" element={<NotFound />} />
                 </Routes>
             </Router>

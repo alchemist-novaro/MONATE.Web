@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useLight, useRegion, useSaveRegion, initRegion } from '../globals/redux-store';
@@ -7,17 +7,30 @@ import ModeSwitch from '../components/mode-switch';
 import MailVerificationDialog from '../components/mail-verification-dialog';
 import MailInfoControl from '../components/mail-info-control';
 import LocationInfoControl from '../components/location-info-control';
-import './sign-up.css';
+import './sign.css';
 
-const SignUp = (props) => {
+const Sign = (props) => {
+    const { signUp } = props;
+
     const lightMode = useLight();
     const region = useRegion();
     const saveRegion = useSaveRegion();
 
     const [openMailVerifyDialog, setOpenMailVerifyDialog] = useState(false);
-    const [signUpMode, setSignUpMode] = useState('mail-info');
+    const [signMode, setSignMode] = useState('mail-info');
 
     const signupImage = `/sign-up/mails/mail-${lightMode ? 'light' : 'dark'}.jpg`;
+
+    useEffect(() => {
+        const fetchRegion = () => {
+            const email = sessionStorage.getItem('email');
+            const emailPassword = sessionStorage.getItem('emailPassword');
+            if (email !== null) {
+                setSignMode('location-info');
+            }
+        };
+        fetchRegion();
+    }, []);
 
     const handleMailVerifyDialogClose = () => {
         setOpenMailVerifyDialog(false);
@@ -32,7 +45,7 @@ const SignUp = (props) => {
             }
         };
         await fetchRegion();
-        setSignUpMode('location-info');
+        setSignMode('location-info');
     }
 
     const handleNext = () => {
@@ -59,13 +72,13 @@ const SignUp = (props) => {
                 ></div>
                 <div className={lightMode ? 'signup-main-light' : 'signup-main-dark'}>
                     <div className={(lightMode ? 'signup-main-light-title' : 'signup-main-dark-title') + ' Large'}>
-                        Sign Up
+                        {signUp ? 'Sign Up' : 'Log In'}
                     </div>
                     <div className={lightMode ? 'signup-main-light-inputs' : 'signup-main-dark-inputs'}>
-                        {signUpMode === 'mail-info' ?
-                            <MailInfoControl setOpenMailVerifyDialog={setOpenMailVerifyDialog} />
+                        {signMode === 'mail-info' ?
+                            <MailInfoControl setOpenMailVerifyDialog={setOpenMailVerifyDialog} signUp={signUp} />
                             : <div>
-                                {signUpMode === 'location-info' ?
+                                {signMode === 'location-info' ?
                                     <LocationInfoControl />
                                     : <div>
                                     </div>
@@ -84,4 +97,4 @@ const SignUp = (props) => {
     );
 };
 
-export default SignUp;
+export default Sign;

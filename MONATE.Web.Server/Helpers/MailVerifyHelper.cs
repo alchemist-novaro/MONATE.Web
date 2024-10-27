@@ -3,7 +3,6 @@
     using MailKit.Net.Smtp;
     using MailKit;
     using MimeKit;
-    using MailKit.Net.Proxy;
 
     public static class VerifyEmailHelper
     {

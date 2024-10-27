@@ -41,12 +41,12 @@ const MailVerificationDialog = (props) => {
         await cryptor.initialize();
         const verifyData = {
             email: await cryptor.encrypt(emailAddr),
-            emailPassword: await cryptor.encrypt(password),
+            password: await cryptor.encrypt(password),
             code: await cryptor.encrypt(verifyCode),
         };
 
         try {
-            const response = await fetch(`register/verifycode`, {
+            const response = await fetch(`user/verifycode`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,8 +62,10 @@ const MailVerificationDialog = (props) => {
             else {
                 onVerifySuccess();
                 const data = await response.json();
-                const newPassword = await cryptor.decrypt(data.password);
-                sessionStorage.setItem('password', newPassword);
+                const token = await cryptor.decrypt(data.token);
+
+                sessionStorage.setItem('token', token);
+                sessionStorage.setItem('email', emailAddr);
 
                 showAlert({ severity: 'success', message: 'Verified successfully.' });
             }

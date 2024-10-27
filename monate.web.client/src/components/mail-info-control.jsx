@@ -9,7 +9,7 @@ import { useAlert } from './alerts';
 import CryptionHelper from '../../helpers/cryption-helper';
 
 const MailInfoControl = (props) => {
-    const { setOpenMailVerifyDialog } = props;
+    const { setOpenMailVerifyDialog, signUp } = props;
 
     const lightMode = useLight();
     const saveEmail = useSaveEmail();
@@ -43,42 +43,43 @@ const MailInfoControl = (props) => {
             return;
         }
         else setEmailError('');
-        if (passwordValid != passwordInput) {
-            setPasswordError('Input password correctly.');
-            return;
-        }
-        else {
-            setPasswordError('');
-            savePassword(passwordInput);
-        }
 
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
-        const userMail = {
-            email: await cryptor.encrypt(emailAddr),
-        };
 
-        try {
-            const response = await fetch(`register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userMail),
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                showAlert({ severity: 'error', message: data.message });
+        if (signUp) {
+            if (passwordValid != passwordInput) {
+                setPasswordError('Input password correctly.');
                 return;
             }
             else {
-                saveEmail(emailAddr);
-                setOpenMailVerifyDialog(true);
-                showAlert({ severity: 'success', message: 'Verification code sent.' });
+                setPasswordError('');
+                savePassword(passwordInput);
             }
-        } catch (error) {
-            showAlert({ severity: 'error', message: error.message });
+            const cryptedEmail = await cryptor.encrypt(emailAddr);
+
+            try {
+                const response = await fetch(`user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: cryptedEmail,
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    showAlert({ severity: 'error', message: data.message });
+                    return;
+                }
+                else {
+                    saveEmail(emailAddr);
+                    setOpenMailVerifyDialog(true);
+                    showAlert({ severity: 'success', message: 'Verification code sent.' });
+                }
+            } catch (error) {
+                showAlert({ severity: 'error', message: error.message });
+            }
         }
     }
 
@@ -89,7 +90,7 @@ const MailInfoControl = (props) => {
                 name='Email Address'
                 id='email-address'
                 type='email'
-                style={{ marginTop: 'calc(8vh - 12px)', width: '30vw' }}
+                style={{ marginTop: signUp ? 'calc(8vh - 12px)' : '10vh', width: '30vw' }}
                 error={emailError}
                 autoComplete='username'
                 onChange={handleEmailChange}
@@ -104,7 +105,7 @@ const MailInfoControl = (props) => {
                 autoComplete='new-password'
                 onChange={handlePasswordInputChange}
             />
-            <MyTextField
+            {signUp ? <MyTextField
                 required
                 name='Password Validation'
                 id='password-validation'
@@ -113,15 +114,15 @@ const MailInfoControl = (props) => {
                 autoComplete='new-password'
                 type='password'
                 onChange={handlePasswordValidChange}
-            />
-            <FormControlLabel control={<Checkbox defaultChecked style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf' }} />}
+            /> : <div />}
+            {signUp ? <FormControlLabel control={<Checkbox defaultChecked style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf' }} />}
                 style={{ color: lightMode ? '#1f2f2f' : '#cfdfdf', marginTop: 'calc(2.5vh - 12px)' }}
-                label="I agree to sign up with this email." />
+                label="I agree to sign up with this email." /> : <div />}
             <Button
                 varient='contained'
                 onClick={handleSubmit}
                 style={{
-                    marginTop: 'calc(1vh - 12px)', width: '17vw', height: '5vh', fontSize: '3vh',
+                    marginTop: signUp ? 'calc(1vh - 12px)' : 'calc(10vh - 36px)', width: '17vw', height: '5vh', fontSize: '3vh',
                     color: lightMode ? '#cfdfdf' : '#1f2f2f', backgroundColor: lightMode ? '#3f4f4f' : '#afbfbf'
                 }}
             >Submit</Button>
@@ -133,7 +134,10 @@ const MailInfoControl = (props) => {
                 }}
             >
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <GoogleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Google</span>
+                    <GoogleIcon width='2vw' height='2vw' />
+                    <span style={{ marginLeft: '1vw', textTransform: 'none', }}>
+                        {signUp ? 'Sign up with Google' : 'Log in with Google'}
+                    </span>
                 </div>
             </Button>
             <Button
@@ -144,7 +148,10 @@ const MailInfoControl = (props) => {
                 }}
             >
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <AppleIcon width='2vw' height='2vw' /><span style={{ marginLeft: '1vw', textTransform: 'none', }}>Sign up with Apple</span>
+                    <AppleIcon width='2vw' height='2vw' />
+                    <span style={{ marginLeft: '1vw', textTransform: 'none', }}>
+                        {signUp ? 'Sign up with Apple' : 'Log in with Apple'}
+                    </span>
                 </div>
             </Button>
         </form>

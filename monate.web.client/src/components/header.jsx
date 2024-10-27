@@ -43,6 +43,10 @@ const Header = (props) => {
         navigate('/signup');
     }
 
+    const handleLogIn = () => {
+        navigate('/login');
+    }
+
     return (
         <header className={headerClasses.join(' ')}>
             <nav className='header-nav'>
@@ -73,7 +77,8 @@ const Header = (props) => {
                     ) : (
                         <div>
                             <Button variant='text' className='header-log-in-button'
-                                style={{ color: lightMode ? '#60f' : '#fff', }}>Log in</Button>
+                                style={{ color: lightMode ? '#60f' : '#fff', }}
+                                onClick={handleLogIn}>Log in</Button>
                             <Button variant='text' className='header-sign-up-button'
                                 style={{ color: lightMode ? '#60f' : '#fff', }}
                                 onClick={handleSignUp}>Sign up</Button>

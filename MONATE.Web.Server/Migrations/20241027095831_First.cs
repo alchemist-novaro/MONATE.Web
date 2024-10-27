@@ -18,7 +18,7 @@ namespace MONATE.Web.Server.Migrations
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     Name = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,8 @@ namespace MONATE.Web.Server.Migrations
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Type = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Type = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -106,8 +107,8 @@ namespace MONATE.Web.Server.Migrations
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     Name = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -130,7 +131,7 @@ namespace MONATE.Web.Server.Migrations
                     FirstName = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     LastName = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     AddressLine1 = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    AddressLine2 = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    AddressLine2 = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     City = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     State = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     ZipCode = table.Column<int>(type: "NUMBER(10)", nullable: false),
@@ -181,12 +182,12 @@ namespace MONATE.Web.Server.Migrations
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    AvatarPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    AvatarPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Title = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    VideoPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    GithubUrl = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    VideoPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    GithubUrl = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     Credit = table.Column<double>(type: "BINARY_DOUBLE", nullable: false)
                 },
                 constraints: table =>
@@ -233,8 +234,8 @@ namespace MONATE.Web.Server.Migrations
                     EndpointId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     Version = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     Price = table.Column<double>(type: "BINARY_DOUBLE", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     WorkflowPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
                 },
                 constraints: table =>

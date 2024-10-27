@@ -1,21 +1,9 @@
-import { useEffect } from 'react';
-import { useRegion, useSaveRegion, initRegion } from '../globals/redux-store';
+import { useRegion } from '../globals/redux-store';
 
 import './display-region.css'
 
 const DisplayRegion = () => {
-    const saveRegion = useSaveRegion();
     const region = useRegion();
-
-    useEffect(() => {
-        const fetchRegion = async () => {
-            if (region === null) {
-                const regionData = await initRegion();
-                saveRegion(regionData);
-            }
-        };
-        fetchRegion();
-    }, []);
 
     return (
         <div>
@@ -31,9 +19,7 @@ const DisplayRegion = () => {
                         </div>
                     )}
                 </div>
-            ) : (
-                <p>Loading location...</p>
-            )}
+            ) : <div />}
         </div>
     );
 };

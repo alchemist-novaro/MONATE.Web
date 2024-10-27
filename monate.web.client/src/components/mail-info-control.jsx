@@ -9,7 +9,7 @@ import { useAlert } from './alerts';
 import CryptionHelper from '../../helpers/cryption-helper';
 
 const MailInfoControl = (props) => {
-    const { setOpenMailVerifyDialog, signUp } = props;
+    const { setOpenMailVerifyDialog, signUp, onLoginSuccess } = props;
 
     const lightMode = useLight();
     const saveEmail = useSaveEmail();
@@ -38,11 +38,15 @@ const MailInfoControl = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!emailAddr)
+            setEmailError('Email address must be input.');
         if (!emailRegex.test(emailAddr)) {
             setEmailError('Email format is not correct.');
             return;
         }
         else setEmailError('');
+        if (!passwordInput)
+            setPasswordError('Password must be input.');
 
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
@@ -56,7 +60,9 @@ const MailInfoControl = (props) => {
                 setPasswordError('');
                 savePassword(passwordInput);
             }
+
             const cryptedEmail = await cryptor.encrypt(emailAddr);
+            const emailData = { email: cryptedEmail };
 
             try {
                 const response = await fetch(`user`, {
@@ -64,7 +70,7 @@ const MailInfoControl = (props) => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: cryptedEmail,
+                    body: JSON.stringify(emailData),
                 });
 
                 if (!response.ok) {
@@ -78,7 +84,37 @@ const MailInfoControl = (props) => {
                     showAlert({ severity: 'success', message: 'Verification code sent.' });
                 }
             } catch (error) {
-                showAlert({ severity: 'error', message: error.message });
+                showAlert({ severity: 'error', message: 'Could not found server.' });
+            }
+        } else {
+            const loginData = {
+                email: await cryptor.encrypt(emailAddr),
+                password: await cryptor.encrypt(passwordInput),
+            };
+
+            try {
+                const response = await fetch(`user/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(loginData),
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showAlert({ severity: 'error', message: data.message });
+                    return;
+                }
+                else {
+                    const newToken = await cryptor.decrypt(data.token);
+                    sessionStorage.setItem('token', newToken);
+                    showAlert({ severity: 'success', message: 'Logged in successfully.' });
+
+                    onLoginSuccess(data.state);
+                }
+            } catch (error) {
+                showAlert({ severity: 'error', message: 'Could not found server.' });
             }
         }
     }

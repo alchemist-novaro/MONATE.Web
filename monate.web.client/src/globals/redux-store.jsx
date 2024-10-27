@@ -13,7 +13,6 @@ export const SET_AVATAR = 'SET_AVATAR';
 // Async function to get initial region information
 export const initRegion = async () => {
     const response = await axios.get('https://ipinfo.io/json?token=c5118d2d404912');
-    sessionStorage.setItem('region', response.data.country);
     return response.data;
 };
 

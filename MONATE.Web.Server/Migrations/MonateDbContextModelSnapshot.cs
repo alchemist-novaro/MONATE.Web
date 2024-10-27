@@ -83,7 +83,6 @@ namespace MONATE.Web.Server.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Name")
@@ -104,11 +103,9 @@ namespace MONATE.Web.Server.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Name")
@@ -250,7 +247,6 @@ namespace MONATE.Web.Server.Migrations
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("AddressLine2")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("City")
@@ -296,22 +292,18 @@ namespace MONATE.Web.Server.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AvatarPath")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<double>("Credit")
                         .HasColumnType("BINARY_DOUBLE");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("GithubUrl")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Title")
@@ -322,7 +314,6 @@ namespace MONATE.Web.Server.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("VideoPath")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.HasKey("Id");
@@ -340,6 +331,9 @@ namespace MONATE.Web.Server.Migrations
                         .HasColumnType("NUMBER(10)");
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -359,14 +353,12 @@ namespace MONATE.Web.Server.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("EndpointId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<double>("Price")

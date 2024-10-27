@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
     BrowserRouter as Router,
     Route,
@@ -10,11 +11,22 @@ import Dashboard from './pages/dashboard';
 import NotFound from './pages/not-found';
 import Sign from './pages/sign';
 import AlertProvider from './components/alerts';
+import { useRegion, useSaveRegion, initRegion } from './globals/redux-store';
 
 const App = (props) => {
     sessionStorage.setItem('password', '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF');
 
-    console.log('started');
+    const region = useRegion();
+    const saveRegion = useSaveRegion();
+    useEffect(() => {
+        const fetchRegion = async () => {
+            if (region === null) {
+                const regionData = await initRegion();
+                saveRegion(regionData);
+            }
+        };
+        fetchRegion();
+    }, []);
 
     return (
         <AlertProvider>

@@ -53,24 +53,24 @@ const MailVerificationDialog = (props) => {
                 },
                 body: JSON.stringify(verifyData),
             });
+            const data = await response.json();
 
             if (!response.ok) {
-                const data = await response.json();
                 showAlert({ severity: 'error', message: data.message });
                 return;
             }
             else {
-                onVerifySuccess();
-                const data = await response.json();
                 const token = await cryptor.decrypt(data.token);
 
                 sessionStorage.setItem('token', token);
                 sessionStorage.setItem('email', emailAddr);
 
                 showAlert({ severity: 'success', message: 'Verified successfully.' });
+
+                onVerifySuccess();
             }
         } catch (error) {
-            showAlert({ severity: 'error', message: error.message });
+            showAlert({ severity: 'error', message: 'Could not found server.' });
         }
     }
 

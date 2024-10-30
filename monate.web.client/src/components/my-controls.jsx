@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { IMaskInput } from 'react-imask';
 import { useLight } from '../globals/redux-store';
 
-export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled }) => {
+export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, fontSize }) => {
     const lightMode = useLight();
 
     return (
@@ -39,17 +39,85 @@ export const MyTextField = ({ required, name, value, id, style, onChange, error,
                 },
                 input: {
                     color: lightMode ? '#1f2f2f' : '#cfdfdf',
+                    fontSize: fontSize,
                 },
                 '& .MuiOutlinedInput-input.Mui-disabled': {
                     WebkitTextFillColor: '#7f8f8f',
                 },
                 '& .MuiInputLabel-root': {
                     color: '#7f8f8f',
-                    fontSize: '16px',
+                    fontSize: fontSize,
                     fontWeight: 'bold',
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
                     color: lightMode ? '#1f2f2f' : '#cfdfdf',
+                    fontSize: '16px',
+                },
+                '& .MuiInputLabel-root.Mui-disabled': {
+                    color: '#7f8f8f',
+                    fontSize: '16px',
+                },
+                '& .MuiInputLabel-root.Mui-animated': {
+                    color: '#7f8f8f',
+                    fontSize: '16px',
+                },
+            }}
+        />
+    );
+};
+
+export const MyMultilineTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, fontSize, rows, maxRows }) => {
+    const lightMode = useLight();
+
+    return (
+        <TextField
+            multiline
+            required={required}
+            disabled={disabled}
+            id={id}
+            label={name}
+            defaultValue={value}
+            type={type}
+            style={style}
+            onChange={onChange}
+            error={Boolean(error)}
+            helperText={error}
+            autoComplete={autoComplete}
+            rows={rows}
+            maxRows={maxRows}
+            InputProps={{
+                inputComponent: inputComponent,
+            }}
+            sx={{
+                '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                        borderColor: '#7f8f8f',
+                    },
+                    '&:hover fieldset': {
+                        borderColor: lightMode ? '#1f1fcf' : '#1fcfcf',
+                    },
+                    '&.Mui-focused fieldset': {
+                        borderColor: lightMode ? '#1f2f2f' : '#cfdfdf',
+                    },
+                    '&.Mui-disabled fieldset': {
+                        borderColor: '#7f8f8f',
+                    }
+                },
+                textarea: {
+                    color: lightMode ? '#1f2f2f' : '#cfdfdf',
+                    fontSize: fontSize,
+                },
+                '& .MuiOutlinedInput-textarea.Mui-disabled': {
+                    WebkitTextFillColor: '#7f8f8f',
+                },
+                '& .MuiInputLabel-root': {
+                    color: '#7f8f8f',
+                    fontSize: fontSize,
+                    fontWeight: 'bold',
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                    color: lightMode ? '#1f2f2f' : '#cfdfdf',
+                    fontSize: '16px',
                 },
                 '& .MuiInputLabel-root.Mui-disabled': {
                     color: '#7f8f8f',

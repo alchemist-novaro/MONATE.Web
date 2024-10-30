@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import DisplayRegion from './display-region';
 import ModeSwitch from './mode-switch';
 import { MonateIcon } from './svg-icons';
-import { useLight, useAvatar, useUserName } from '../globals/redux-store';
+import { useLight } from '../globals/redux-store';
 
 import './header.css';
 
 const Header = (props) => {
     const [scrolled, setScrolled] = useState(false);
     const lightMode = useLight();
-    const userName = useUserName();
-    const avatar = useAvatar();
+    const firstName = sessionStorage.getItem('firstName');
+    const lastName = sessionStorage.getItem('lastName');
+    const avatar = sessionStorage.getItem('avatar');
     const navigate = useNavigate();
 
     // Monitor the scroll position and set "scrolled" state
@@ -59,19 +60,19 @@ const Header = (props) => {
                     <div className='header-region'>
                         <DisplayRegion />
                     </div>
-                    {userName ? (
-                        <div>
+                    {firstName ? (
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <div className='header-avatar-container'>
                                 {avatar ? (
                                     <img src={avatar} className='header-avatar-image'/>
                                 ) : (
-                                        <div className='header-avatar-div'>
-                                        {userName.first[0].toUpperCase()}
+                                    <div className='header-avatar-div'>
+                                        {firstName[0].toUpperCase()}
                                     </div>
                                 )}
                             </div>
                             <div className='header-name'>
-                                {userName.first + ' ' + userName.last[0].toUpperCase() + '.'}
+                                {firstName + ' ' + lastName[0].toUpperCase() + '.'}
                             </div>
                         </div>
                     ) : (

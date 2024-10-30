@@ -99,6 +99,7 @@
 
 .header-name {
     text-align: right;
+    margin-top: 3px;
     padding-right: 2rem;
     align-content: center;
 }

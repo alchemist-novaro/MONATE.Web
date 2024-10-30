@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { MyTextField } from './my-controls';
-import { useLight, useRegion } from '../globals/redux-store';
+import { useLight } from '../globals/redux-store';
 import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from './alerts';
 
 const LocationInfoControl = (props) => {
     const { editMode, onLocationSuccess } = props;
 
+    const region = sessionStorage.getItem('region');
+
     const { showAlert } = useAlert();
     const lightMode = useLight();
-    const region = useRegion();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -23,7 +24,6 @@ const LocationInfoControl = (props) => {
     const [firstNameError, setFirstNameError] = useState('');
     const [lastNameError, setLastNameError] = useState('');
     const [address1Error, setAddress1Error] = useState('');
-    const [address2Error, setAddress2Error] = useState('');
     const [cityError, setCityError] = useState('');
     const [stateError, setStateError] = useState('');
     const [zipCodeError, setZipCodeError] = useState('');
@@ -60,23 +60,39 @@ const LocationInfoControl = (props) => {
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
 
-        const email = sessionStorage.getItem('email');
+        const email = sessionStorage.getItem('email').toLowerCase();
         const token = sessionStorage.getItem('token');
 
-        if (!firstName)
-            setFirstNameError('Fist name must be input.')
-        if (!lastName)
-            setFirstNameError('Last name must be input.')
-        if (!address1)
-            setFirstNameError('Address line 1 must be input.')
-        if (!city)
-            setFirstNameError('City must be input.')
-        if (!state)
-            setFirstNameError('State must be input.')
-        if (!zipCode)
-            setFirstNameError('Zip code must be input.')
-        if (!region)
-            setFirstNameError('Country must be valid. Please refresh page.')
+        if (!firstName) {
+            setFirstNameError('Fist name must be input.');
+            return;
+        }
+        else setFirstNameError('');
+        if (!lastName) {
+            setLastNameError('Last name must be input.');
+            return;
+        }
+        else setLastNameError('');
+        if (!address1) {
+            setAddress1Error('Address line 1 must be input.');
+            return;
+        }
+        else setAddress1Error('');
+        if (!city) {
+            setCityError('City must be input.');
+            return;
+        }
+        else setCityError('');
+        if (!state) {
+            setStateError('State must be input.');
+            return;
+        }
+        else setStateError('');
+        if (!zipCode) {
+            setZipCodeError('Zip code must be input.');
+            return;
+        }
+        else setZipCodeError('');
 
         const locationData = {
             email: await cryptor.encrypt(email),
@@ -88,7 +104,7 @@ const LocationInfoControl = (props) => {
             city: await cryptor.encrypt(city),
             state: await cryptor.encrypt(state),
             zipCode: await cryptor.encrypt(zipCode),
-            country: await cryptor.encrypt(region.country),
+            country: await cryptor.encrypt(region),
         }
 
         try {
@@ -106,11 +122,13 @@ const LocationInfoControl = (props) => {
                 return;
             }
             else {
-                const newToken = await crypto.decrypt(data.token);
-                console.log(newToken);
+                const newToken = await cryptor.decrypt(data.token);
                 sessionStorage.setItem('token', newToken);
+                sessionStorage.setItem('firstName', firstName);
+                sessionStorage.setItem('lastName', lastName);
+                sessionStorage.setItem('state', state);
                 showAlert({ severity: 'success', message: 'Saved location successfully.' });
-                // onLocationSuccess();
+                onLocationSuccess();
             }
         } catch (error) {
             showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -148,7 +166,6 @@ const LocationInfoControl = (props) => {
                 onChange={address1Changed}
             />
             <MyTextField
-                error={address2Error}
                 name='Address Line 2'
                 id='address-line-2'
                 style={{ marginTop: 'calc(3vh - 12px)', width: '30vw' }}
@@ -184,7 +201,7 @@ const LocationInfoControl = (props) => {
                 <MyTextField
                     required
                     disabled
-                    value={region ? region.country : ''}
+                    value={region ? region : ''}
                     name='Country'
                     id='country'
                     style={{ marginLeft: '20px', width: 'calc(15vw - 10px)' }}

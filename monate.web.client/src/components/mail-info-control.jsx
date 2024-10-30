@@ -38,15 +38,20 @@ const MailInfoControl = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!emailAddr)
+        if (!emailAddr) {
             setEmailError('Email address must be input.');
-        if (!emailRegex.test(emailAddr)) {
+            return;
+        }
+        else if (!emailRegex.test(emailAddr)) {
             setEmailError('Email format is not correct.');
             return;
         }
         else setEmailError('');
-        if (!passwordInput)
+        if (!passwordInput) {
             setPasswordError('Password must be input.');
+            return;
+        }
+        else setPasswordError('');
 
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
@@ -61,7 +66,7 @@ const MailInfoControl = (props) => {
                 savePassword(passwordInput);
             }
 
-            const cryptedEmail = await cryptor.encrypt(emailAddr);
+            const cryptedEmail = await cryptor.encrypt(emailAddr.toLowerCase());
             const emailData = { email: cryptedEmail };
 
             try {
@@ -108,8 +113,24 @@ const MailInfoControl = (props) => {
                 }
                 else {
                     const newToken = await cryptor.decrypt(data.token);
+                    sessionStorage.setItem('email', emailAddr);
                     sessionStorage.setItem('token', newToken);
                     showAlert({ severity: 'success', message: 'Logged in successfully.' });
+
+                    if (data.state === 'profile') {
+                        sessionStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
+                        sessionStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
+                        sessionStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
+                        sessionStorage.setItem('region', await cryptor.decrypt(data.region));
+                    }
+                    if (data.state === 'success') {
+                        sessionStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
+                        sessionStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
+                        sessionStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
+                        sessionStorage.setItem('region', await cryptor.decrypt(data.region));
+                        sessionStorage.setItem('title', await cryptor.decrypt(data.title));
+                        sessionStorage.setItem('avatar', await cryptor.decrypt(data.avatar));
+                    }
 
                     onLoginSuccess(data.state);
                 }

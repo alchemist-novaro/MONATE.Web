@@ -7,7 +7,6 @@ namespace MONATE.Web.Server.Controllers
     using MONATE.Web.Server.Logics;
     using MONATE.Web.Server.Data.Models;
     using MONATE.Web.Server.Data.Packets.UserInfo;
-    using MailKit.Net.Imap;
 
     [ApiController]
     [Route("[controller]")]
@@ -80,9 +79,16 @@ namespace MONATE.Web.Server.Controllers
 
                     if (_user.Location == null)
                         return Ok(new { state = "location", token = _cryptedNewToken });
+                    var _firstName = Globals.Cryptor.Encrypt(_user.Location.FirstName);
+                    var _lastName = Globals.Cryptor.Encrypt(_user.Location.LastName);
+                    var _state = Globals.Cryptor.Encrypt(_user.Location.State);
+                    var _region = Globals.Cryptor.Encrypt(_user.Location.Country);
                     if (_user.Profile == null)
-                        return Ok(new { state = "profile", token = _cryptedNewToken });
-                    return Ok(new { state = "success", token = _cryptedNewToken });
+                        return Ok(new { state = "profile", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, token = _cryptedNewToken });
+                    var _title = Globals.Cryptor.Encrypt(_user.Profile.Title);
+                    var _fileData = await System.IO.File.ReadAllTextAsync("Avatars\\" + _user.Profile.AvatarPath);
+                    var _avatar = Globals.Cryptor.Encrypt(_fileData);
+                    return Ok(new { state = "success", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, title = _title, avatar = _avatar, token = _cryptedNewToken });
                 }
                 else
                 {
@@ -122,9 +128,16 @@ namespace MONATE.Web.Server.Controllers
 
                     if (user.Location == null)
                         return Ok(new { state = "location", token = cryptedNewToken });
+                    var firstName = Globals.Cryptor.Encrypt(user.Location.FirstName);
+                    var lastName = Globals.Cryptor.Encrypt(user.Location.LastName);
+                    var state = Globals.Cryptor.Encrypt(user.Location.State);
+                    var region = Globals.Cryptor.Encrypt(user.Location.Country);
                     if (user.Profile == null)
-                        return Ok(new { state = "profile", token = cryptedNewToken });
-                    return Ok(new { state = "success", token = cryptedNewToken });
+                        return Ok(new { state = "profile", firstName = firstName, lastName = lastName, stateAddr = state, region = region, token = cryptedNewToken });
+                    var title = Globals.Cryptor.Encrypt(user.Profile.Title);
+                    var fileData = await System.IO.File.ReadAllTextAsync("Avatars\\" + user.Profile.AvatarPath);
+                    var avatar = Globals.Cryptor.Encrypt(fileData);
+                    return Ok(new { state = "success", firstName = firstName, lastName = lastName, stateAddr = state, region = region, title = title, avatar = avatar, token = cryptedNewToken });
                 }
                 else
                     return BadRequest(new { message = "Password is not correct." });
@@ -222,9 +235,6 @@ namespace MONATE.Web.Server.Controllers
                     var _newToken = TokenHelper.GeneralToken;
                     var _cryptedNewToken = Globals.Cryptor.Encrypt(_newToken);
 
-                    _user.Token = _newToken;
-                    _user.ExpireDate = DateTime.UtcNow.AddHours(1);
-
                     if (_user.Location == null)
                     {
                         _context.Locations.Add(new UserLocation
@@ -242,7 +252,7 @@ namespace MONATE.Web.Server.Controllers
                     }
                     else
                     {
-                        var _location = await GetLocationByUserAsync(_user);
+                        var _location = _user.Location;
                         _location.FirstName = _firstName;
                         _location.LastName = _lastName;
                         _location.City = _city;
@@ -250,12 +260,89 @@ namespace MONATE.Web.Server.Controllers
                         _location.ZipCode = int.Parse(_zipCode);
                         _location.Country = _country;
                     }
+                    _user.Token = _newToken;
+                    _user.ExpireDate = DateTime.UtcNow.AddHours(1);
                     await _context.SaveChangesAsync();
 
-                    if (_user.Location == null)
-                        return Ok(new { state = "location", token = _cryptedNewToken });
                     if (_user.Profile == null)
                         return Ok(new { state = "profile", token = _cryptedNewToken });
+                    var _title = Globals.Cryptor.Encrypt(_user.Profile.Title);
+                    var _fileData = await System.IO.File.ReadAllTextAsync("Avatars\\" + _user.Profile.AvatarPath);
+                    var _avatar = Globals.Cryptor.Encrypt(_fileData);
+                    return Ok(new { state = "success", title = _title, avatar = _avatar, token = _cryptedNewToken });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Your token is not registered." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("SaveProfile", Name = "Post /User/SaveProfile")]
+        public async Task<IActionResult> SaveProfile(ProfileData profile)
+        {
+            if (profile == null || string.IsNullOrEmpty(profile.Email) || string.IsNullOrEmpty(profile.Token))
+            {
+                return BadRequest(new { message = "Invalid token infomation." });
+            }
+
+            try
+            {
+                var _email = Globals.Cryptor.Decrypt(profile.Email);
+                var _token = Globals.Cryptor.Decrypt(profile.Token);
+
+                var _user = await GetUserByEmailAsync(_email);
+                if (_user == null)
+                    return BadRequest(new { message = "This user is not registered." });
+
+                if (_user.ExpireDate < DateTime.Now)
+                {
+                    return BadRequest(new { message = "Your current token is expired. Please log in again." });
+                }
+
+                if (_user.Token == _token)
+                {
+                    var _avatar = Globals.Cryptor.Decrypt(profile.Avatar);
+                    var _title = Globals.Cryptor.Decrypt(profile.Title);
+                    var _description = Globals.Cryptor.Decrypt(profile.Description);
+
+                    var _filePath = TokenHelper.ApiToken(_email);
+                    if (!Directory.Exists("Avatars"))
+                        Directory.CreateDirectory("Avatars");
+                    await System.IO.File.WriteAllTextAsync("Avatars\\" + _filePath, _avatar);
+
+                    var _newToken = TokenHelper.GeneralToken;
+                    var _cryptedNewToken = Globals.Cryptor.Encrypt(_newToken);
+
+                    if (_user.Profile == null)
+                    {
+                        _context.Profiles.Add(new UserProfile
+                        {
+                            AvatarPath = _filePath,
+                            Title = _title,
+                            Description = _description,
+                            User = _user,
+                        });
+                    }
+                    else
+                    {
+                        var _profile = _user.Profile;
+
+                        if (System.IO.File.Exists("Avatars\\" + _profile.AvatarPath))
+                            System.IO.File.Delete("Avatars\\" + _profile.AvatarPath);
+
+                        _profile.AvatarPath = _filePath;
+                        _profile.Title = _title;
+                        _profile.Description = _description;
+                    }
+                    _user.Token = _newToken;
+                    _user.ExpireDate = DateTime.UtcNow.AddHours(1);
+                    await _context.SaveChangesAsync();
+
                     return Ok(new { state = "success", token = _cryptedNewToken });
                 }
                 else
@@ -271,12 +358,7 @@ namespace MONATE.Web.Server.Controllers
 
         private async Task<User> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        private async Task<UserLocation> GetLocationByUserAsync(User user)
-        {
-            return await _context.Locations.FirstOrDefaultAsync(l => l.User == user);
+            return await _context.Users.Include(u => u.Profile).Include(u => u.Location).FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

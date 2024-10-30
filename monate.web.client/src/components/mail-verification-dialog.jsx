@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -40,7 +39,7 @@ const MailVerificationDialog = (props) => {
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
         const verifyData = {
-            email: await cryptor.encrypt(emailAddr),
+            email: await cryptor.encrypt(emailAddr.toLowerCase()),
             password: await cryptor.encrypt(password),
             code: await cryptor.encrypt(verifyCode),
         };

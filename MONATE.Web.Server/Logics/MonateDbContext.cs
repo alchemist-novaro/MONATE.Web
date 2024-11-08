@@ -21,6 +21,7 @@
         public DbSet<OutputValue> OutputValues { get; set; }
         public DbSet<ValueType> ValueTypes { get; set; }
         public DbSet<Workflow> Workflows { get; set; }
+        public DbSet<Portfolio> Portfolios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,6 +56,9 @@
             modelBuilder.Entity<Category>()
                 .HasMany(c => c.Endpoints)
                 .WithMany(e => e.Categories);
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Portfolios)
+                .WithMany(p => p.Categories);
             modelBuilder.Entity<Workflow>()
                 .HasOne(w => w.Endpoint)
                 .WithMany(e => e.Workflows)

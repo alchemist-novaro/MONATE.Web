@@ -6,7 +6,9 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string Token { get; set; }
+        public UserType UserType { get; set; }
         public DateTime ExpireDate { get; set; }
+        public Permition Permition { get; set; }
 
         public UserProfile Profile { get; set; }
         public UserLocation Location { get; set; }

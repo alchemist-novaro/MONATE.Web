@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MONATE.Web.Server.Migrations
 {
     [DbContext(typeof(MonateDbContext))]
-    [Migration("20241028053653_First")]
-    partial class First
+    [Migration("20241108125629_Database")]
+    partial class Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,21 @@ namespace MONATE.Web.Server.Migrations
                     b.HasIndex("EndpointsId");
 
                     b.ToTable("CategoryEndpoint");
+                });
+
+            modelBuilder.Entity("CategoryPortfolio", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("PortfoliosId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("CategoriesId", "PortfoliosId");
+
+                    b.HasIndex("PortfoliosId");
+
+                    b.ToTable("CategoryPortfolio");
                 });
 
             modelBuilder.Entity("CategoryUser", b =>
@@ -115,6 +130,9 @@ namespace MONATE.Web.Server.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<int>("Permition")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("NUMBER(10)");
 
@@ -134,7 +152,6 @@ namespace MONATE.Web.Server.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DefaultValue")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Path")
@@ -164,10 +181,10 @@ namespace MONATE.Web.Server.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int>("MemberType")
                         .HasColumnType("NUMBER(10)");
 
-                    b.Property<int>("PermitionLevel")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("UserId")
@@ -209,6 +226,31 @@ namespace MONATE.Web.Server.Migrations
                     b.ToTable("OutputValues");
                 });
 
+            modelBuilder.Entity("MONATE.Web.Server.Data.Models.Portfolio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Portfolios");
+                });
+
             modelBuilder.Entity("MONATE.Web.Server.Data.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -228,9 +270,15 @@ namespace MONATE.Web.Server.Migrations
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<int>("Permition")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
@@ -338,9 +386,11 @@ namespace MONATE.Web.Server.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("NVARCHAR2(2000)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                    b.Property<int>("Permition")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
@@ -361,8 +411,14 @@ namespace MONATE.Web.Server.Migrations
                     b.Property<int>("EndpointId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<double>("GPURequirement")
+                        .HasColumnType("BINARY_DOUBLE");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<int>("Permition")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<double>("Price")
                         .HasColumnType("BINARY_DOUBLE");
@@ -393,6 +449,21 @@ namespace MONATE.Web.Server.Migrations
                     b.HasOne("MONATE.Web.Server.Data.Models.Endpoint", null)
                         .WithMany()
                         .HasForeignKey("EndpointsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CategoryPortfolio", b =>
+                {
+                    b.HasOne("MONATE.Web.Server.Data.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MONATE.Web.Server.Data.Models.Portfolio", null)
+                        .WithMany()
+                        .HasForeignKey("PortfoliosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

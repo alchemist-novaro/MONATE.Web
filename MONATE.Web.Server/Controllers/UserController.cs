@@ -88,6 +88,10 @@ namespace MONATE.Web.Server.Controllers
                     var _title = Globals.Cryptor.Encrypt(_user.Profile.Title);
                     var _fileData = await System.IO.File.ReadAllTextAsync("Avatars\\" + _user.Profile.AvatarPath);
                     var _avatar = Globals.Cryptor.Encrypt(_fileData);
+                    if (_user.Permition == Permition.Pending)
+                        return Ok(new { state = "pending", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, title = _title, avatar = _avatar, token = _cryptedNewToken });
+                    if (_user.Permition == Permition.Suspended)
+                        return Ok(new { state = "suspended", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, title = _title, avatar = _avatar, token = _cryptedNewToken });
                     return Ok(new { state = "success", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, title = _title, avatar = _avatar, token = _cryptedNewToken });
                 }
                 else
@@ -111,33 +115,37 @@ namespace MONATE.Web.Server.Controllers
 
             try
             {
-                var email = Globals.Cryptor.Decrypt(loginData.Email);
-                var password = Globals.Cryptor.Decrypt(loginData.Password);
+                var _email = Globals.Cryptor.Decrypt(loginData.Email);
+                var _password = Globals.Cryptor.Decrypt(loginData.Password);
 
-                var user = await GetUserByEmailAsync(email);
-                if (user == null)
+                var _user = await GetUserByEmailAsync(_email);
+                if (_user == null)
                     return BadRequest(new { message = "This email is not registered." });
 
-                if (password == user.Password)
+                if (_password == _user.Password)
                 {
-                    var newToken = TokenHelper.GeneralToken;
-                    var cryptedNewToken = Globals.Cryptor.Encrypt(newToken);
-                    user.Token = newToken;
-                    user.ExpireDate = DateTime.UtcNow.AddHours(1);
+                    var _newToken = TokenHelper.GeneralToken;
+                    var _cryptedNewToken = Globals.Cryptor.Encrypt(_newToken);
+                    _user.Token = _newToken;
+                    _user.ExpireDate = DateTime.UtcNow.AddHours(1);
                     await _context.SaveChangesAsync();
 
-                    if (user.Location == null)
-                        return Ok(new { state = "location", token = cryptedNewToken });
-                    var firstName = Globals.Cryptor.Encrypt(user.Location.FirstName);
-                    var lastName = Globals.Cryptor.Encrypt(user.Location.LastName);
-                    var state = Globals.Cryptor.Encrypt(user.Location.State);
-                    var region = Globals.Cryptor.Encrypt(user.Location.Country);
-                    if (user.Profile == null)
-                        return Ok(new { state = "profile", firstName = firstName, lastName = lastName, stateAddr = state, region = region, token = cryptedNewToken });
-                    var title = Globals.Cryptor.Encrypt(user.Profile.Title);
-                    var fileData = await System.IO.File.ReadAllTextAsync("Avatars\\" + user.Profile.AvatarPath);
-                    var avatar = Globals.Cryptor.Encrypt(fileData);
-                    return Ok(new { state = "success", firstName = firstName, lastName = lastName, stateAddr = state, region = region, title = title, avatar = avatar, token = cryptedNewToken });
+                    if (_user.Location == null)
+                        return Ok(new { state = "location", token = _cryptedNewToken });
+                    var _firstName = Globals.Cryptor.Encrypt(_user.Location.FirstName);
+                    var _lastName = Globals.Cryptor.Encrypt(_user.Location.LastName);
+                    var _state = Globals.Cryptor.Encrypt(_user.Location.State);
+                    var _region = Globals.Cryptor.Encrypt(_user.Location.Country);
+                    if (_user.Profile == null)
+                        return Ok(new { state = "profile", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, token = _cryptedNewToken });
+                    var _title = Globals.Cryptor.Encrypt(_user.Profile.Title);
+                    var _fileData = await System.IO.File.ReadAllTextAsync("Avatars\\" + _user.Profile.AvatarPath);
+                    var _avatar = Globals.Cryptor.Encrypt(_fileData);
+                    if (_user.Permition == Permition.Pending)
+                        return Ok(new { state = "pending", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, title = _title, avatar = _avatar, token = _cryptedNewToken });
+                    if (_user.Permition == Permition.Suspended)
+                        return Ok(new { state = "suspended", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, title = _title, avatar = _avatar, token = _cryptedNewToken });
+                    return Ok(new { state = "success", firstName = _firstName, lastName = _lastName, stateAddr = _state, region = _region, title = _title, avatar = _avatar, token = _cryptedNewToken });
                 }
                 else
                     return BadRequest(new { message = "Password is not correct." });
@@ -158,37 +166,34 @@ namespace MONATE.Web.Server.Controllers
 
             try
             {
-                var email = Globals.Cryptor.Decrypt(data.Email);
-                var password = Globals.Cryptor.Decrypt(data.Password);
-                var code = Globals.Cryptor.Decrypt(data.Code);
+                var _email = Globals.Cryptor.Decrypt(data.Email);
+                var _password = Globals.Cryptor.Decrypt(data.Password);
+                var _code = Globals.Cryptor.Decrypt(data.Code);
 
-                if (VerifyEmailHelper.VerifyEmail(email, code))
+                if (VerifyEmailHelper.VerifyEmail(_email, _code))
                 {
-                    var token = TokenHelper.GeneralToken;
-                    var cryptedToken = Globals.Cryptor.Encrypt(token);
+                    var _token = TokenHelper.GeneralToken;
+                    var _cryptedToken = Globals.Cryptor.Encrypt(_token);
 
-                    var user = await GetUserByEmailAsync(email);
-                    if (user == null)
+                    var _user = await GetUserByEmailAsync(_email);
+                    if (_user == null)
                     {
                         _context.Users.Add(new User
                         {
-                            Email = email,
-                            Password = password,
-                            Token = token,
+                            Email = _email,
+                            Password = _password,
+                            Token = _token,
                             ExpireDate = DateTime.UtcNow.AddHours(1),
+                            Permition = Permition.Pending,
                         });
                     }
                     else
                     {
                         return BadRequest(new { message = "Your email is already registered." });
-
-                        user.Token = token;
-                        user.Password = password;
-                        user.ExpireDate = DateTime.UtcNow.AddHours(1);
                     }
                     await _context.SaveChangesAsync();
 
-                    return Ok(new { token = cryptedToken });
+                    return Ok(new { token = _cryptedToken });
                 }
                 else
                     return BadRequest(new { message = "Verify code is not correct." });
@@ -269,6 +274,10 @@ namespace MONATE.Web.Server.Controllers
                     var _title = Globals.Cryptor.Encrypt(_user.Profile.Title);
                     var _fileData = await System.IO.File.ReadAllTextAsync("Avatars\\" + _user.Profile.AvatarPath);
                     var _avatar = Globals.Cryptor.Encrypt(_fileData);
+                    if (_user.Permition == Permition.Pending)
+                        return Ok(new { state = "pending", title = _title, avatar = _avatar, token = _cryptedNewToken });
+                    if (_user.Permition == Permition.Suspended)
+                        return Ok(new { state = "suspended", title = _title, avatar = _avatar, token = _cryptedNewToken });
                     return Ok(new { state = "success", title = _title, avatar = _avatar, token = _cryptedNewToken });
                 }
                 else
@@ -343,6 +352,10 @@ namespace MONATE.Web.Server.Controllers
                     _user.ExpireDate = DateTime.UtcNow.AddHours(1);
                     await _context.SaveChangesAsync();
 
+                    if (_user.Permition == Permition.Pending)
+                        return Ok(new { state = "pending", token = _cryptedNewToken });
+                    if (_user.Permition == Permition.Suspended)
+                        return Ok(new { state = "suspended", token = _cryptedNewToken });
                     return Ok(new { state = "success", token = _cryptedNewToken });
                 }
                 else

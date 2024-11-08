@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MONATE.Web.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,6 +26,21 @@ namespace MONATE.Web.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Portfolios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Title = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Url = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Portfolios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -34,7 +49,9 @@ namespace MONATE.Web.Server.Migrations
                     Email = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     Password = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     Token = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    ExpireDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
+                    UserType = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    ExpireDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,12 +64,37 @@ namespace MONATE.Web.Server.Migrations
                 {
                     Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Type = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
+                    Type = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ValueTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryPortfolio",
+                columns: table => new
+                {
+                    CategoriesId = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    PortfoliosId = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryPortfolio", x => new { x.CategoriesId, x.PortfoliosId });
+                    table.ForeignKey(
+                        name: "FK_CategoryPortfolio_Categories_CategoriesId",
+                        column: x => x.CategoriesId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CategoryPortfolio_Portfolios_PortfoliosId",
+                        column: x => x.PortfoliosId,
+                        principalTable: "Portfolios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,7 +150,8 @@ namespace MONATE.Web.Server.Migrations
                     UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     Name = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
+                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -156,7 +199,7 @@ namespace MONATE.Web.Server.Migrations
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     OwnerId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    PermitionLevel = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    MemberType = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -234,9 +277,11 @@ namespace MONATE.Web.Server.Migrations
                     EndpointId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     Version = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     Price = table.Column<double>(type: "BINARY_DOUBLE", nullable: false),
+                    GPURequirement = table.Column<double>(type: "BINARY_DOUBLE", nullable: false),
                     Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
                     ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    WorkflowPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    WorkflowPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -258,7 +303,7 @@ namespace MONATE.Web.Server.Migrations
                     TypeId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     WorkflowId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     Path = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    DefaultValue = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    DefaultValue = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -313,6 +358,11 @@ namespace MONATE.Web.Server.Migrations
                 name: "IX_CategoryEndpoint_EndpointsId",
                 table: "CategoryEndpoint",
                 column: "EndpointsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryPortfolio_PortfoliosId",
+                table: "CategoryPortfolio",
+                column: "PortfoliosId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryUser_UsersId",
@@ -382,6 +432,9 @@ namespace MONATE.Web.Server.Migrations
                 name: "CategoryEndpoint");
 
             migrationBuilder.DropTable(
+                name: "CategoryPortfolio");
+
+            migrationBuilder.DropTable(
                 name: "CategoryUser");
 
             migrationBuilder.DropTable(
@@ -398,6 +451,9 @@ namespace MONATE.Web.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Profiles");
+
+            migrationBuilder.DropTable(
+                name: "Portfolios");
 
             migrationBuilder.DropTable(
                 name: "Categories");

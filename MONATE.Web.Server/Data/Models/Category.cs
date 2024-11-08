@@ -8,5 +8,6 @@
 
         public ICollection<User> Users { get; set; }
         public ICollection<Endpoint> Endpoints { get; set; }
+        public ICollection<Portfolio> Portfolios { get; set; }
     }
 }

@@ -6,7 +6,7 @@ import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from './alerts';
 
 const LocationInfoControl = (props) => {
-    const { editMode, onLocationSuccess } = props;
+    const { editMode, onSuccess } = props;
 
     const region = sessionStorage.getItem('region');
 
@@ -128,7 +128,7 @@ const LocationInfoControl = (props) => {
                 sessionStorage.setItem('lastName', lastName);
                 sessionStorage.setItem('state', state);
                 showAlert({ severity: 'success', message: 'Saved location successfully.' });
-                onLocationSuccess();
+                onSuccess(data.state);
             }
         } catch (error) {
             showAlert({ severity: 'error', message: 'Could not found server.' });

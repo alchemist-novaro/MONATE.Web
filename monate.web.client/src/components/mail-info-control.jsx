@@ -9,7 +9,7 @@ import { useAlert } from './alerts';
 import CryptionHelper from '../../helpers/cryption-helper';
 
 const MailInfoControl = (props) => {
-    const { setOpenMailVerifyDialog, signUp, onLoginSuccess } = props;
+    const { setOpenMailVerifyDialog, signUp, onSuccess } = props;
 
     const lightMode = useLight();
     const saveEmail = useSaveEmail();
@@ -132,7 +132,7 @@ const MailInfoControl = (props) => {
                         sessionStorage.setItem('avatar', await cryptor.decrypt(data.avatar));
                     }
 
-                    onLoginSuccess(data.state);
+                    onSuccess(data.state);
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });

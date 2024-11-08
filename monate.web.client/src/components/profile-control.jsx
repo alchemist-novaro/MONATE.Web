@@ -6,7 +6,7 @@ import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from './alerts';
 
 const ProfileControl = (props) => {
-    const { onProfileSuccess } = props;
+    const { onSuccess } = props;
 
     const firstName = sessionStorage.getItem('firstName');
     const lastName = sessionStorage.getItem('lastName');
@@ -96,7 +96,7 @@ const ProfileControl = (props) => {
 
                 showAlert({ severity: 'success', message: 'Saved profile successfully.' });
 
-                onProfileSuccess();
+                onSuccess(data.state);
             }
         } catch (error) {
             showAlert({ severity: 'error', message: 'Could not found server.' });

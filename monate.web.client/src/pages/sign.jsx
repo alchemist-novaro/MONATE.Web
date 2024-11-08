@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLight } from '../globals/redux-store';
 import { MonateIcon } from '../components/svg-icons';
 import ModeSwitch from '../components/mode-switch';
@@ -18,9 +18,11 @@ const Sign = (props) => {
     const lightMode = useLight();
 
     const [openMailVerifyDialog, setOpenMailVerifyDialog] = useState(false);
-    const [signMode, setSignMode] = useState('mail-info');
+    const [signMode, setSignMode] = useState('mail');
 
     const signupImage = `/sign-up/mails/mail-${lightMode ? 'light' : 'dark'}.jpg`;
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const validateToken = async() => {
@@ -67,7 +69,7 @@ const Sign = (props) => {
                             sessionStorage.setItem('avatar', await cryptor.decrypt(data.avatar));
                         }
 
-                        handleLoginSuccess(data.state);
+                        handleSuccess(data.state);
                     }
                 } catch (error) {
                     showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -84,27 +86,13 @@ const Sign = (props) => {
 
     const handleMailVerifySuccess = () => {
         setOpenMailVerifyDialog(false);
-        setSignMode('location-info');
+        setSignMode('location');
     };
 
-    const handleLoginSuccess = (state) => {
-        if (state === 'location')
-            setSignMode('location-info');
-        if (state === 'profile')
-            setSignMode('profile-info');
+    const handleSuccess = (state) => {
+        setSignMode(state);
         if (state === 'success')
-            setSignMode('success')
-    };
-
-    const handleLocationSuccess = () => {
-        if (sessionStorage.getItem('title'))
-            setSignMode('success');
-        else
-            setSignMode('profile-info');
-    };
-
-    const handleProfileSuccess = () => {
-        setSignMode('success');
+            navigate('/');
     };
 
     return (
@@ -130,12 +118,12 @@ const Sign = (props) => {
                         {signUp ? 'Sign Up' : 'Log In'}
                     </div>
                     <div className={lightMode ? 'signup-main-light-inputs' : 'signup-main-dark-inputs'}>
-                        {signMode === 'mail-info' &&
-                            <MailInfoControl setOpenMailVerifyDialog={setOpenMailVerifyDialog} signUp={signUp} onLoginSuccess={handleLoginSuccess} />}
-                        {signMode === 'location-info' &&
-                            <LocationInfoControl onLocationSuccess={handleLocationSuccess} />}
-                        {signMode === 'profile-info' &&
-                            <ProfileControl onProfileSuccess={handleProfileSuccess} />}
+                        {signMode === 'mail' &&
+                            <MailInfoControl setOpenMailVerifyDialog={setOpenMailVerifyDialog} signUp={signUp} onSuccess={handleSuccess} />}
+                        {signMode === 'location' &&
+                            <LocationInfoControl onSuccess={handleSuccess} />}
+                        {signMode === 'profile' &&
+                            <ProfileControl onSuccess={handleSuccess} />}
                     </div>
                 </div>
             </span>

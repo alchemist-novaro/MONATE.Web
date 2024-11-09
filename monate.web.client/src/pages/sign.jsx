@@ -20,8 +20,6 @@ const Sign = (props) => {
     const [openMailVerifyDialog, setOpenMailVerifyDialog] = useState(false);
     const [signMode, setSignMode] = useState('mail');
 
-    const signupImage = `/sign-up/mails/mail-${lightMode ? 'light' : 'dark'}.jpg`;
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -109,10 +107,6 @@ const Sign = (props) => {
                 <ModeSwitch />
             </div>
             <span className='signup-body'>
-                {/*<div
-                    className={lightMode ? 'signup-navbar-light' : 'signup-navbar-dark'}
-                    style={{ backgroundImage: `url("${signupImage}")` }}
-                />*/}
                 <div className={lightMode ? 'signup-main-light' : 'signup-main-dark'}>
                     <div className={(lightMode ? 'signup-main-light-title' : 'signup-main-dark-title') + ' Large'}>
                         {signUp ? 'Sign Up' : 'Log In'}

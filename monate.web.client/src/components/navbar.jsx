@@ -105,9 +105,9 @@ const NavbarProvider = ({ children }) => {
                             <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>
                                 Manage Users
                             </div>}
-                        {(userType === 'administrator' || userType === 'team') &&
+                        {(userType === 'administrator') &&
                             <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>
-                                Manage Portfolios
+                                Add Portfolio
                             </div>}
                         {(userType === 'administrator' || userType === 'team') &&
                             <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>

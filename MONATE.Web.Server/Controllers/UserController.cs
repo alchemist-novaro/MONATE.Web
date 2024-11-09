@@ -535,14 +535,19 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
-        private async Task<User> GetUserByEmailAsync(string email)
+        private async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.Include(u => u.Profile).Include(u => u.Location).FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users
+                .Include(u => u.Profile)
+                .Include(u => u.Location)
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        private async Task<User> GetUserByIdAsync(int id)
+        private async Task<User?> GetUserByIdAsync(int id)
         {
-            return await _context.Users.Include(u => u.Profile).Include(u => u.Location)
+            return await _context.Users
+                .Include(u => u.Profile)
+                .Include(u => u.Location)
                 .Where(u => u.Profile != null && u.Location != null && u.Permition == Permition.Approved)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }

@@ -11,6 +11,7 @@ import Dashboard from './pages/dashboard';
 import NotFound from './pages/not-found';
 import Sign from './pages/sign';
 import AlertProvider from './components/alerts';
+import NavbarProvider from './components/navbar';
 import { initRegion, useSaveRegion } from './globals/redux-store';
 
 const App = (props) => {
@@ -32,14 +33,16 @@ const App = (props) => {
 
     return (
         <AlertProvider>
-            <Router>
-                <Routes>
-                    <Route exact path="/" element={<Dashboard />} />
-                    <Route exact path="/signup" element={<Sign signUp />} />
-                    <Route exact path="/login" element={<Sign />} />
-                    <Route exact path="*" element={<NotFound />} />
-                </Routes>
-            </Router>
+            <NavbarProvider>
+                <Router>
+                    <Routes>
+                        <Route exact path="/" element={<Dashboard />} />
+                        <Route exact path="/signup" element={<Sign signUp />} />
+                        <Route exact path="/login" element={<Sign />} />
+                        <Route exact path="*" element={<NotFound />} />
+                    </Routes>
+                </Router>
+            </NavbarProvider>
         </AlertProvider>
     );
 }

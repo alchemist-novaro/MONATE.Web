@@ -25,14 +25,14 @@ const Sign = (props) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const validateToken = async() => {
-            const email = sessionStorage.getItem('email').toLowerCase();
+        const validateToken = async () => {
+            const email = sessionStorage.getItem('email');
             const token = sessionStorage.getItem('token');
             if (email && token) {
                 const cryptor = new CryptionHelper();
                 await cryptor.initialize();
                 const tokenData = {
-                    email: await cryptor.encrypt(email),
+                    email: await cryptor.encrypt(email.toLowerCase()),
                     token: await cryptor.encrypt(token),
                 };
                 try {
@@ -60,7 +60,7 @@ const Sign = (props) => {
                             sessionStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
                             sessionStorage.setItem('region', await cryptor.decrypt(data.region));
                         }
-                        if (data.state === 'success') {
+                        if (data.state === 'success' || data.state === 'pending' || data.state === 'suspended') {
                             sessionStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
                             sessionStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
                             sessionStorage.setItem('state', await cryptor.decrypt(data.stateAddr));

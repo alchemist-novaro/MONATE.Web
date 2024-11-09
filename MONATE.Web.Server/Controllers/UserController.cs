@@ -412,6 +412,51 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
+        [HttpPost("GetUserType", Name = "Post /Users/GetUserType")]
+        public async Task<IActionResult> GetUserType(GeneralTokenData token)
+        {
+            if (token == null || string.IsNullOrEmpty(token.Email) || string.IsNullOrEmpty(token.Token))
+            {
+                return BadRequest(new { message = "Invalid token information" });
+            }
+
+            try
+            {
+                var _email = Globals.Cryptor.Decrypt(token.Email);
+                var _token = Globals.Cryptor.Decrypt(token.Token);
+
+                var _user = await GetUserByEmailAsync(_email);
+                if (_user == null)
+                    return BadRequest(new { message = "This user is not registered." });
+
+                if (_user.ExpireDate < DateTime.Now)
+                {
+                    return BadRequest(new { message = "Your current token is expired. Please log in again." });
+                }
+
+                if (_user.Token == _token)
+                {
+                    if (_user.Permition == Permition.Pending)
+                        return BadRequest(new { message = "Your account is pending now. Please contact with support team." });
+                    if (_user.Permition == Permition.Suspended)
+                        return BadRequest(new { message = "Your account is suspended now. Please contact with support team." });
+                    if (_user.UserType == UserType.Administrator)
+                        return Ok(new { userType = Globals.Cryptor.Encrypt("administrator") });
+                    if (_user.UserType == UserType.Client)
+                        return Ok(new { userType = Globals.Cryptor.Encrypt("client") });
+                    return Ok(new { userType = Globals.Cryptor.Encrypt("team") });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Your token is not registered." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPost("SaveProfile", Name = "Post /User/SaveProfile")]
         public async Task<IActionResult> SaveProfile(ProfileData profile)
         {

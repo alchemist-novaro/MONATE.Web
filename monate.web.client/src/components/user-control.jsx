@@ -34,13 +34,13 @@ const UserElement = ({ id }) => {
 
     useEffect(() => {
         const getUser = async () => {
-            const email = sessionStorage.getItem('email').toLowerCase();
+            const email = sessionStorage.getItem('email');
             const token = sessionStorage.getItem('token');
             if (email && token) {
                 const cryptor = new CryptionHelper();
                 await cryptor.initialize();
                 const userData = {
-                    email: await cryptor.encrypt(email),
+                    email: await cryptor.encrypt(email.toLowerCase()),
                     token: await cryptor.encrypt(token),
                     id: await cryptor.encrypt(id),
                 };
@@ -175,13 +175,13 @@ const UserControl = (props) => {
 
     useEffect(() => {
         const getUsers = async () => {
-            const email = sessionStorage.getItem('email').toLowerCase();
+            const email = sessionStorage.getItem('email');
             const token = sessionStorage.getItem('token');
             if (email && token) {
                 const cryptor = new CryptionHelper();
                 await cryptor.initialize();
                 const pageData = {
-                    email: await cryptor.encrypt(email),
+                    email: await cryptor.encrypt(email.toLowerCase()),
                     token: await cryptor.encrypt(token),
                     page: await cryptor.encrypt(`${currentPage - 1}`),
                 };

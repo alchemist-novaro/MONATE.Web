@@ -60,7 +60,7 @@ const LocationInfoControl = (props) => {
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
 
-        const email = sessionStorage.getItem('email').toLowerCase();
+        const email = sessionStorage.getItem('email');
         const token = sessionStorage.getItem('token');
 
         if (!firstName) {
@@ -95,7 +95,7 @@ const LocationInfoControl = (props) => {
         else setZipCodeError('');
 
         const locationData = {
-            email: await cryptor.encrypt(email),
+            email: await cryptor.encrypt(email.toLowerCase()),
             token: await cryptor.encrypt(token),
             firstName: await cryptor.encrypt(firstName),
             lastName: await cryptor.encrypt(lastName),

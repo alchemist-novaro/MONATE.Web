@@ -67,7 +67,7 @@ const ProfileControl = (props) => {
         const token = sessionStorage.getItem('token');
 
         const profileData = {
-            email: await cryptor.encrypt(email),
+            email: await cryptor.encrypt(email.tolowerCase()),
             token: await cryptor.encrypt(token),
             avatar: await cryptor.encrypt(newAvatar),
             title: await cryptor.encrypt(title),

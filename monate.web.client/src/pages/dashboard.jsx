@@ -46,7 +46,7 @@ const Dashboard = (props) => {
             const cryptor = new CryptionHelper();
             await cryptor.initialize();
             const tokenData = {
-                email: await cryptor.encrypt(email),
+                email: await cryptor.encrypt(email.toLowerCase()),
                 token: await cryptor.encrypt(token),
             };
             try {

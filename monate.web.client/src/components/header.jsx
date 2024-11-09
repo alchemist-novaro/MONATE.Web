@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import DisplayRegion from './display-region';
 import ModeSwitch from './mode-switch';
 import { MonateIcon } from './svg-icons';
+import { useNavbar } from './navbar';
 import { useLight } from '../globals/redux-store';
 
 import './header.css';
@@ -15,6 +16,11 @@ const Header = (props) => {
     const lastName = sessionStorage.getItem('lastName');
     const avatar = sessionStorage.getItem('avatar');
     const navigate = useNavigate();
+    const { showNavbar } = useNavbar();
+
+    const onShowNavbar = () => {
+        showNavbar();
+    }
 
     // Monitor the scroll position and set "scrolled" state
     useEffect(() => {
@@ -61,7 +67,7 @@ const Header = (props) => {
                         <DisplayRegion />
                     </div>
                     {firstName ? (
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', cursor: 'pointer' }} onClick={onShowNavbar}>
                             <div className='header-avatar-container'>
                                 {avatar ? (
                                     <img src={avatar} className='header-avatar-image'/>

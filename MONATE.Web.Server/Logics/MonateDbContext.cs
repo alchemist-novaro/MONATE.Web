@@ -22,6 +22,7 @@
         public DbSet<ValueType> ValueTypes { get; set; }
         public DbSet<Workflow> Workflows { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
+        public DbSet<CustomNode> CustomNodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

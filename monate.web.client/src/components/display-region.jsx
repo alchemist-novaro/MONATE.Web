@@ -1,7 +1,8 @@
-import './display-region.css'
+import { useRegion } from '../globals/redux-store';
+import './display-region.css';
 
 const DisplayRegion = () => {
-    const region = sessionStorage.getItem('region');
+    const region = useRegion();
 
     return (
         <div>

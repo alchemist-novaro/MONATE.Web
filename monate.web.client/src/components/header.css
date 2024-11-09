@@ -1,5 +1,6 @@
 .header-dark {
     background-color: #1f2f2f77;
+    backdrop-filter: blur(5px);
     color: white;
     padding: 6px;
     position: fixed;
@@ -18,6 +19,7 @@
 
 .header-light {
     background-color: #dfefef77;
+    backdrop-filter: blur(5px);
     color: #1f2f2f;
     padding: 6px;
     position: fixed;

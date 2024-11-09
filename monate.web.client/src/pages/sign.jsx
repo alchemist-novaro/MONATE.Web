@@ -109,10 +109,10 @@ const Sign = (props) => {
                 <ModeSwitch />
             </div>
             <span className='signup-body'>
-                <div
+                {/*<div
                     className={lightMode ? 'signup-navbar-light' : 'signup-navbar-dark'}
                     style={{ backgroundImage: `url("${signupImage}")` }}
-                ></div>
+                />*/}
                 <div className={lightMode ? 'signup-main-light' : 'signup-main-dark'}>
                     <div className={(lightMode ? 'signup-main-light-title' : 'signup-main-dark-title') + ' Large'}>
                         {signUp ? 'Sign Up' : 'Log In'}
@@ -124,6 +124,14 @@ const Sign = (props) => {
                             <LocationInfoControl onSuccess={handleSuccess} />}
                         {signMode === 'profile' &&
                             <ProfileControl onSuccess={handleSuccess} />}
+                        {signMode === 'pending' &&
+                            <div style={{ marginTop: '20vh', fontSize: '20px', color: 'red', display: 'flex', justifyContent: 'center' }}>
+                                Your account is pending now. Please contact with support team.
+                            </div>}
+                        {signMode === 'suspended' &&
+                            <div style={{ marginTop: '20vh', fontSize: '20px', color: 'red', display: 'flex', justifyContent: 'center' }}>
+                                Your account is suspended now. Please contact with support team.
+                            </div>}
                     </div>
                 </div>
             </span>

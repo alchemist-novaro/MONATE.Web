@@ -185,6 +185,7 @@ namespace MONATE.Web.Server.Controllers
                             Token = _token,
                             ExpireDate = DateTime.UtcNow.AddHours(1),
                             Permition = Permition.Pending,
+                            UserType = UserType.Client,
                         });
                     }
                     else
@@ -291,6 +292,126 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
+        [HttpPost("GetUsers", Name = "Post /Users/GetUsers")]
+        public async Task<IActionResult> GetUsers(PageData page)
+        {
+            if (page == null || string.IsNullOrEmpty(page.Email) || string.IsNullOrEmpty(page.Token))
+            {
+                return BadRequest(new { message = "Invalid token information" });
+            }
+
+            try
+            {
+                var _email = Globals.Cryptor.Decrypt(page.Email);
+                var _token = Globals.Cryptor.Decrypt(page.Token);
+
+                var _user = await GetUserByEmailAsync(_email);
+                if (_user == null)
+                    return BadRequest(new { message = "This user is not registered." });
+
+                if (_user.ExpireDate < DateTime.Now)
+                {
+                    return BadRequest(new { message = "Your current token is expired. Please log in again." });
+                }
+
+                if (_user.Token == _token)
+                {
+                    if (_user.Permition == Permition.Pending)
+                        return BadRequest(new { message = "Your account is pending now. Please contact with support team." });
+                    if (_user.Permition == Permition.Suspended)
+                        return BadRequest(new { message = "Your account is suspended now. Please contact with support team." });
+
+                    var _pageString = Globals.Cryptor.Decrypt(page.Page);
+                    var _page = int.Parse(_pageString);
+
+                    var _ids = "";
+                    var _userList = await GetPermittedUsersAsync();
+                    for (int idx = _page * 12; idx < _userList.Count; idx++)
+                    {
+                        _ids += _userList[idx].Id.ToString() + " ";
+                    }
+                    if (!string.IsNullOrEmpty(_ids))
+                        _ids = _ids.Substring(0, _ids.Length - 1);
+
+                    var _userIds = Globals.Cryptor.Encrypt(_ids);
+                    return Ok(new { userIds = _userIds });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Your token is not registered." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("GetUser", Name = "Post /Users/GetUser")]
+        public async Task<IActionResult> GetUser(UserData user)
+        {
+            if (user == null || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Token))
+            {
+                return BadRequest(new { message = "Invalid token information" });
+            }
+
+            try
+            {
+                var _email = Globals.Cryptor.Decrypt(user.Email);
+                var _token = Globals.Cryptor.Decrypt(user.Token);
+
+                var _user = await GetUserByEmailAsync(_email);
+                if (_user == null)
+                    return BadRequest(new { message = "This user is not registered." });
+
+                if (_user.ExpireDate < DateTime.Now)
+                {
+                    return BadRequest(new { message = "Your current token is expired. Please log in again." });
+                }
+
+                if (_user.Token == _token)
+                {
+                    if (_user.Permition == Permition.Pending)
+                        return BadRequest(new { message = "Your account is pending now. Please contact with support team." });
+                    if (_user.Permition == Permition.Suspended)
+                        return BadRequest(new { message = "Your account is suspended now. Please contact with support team." });
+
+                    var _idStr = Globals.Cryptor.Decrypt(user.Id);
+                    var _id = int.Parse(_idStr);
+
+                    var _u = await GetUserByIdAsync(_id);
+                    if (_u == null)
+                        return BadRequest(new { message = "Can't find user with this id." });
+
+                    var _userType = Globals.Cryptor.Encrypt(((int)_u.UserType).ToString());
+
+                    var _firstName = Globals.Cryptor.Encrypt(_u.Location.FirstName);
+                    var _lastName = Globals.Cryptor.Encrypt(_u.Location.LastName);
+                    var _state = Globals.Cryptor.Encrypt(_u.Location.State);
+                    var _region = Globals.Cryptor.Encrypt(_u.Location.Country);
+
+                    var _title = Globals.Cryptor.Encrypt(_u.Profile.Title);
+                    var _description = Globals.Cryptor.Encrypt(_u.Profile.Description ?? "");
+                    var _githubUrl = Globals.Cryptor.Encrypt(_u.Profile.GithubUrl ?? "");
+                    var _phoneNumber = Globals.Cryptor.Encrypt(_u.Profile.PhoneNumber ?? "");
+                    var _avatarData = await System.IO.File.ReadAllTextAsync("Avatars\\" + _u.Profile.AvatarPath);
+                    var _avatar = Globals.Cryptor.Encrypt(_avatarData);
+
+                    return Ok(new { userType = _userType, firstName = _firstName, lastName = _lastName,
+                        state = _state, region = _region, title = _title, description = _description, 
+                        githubUrl = _githubUrl, phoneNumber = _phoneNumber, avatar = _avatar });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Your token is not registered." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPost("SaveProfile", Name = "Post /User/SaveProfile")]
         public async Task<IActionResult> SaveProfile(ProfileData profile)
         {
@@ -372,6 +493,22 @@ namespace MONATE.Web.Server.Controllers
         private async Task<User> GetUserByEmailAsync(string email)
         {
             return await _context.Users.Include(u => u.Profile).Include(u => u.Location).FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        private async Task<User> GetUserByIdAsync(int id)
+        {
+            return await _context.Users.Include(u => u.Profile).Include(u => u.Location)
+                .Where(u => u.Profile != null && u.Location != null && u.Permition == Permition.Approved)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        private async Task<List<User>> GetPermittedUsersAsync()
+        {
+            return await _context.Users
+                .Include(u => u.Profile)
+                .Include(u => u.Location)
+                .Where(u => u.Profile != null && u.Location != null && u.Permition == Permition.Approved)
+                .ToListAsync();
         }
     }
 }

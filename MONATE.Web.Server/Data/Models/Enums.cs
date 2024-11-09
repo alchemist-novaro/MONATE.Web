@@ -11,6 +11,7 @@
     {
         Administrator = 0,
         Client = 1,
+        TeamMember = 2,
     }
 
     public enum Permition : int

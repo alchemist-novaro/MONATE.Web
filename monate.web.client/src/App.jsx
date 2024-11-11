@@ -9,6 +9,7 @@ import './style.css';
 
 import Dashboard from './pages/dashboard';
 import NotFound from './pages/not-found';
+import Portfolio from './pages/portfolio';
 import Sign from './pages/sign';
 import AlertProvider from './components/alerts';
 import NavbarProvider from './components/navbar';
@@ -39,6 +40,7 @@ const App = (props) => {
                         <Route exact path="/" element={<Dashboard />} />
                         <Route exact path="/signup" element={<Sign signUp />} />
                         <Route exact path="/login" element={<Sign />} />
+                        <Route exact path="/portfolio" element={<Portfolio />} />
                         <Route exact path="*" element={<NotFound />} />
                     </Routes>
                 </Router>

@@ -60,7 +60,11 @@ const NavbarProvider = ({ children }) => {
     const onLogOut = () => {
         setOpen(false);
         sessionStorage.clear();
-        window.location.reload();
+        window.location.href = '/';
+    }
+
+    const onAddPortfolio = () => {
+        window.location.href = '/portfolio';
     }
 
     return (
@@ -106,8 +110,8 @@ const NavbarProvider = ({ children }) => {
                                 Manage Users
                             </div>}
                         {(userType === 'administrator') &&
-                            <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>
-                                Add Portfolio
+                            <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'} onClick={onAddPortfolio}>
+                                Upload Portfolio
                             </div>}
                         {(userType === 'administrator' || userType === 'team') &&
                             <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>

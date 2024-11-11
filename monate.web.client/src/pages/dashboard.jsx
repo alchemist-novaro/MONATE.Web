@@ -75,7 +75,6 @@ const Dashboard = (props) => {
                         showAlert({ severity: 'error', message: 'Your account is suspended now. Please contact with support team.' });
                         return false;
                     }
-
                     return true;
                 }
             } catch (error) {

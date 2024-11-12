@@ -1,18 +1,28 @@
 import { useState } from 'react';
-import Header from '../components/header.jsx';
-import { useLight } from '../globals/redux-store.jsx';
+import Header from '../components/header';
 import { useEffect, useRef } from 'react';
-import { useAlert } from '../components/alerts.jsx';
-import { MyTextField } from '../components/my-controls.jsx';
-import { UploadIcon, LinkIcon } from '../components/svg-icons.jsx';
-import ItemPicker from '../components/item-picker.jsx';
-import CryptionHelper from '../../helpers/cryption-helper.js';
+import { useAlert } from '../components/alerts';
+import { MyTextField } from '../components/my-controls';
+import { UploadIcon, LinkIcon } from '../components/svg-icons';
+import ItemPicker from '../components/item-picker';
+import {
+    useLightMode,
+    useToken, useSaveToken,
+    useEmail,
+} from '../globals/interface';
+import useCryptionHelper from '../../helpers/cryption-helper';
 
 import './portfolio.css';
 
 const Portfolio = (props) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
+    const token = useToken();
+    const email = useEmail();
+    const saveToken = useSaveToken();
+
     const { showAlert } = useAlert();
+
+    const { encrypt, decrypt } = useCryptionHelper();
 
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState('');
@@ -51,14 +61,10 @@ const Portfolio = (props) => {
             window.location.href = '/';
         };
         const validateToken = async () => {
-            const email = localStorage.getItem('email');
-            const token = localStorage.getItem('token');
             if (email && token) {
-                const cryptor = new CryptionHelper();
-                await cryptor.initialize();
                 const tokenData = {
-                    email: await cryptor.encrypt(email.toLowerCase()),
-                    token: await cryptor.encrypt(token),
+                    email: await encrypt(email.toLowerCase()),
+                    token: await encrypt(token),
                 };
                 try {
                     const response = await fetch(`user/getusertype`, {
@@ -75,7 +81,7 @@ const Portfolio = (props) => {
                         redirect();
                     }
                     else {
-                        const _userType = await cryptor.decrypt(data.userType);
+                        const _userType = await decrypt(data.userType);
                         if (_userType !== 'administrator') {
                             showAlert({ severity: 'error', message: 'You are not administrator.' });
                             redirect();
@@ -169,18 +175,14 @@ const Portfolio = (props) => {
         if (!validated)
             return;
 
-        const email = localStorage.getItem('email');
-        const token = localStorage.getItem('token');
         if (email && token) {
-            const cryptor = new CryptionHelper();
-            await cryptor.initialize();
             const categoryIds = selectedCategories.map(category => category.id);
             const portfolioData = {
-                email: await cryptor.encrypt(email.toLowerCase()),
-                token: await cryptor.encrypt(token),
-                title: await cryptor.encrypt(title),
-                url: await cryptor.encrypt(url),
-                image: await cryptor.encrypt(image),
+                email: await encrypt(email.toLowerCase()),
+                token: await encrypt(token),
+                title: await encrypt(title),
+                url: await encrypt(url),
+                image: await encrypt(image),
                 categoryIds: categoryIds
             };
             try {
@@ -197,8 +199,8 @@ const Portfolio = (props) => {
                     showAlert({ severity: 'error', message: data.message });
                 }
                 else {
-                    const newToken = await cryptor.decrypt(data.token);
-                    localStorage.setItem('token', newToken);
+                    const newToken = await decrypt(data.token);
+                    saveToken(newToken);
                     showAlert({ severity: 'success', message: 'Successfully uploaded portfolio.' });
                     window.location.href = '/';
                 }

@@ -1,18 +1,39 @@
-import { useState, useRef } from 'react';
+import {
+    useState,
+    useRef,
+} from 'react';
 import Button from '@mui/material/Button';
-import { MyTextField, MyMultilineTextField } from './my-controls';
-import { useLight } from '../globals/redux-store';
-import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from './alerts';
+import {
+    MyTextField,
+    MyMultilineTextField,
+} from './my-controls';
+import {
+    useLightMode,
+    useFirstName,
+    useLastName,
+    useStateAddr,
+    useRegion,
+    useAvatar, useSaveAvatar,
+    useToken, useSaveToken,
+    useEmail,
+    useSaveTitle,
+} from '../globals/interface';
+import useCryptionHelper from '../../helpers/cryption-helper';
 
 const ProfileControl = (props) => {
     const { onSuccess } = props;
 
-    const firstName = localStorage.getItem('firstName');
-    const lastName = localStorage.getItem('lastName');
-    const state = localStorage.getItem('state');
-    const region = localStorage.getItem('region');
-    const avatar = localStorage.getItem('avatar');
+    const firstName = useFirstName();
+    const lastName = useLastName();
+    const state = useStateAddr();
+    const region = useRegion();
+    const avatar = useAvatar();
+    const token = useToken();
+    const email = useEmail();
+    const saveAvatar = useSaveAvatar();
+    const saveToken = useSaveToken();
+    const saveTitle = useSaveTitle();
 
     const [newAvatar, setNewAvatar] = useState('');
     const [title, setTitle] = useState('');
@@ -23,7 +44,10 @@ const ProfileControl = (props) => {
     const fileInputRef = useRef(null);
 
     const { showAlert } = useAlert();
-    const lightMode = useLight();
+
+    const { encrypt, decrypt } = useCryptionHelper();
+
+    const lightMode = useLightMode();
 
     const handleOpenImage = () => {
         fileInputRef.current.click();
@@ -60,18 +84,12 @@ const ProfileControl = (props) => {
         }
         else setDescriptionError('');
 
-        const cryptor = new CryptionHelper();
-        await cryptor.initialize();
-
-        const email = localStorage.getItem('email');
-        const token = localStorage.getItem('token');
-
         const profileData = {
-            email: await cryptor.encrypt(email.toLowerCase()),
-            token: await cryptor.encrypt(token),
-            avatar: await cryptor.encrypt(newAvatar),
-            title: await cryptor.encrypt(title),
-            description: await cryptor.encrypt(description),
+            email: await encrypt(email.toLowerCase()),
+            token: await encrypt(token),
+            avatar: await encrypt(newAvatar),
+            title: await encrypt(title),
+            description: await encrypt(description),
         };
 
         try {
@@ -89,10 +107,10 @@ const ProfileControl = (props) => {
                 return;
             }
             else {
-                const newToken = await cryptor.decrypt(data.token);
-                localStorage.setItem('token', newToken);
-                localStorage.setItem('avatar', newAvatar);
-                localStorage.setItem('title', title);
+                const newToken = await decrypt(data.token);
+                saveToken(newToken);
+                saveAvatar(newAvatar);
+                saveTitle(title);
 
                 showAlert({ severity: 'success', message: 'Saved profile successfully.' });
 

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLight } from '../globals/redux-store';
 import { LinkIcon, NextIcon, BackIcon } from './svg-icons';
 import { MyTextField } from './my-controls';
+import { useLightMode } from '../globals/interface';
 import './portfolio-control.css';
 
 const PortfolioElement = ({ image, url, title, categories }) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     const redirect = () => {
         var finalUrl = url;
@@ -64,7 +64,7 @@ const PortfolioElement = ({ image, url, title, categories }) => {
 }
 
 const PortfolioControl = (props) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);

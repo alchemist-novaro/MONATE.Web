@@ -1,14 +1,23 @@
 import { useEffect, useState, useRef } from 'react';
-import { useLight } from '../globals/redux-store';
 import { useAlert } from './alerts';
 import { LocationIcon, GithubIcon, PhoneIcon, NextIcon, BackIcon } from './svg-icons';
 import { MyTextField } from './my-controls';
-import CryptionHelper from '../../helpers/cryption-helper';
+import {
+    useLightMode,
+    useEmail,
+    useToken,
+} from '../globals/interface';
+import useCryptionHelper from '../../helpers/cryption-helper';
 import './user-control.css';
 
 const UserElement = ({ id }) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
+    const email = useEmail();
+    const token = useToken();
+
     const { showAlert } = useAlert();
+
+    const { encrypt, decrypt } = useCryptionHelper();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -36,15 +45,11 @@ const UserElement = ({ id }) => {
 
     useEffect(() => {
         const getUser = async () => {
-            const email = localStorage.getItem('email');
-            const token = localStorage.getItem('token');
             if (email && token) {
-                const cryptor = new CryptionHelper();
-                await cryptor.initialize();
                 const userData = {
-                    email: await cryptor.encrypt(email.toLowerCase()),
-                    token: await cryptor.encrypt(token),
-                    id: await cryptor.encrypt(id),
+                    email: await encrypt(email.toLowerCase()),
+                    token: await encrypt(token),
+                    id: await encrypt(id),
                 };
                 try {
                     const response = await fetch(`user/getuser`, {
@@ -60,16 +65,16 @@ const UserElement = ({ id }) => {
                         showAlert({ severity: 'error', message: data.message });
                     }
                     else {
-                        const _firstName = await cryptor.decrypt(data.firstName);
-                        const _lastName = await cryptor.decrypt(data.lastName);
-                        const _state = await cryptor.decrypt(data.state);
-                        const _region = await cryptor.decrypt(data.region);
-                        const _title = await cryptor.decrypt(data.title);
-                        const _description = await cryptor.decrypt(data.description);
-                        const _avatar = await cryptor.decrypt(data.avatar);
-                        const _githubUrl = await cryptor.decrypt(data.githubUrl);
-                        const _userType = await cryptor.decrypt(data.userType);
-                        const _phoneNumber = await cryptor.decrypt(data.phoneNumber);
+                        const _firstName = await decrypt(data.firstName);
+                        const _lastName = await decrypt(data.lastName);
+                        const _state = await decrypt(data.state);
+                        const _region = await decrypt(data.region);
+                        const _title = await decrypt(data.title);
+                        const _description = await decrypt(data.description);
+                        const _avatar = await decrypt(data.avatar);
+                        const _githubUrl = await decrypt(data.githubUrl);
+                        const _userType = await decrypt(data.userType);
+                        const _phoneNumber = await decrypt(data.phoneNumber);
 
                         setFirstName(_firstName);
                         setLastName(_lastName);
@@ -180,25 +185,27 @@ const UserElement = ({ id }) => {
 }
 
 const UserControl = (props) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
+    const email = useEmail();
+    const token = useToken();
+
     const [userIds, setUserIds] = useState([]);
     const { showAlert } = useAlert();
+
+    const { encrypt, decrypt } = useCryptionHelper();
+
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
     const timerRef = useRef(null);
 
     const getUsers = async () => {
-        const email = localStorage.getItem('email');
-        const token = localStorage.getItem('token');
         if (email && token) {
-            const cryptor = new CryptionHelper();
-            await cryptor.initialize();
             const pageData = {
-                email: await cryptor.encrypt(email.toLowerCase()),
-                token: await cryptor.encrypt(token),
-                page: await cryptor.encrypt(`${currentPage - 1}`),
-                query: await cryptor.encrypt(searchQuery),
+                email: await encrypt(email.toLowerCase()),
+                token: await encrypt(token),
+                page: await encrypt(`${currentPage - 1}`),
+                query: await encrypt(searchQuery),
             };
             try {
                 const response = await fetch(`user/getusers`, {
@@ -214,8 +221,8 @@ const UserControl = (props) => {
                     showAlert({ severity: 'error', message: data.message });
                 }
                 else {
-                    const userIdsStr = await cryptor.decrypt(data.userIds);
-                    const maxPageStr = await cryptor.decrypt(data.maxPage);
+                    const userIdsStr = await decrypt(data.userIds);
+                    const maxPageStr = await decrypt(data.maxPage);
                     setMaxPage(parseInt(maxPageStr))
                     setUserIds(userIdsStr.split(' '));
                 }

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useLight } from '../globals/redux-store';
+import { useLightMode } from '../globals/interface';
 
 import "./animated-backgrounds.css";
 
 const AnimatedBackgrounds = () => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     const backgrounds = [
         `/backgrounds/${lightMode ? 'light' : 'dark'} (1).jpg`,

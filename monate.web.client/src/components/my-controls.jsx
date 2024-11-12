@@ -1,10 +1,10 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { IMaskInput } from 'react-imask';
-import { useLight } from '../globals/redux-store';
+import { useLightMode } from '../globals/interface';
 
 export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, fontSize, placeholder }) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <TextField
@@ -68,7 +68,7 @@ export const MyTextField = ({ required, name, value, id, style, onChange, error,
 };
 
 export const MyMultilineTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, fontSize, rows, maxRows }) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <TextField

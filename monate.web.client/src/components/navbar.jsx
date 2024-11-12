@@ -1,33 +1,41 @@
 import { createContext, useState, useContext } from 'react';
 import Slide from '@mui/material/Slide';
 import { useAlert } from './alerts';
-import CryptionHelper from '../../helpers/cryption-helper';
-import { useLight } from '../globals/redux-store';
+import {
+    useLightMode,
+    useAvatar,
+    useFirstName,
+    useLastName,
+    useEmail,
+    useToken,
+} from '../globals/interface';
+import useCryptionHelper from '../../helpers/cryption-helper';
 import './navbar.css';
 
 const NavbarContext = createContext();
 
 const NavbarProvider = ({ children }) => {
-    const lightMode = useLight();
     const { showAlert } = useAlert();
 
-    const avatar = localStorage.getItem('avatar');
-    const firstName = localStorage.getItem('firstName');
-    const lastName = localStorage.getItem('lastName');
+    const { encrypt, decrypt } = useCryptionHelper();
+
+    const lightMode = useLightMode();
+    const avatar = useAvatar();
+    const firstName = useFirstName();
+    const lastName = useLastName();
+    const email = useEmail();
+    const token = useToken();
+
     const [open, setOpen] = useState(false);
     const [userType, setUserType] = useState('');
 
     const showNavbar = async() => {
         setOpen(true);
 
-        const email = localStorage.getItem('email');
-        const token = localStorage.getItem('token');
         if (email && token) {
-            const cryptor = new CryptionHelper();
-            await cryptor.initialize();
             const tokenData = {
-                email: await cryptor.encrypt(email.toLowerCase()),
-                token: await cryptor.encrypt(token),
+                email: await encrypt(email.toLowerCase()),
+                token: await encrypt(token),
             };
             try {
                 const response = await fetch(`user/getusertype`, {
@@ -43,7 +51,7 @@ const NavbarProvider = ({ children }) => {
                     showAlert({ severity: 'error', message: data.message });
                 }
                 else {
-                    const _userType = await cryptor.decrypt(data.userType);
+                    const _userType = await decrypt(data.userType);
                     setUserType(_userType);
                 }
             } catch (error) {
@@ -65,6 +73,11 @@ const NavbarProvider = ({ children }) => {
 
     const onAddPortfolio = () => {
         window.location.href = '/upload-portfolio';
+    }
+
+    const onManageUsers = () => {
+        console.log('manage');
+        window.location.href = '/manage-users';
     }
 
     return (
@@ -106,7 +119,7 @@ const NavbarProvider = ({ children }) => {
                         <br />
                         <br />
                         {(userType === 'administrator') &&
-                            <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>
+                            <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'} onClick={onManageUsers}>
                                 Manage Users
                             </div>}
                         {(userType === 'administrator') &&

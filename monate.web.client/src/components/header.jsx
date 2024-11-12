@@ -5,16 +5,20 @@ import DisplayRegion from './display-region';
 import ModeSwitch from './mode-switch';
 import { MonateIcon } from './svg-icons';
 import { useNavbar } from './navbar';
-import { useLight } from '../globals/redux-store';
-
+import {
+    useLightMode,
+    useFirstName,
+    useLastName,
+    useAvatar,
+} from '../globals/interface';
 import './header.css';
 
 const Header = (props) => {
     const [scrolled, setScrolled] = useState(false);
-    const lightMode = useLight();
-    const firstName = localStorage.getItem('firstName');
-    const lastName = localStorage.getItem('lastName');
-    const avatar = localStorage.getItem('avatar');
+    const lightMode = useLightMode();
+    const firstName = useFirstName();
+    const lastName = useLastName();
+    const avatar = useAvatar();
     const navigate = useNavigate();
     const { showNavbar } = useNavbar();
 
@@ -22,7 +26,6 @@ const Header = (props) => {
         showNavbar();
     }
 
-    // Monitor the scroll position and set "scrolled" state
     useEffect(() => {
         const handleScroll = () => {
             const offset = window.scrollY;
@@ -35,7 +38,6 @@ const Header = (props) => {
 
         window.addEventListener('scroll', handleScroll);
 
-        // Cleanup the event listener on component unmount
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };

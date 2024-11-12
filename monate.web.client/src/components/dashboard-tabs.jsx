@@ -1,10 +1,10 @@
-import { useLight } from '../globals/redux-store';
 import { PortfolioIcon, UsersIcon, WorkflowIcon, AboutUsIcon } from './svg-icons';
+import { useLightMode } from '../globals/interface';
 import './dashboard-tabs.css';
 
 const DashboardTabs = (props) => {
     const { onPortfolios, onUsers, onEndpoints, onAboutUs } = props;
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <div style={{ marginTop: '-7.5vh', display: 'flex', flexDirection: 'row' }}>

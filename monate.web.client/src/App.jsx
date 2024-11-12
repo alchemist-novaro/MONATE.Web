@@ -11,22 +11,22 @@ import Dashboard from './pages/dashboard';
 import NotFound from './pages/not-found';
 import Portfolio from './pages/portfolio';
 import Sign from './pages/sign';
+import Manager from './pages/manager';
 import AlertProvider from './components/alerts';
 import NavbarProvider from './components/navbar';
-import { initRegion, useSaveRegion } from './globals/redux-store';
+import {
+    useSaveRegion, useRegion,
+} from './globals/interface';
+import initRegion from '../helpers/region-helper';
 
 const App = (props) => {
     const saveRegion = useSaveRegion();
+    const region = useRegion();
 
-    const region = localStorage.getItem('region');
-    const password = localStorage.getItem('password');
     useEffect(() => {
         const fetchRegion = async () => {
-            if (password === null)
-                localStorage.setItem('password', '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF');
             if (region === null) {
                 const regionData = await initRegion();
-                localStorage.setItem('region', regionData.country);
                 saveRegion(regionData.country);
             }
         };
@@ -42,6 +42,10 @@ const App = (props) => {
                         <Route path="/signup" element={<Sign signUp />} />
                         <Route path="/login" element={<Sign />} />
                         <Route path="/upload-portfolio" element={<Portfolio />} />
+                        <Route path="/manage-users" element={<Manager />} />
+                        <Route path="/manage-endpoints" element={<Manager />} />
+                        <Route path="/manage-custom-nodes" element={<Manager />} />
+                        <Route path="/manage-value-types" element={<Manager />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Router>

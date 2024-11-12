@@ -8,11 +8,11 @@ import { useAlert } from './alerts';
 const ProfileControl = (props) => {
     const { onSuccess } = props;
 
-    const firstName = sessionStorage.getItem('firstName');
-    const lastName = sessionStorage.getItem('lastName');
-    const state = sessionStorage.getItem('state');
-    const region = sessionStorage.getItem('region');
-    const avatar = sessionStorage.getItem('avatar');
+    const firstName = localStorage.getItem('firstName');
+    const lastName = localStorage.getItem('lastName');
+    const state = localStorage.getItem('state');
+    const region = localStorage.getItem('region');
+    const avatar = localStorage.getItem('avatar');
 
     const [newAvatar, setNewAvatar] = useState('');
     const [title, setTitle] = useState('');
@@ -63,11 +63,11 @@ const ProfileControl = (props) => {
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
 
-        const email = sessionStorage.getItem('email');
-        const token = sessionStorage.getItem('token');
+        const email = localStorage.getItem('email');
+        const token = localStorage.getItem('token');
 
         const profileData = {
-            email: await cryptor.encrypt(email.tolowerCase()),
+            email: await cryptor.encrypt(email.toLowerCase()),
             token: await cryptor.encrypt(token),
             avatar: await cryptor.encrypt(newAvatar),
             title: await cryptor.encrypt(title),
@@ -90,9 +90,9 @@ const ProfileControl = (props) => {
             }
             else {
                 const newToken = await cryptor.decrypt(data.token);
-                sessionStorage.setItem('token', newToken);
-                sessionStorage.setItem('avatar', newAvatar);
-                sessionStorage.setItem('title', title);
+                localStorage.setItem('token', newToken);
+                localStorage.setItem('avatar', newAvatar);
+                localStorage.setItem('title', title);
 
                 showAlert({ severity: 'success', message: 'Saved profile successfully.' });
 

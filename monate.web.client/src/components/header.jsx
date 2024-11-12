@@ -12,9 +12,9 @@ import './header.css';
 const Header = (props) => {
     const [scrolled, setScrolled] = useState(false);
     const lightMode = useLight();
-    const firstName = sessionStorage.getItem('firstName');
-    const lastName = sessionStorage.getItem('lastName');
-    const avatar = sessionStorage.getItem('avatar');
+    const firstName = localStorage.getItem('firstName');
+    const lastName = localStorage.getItem('lastName');
+    const avatar = localStorage.getItem('avatar');
     const navigate = useNavigate();
     const { showNavbar } = useNavbar();
 

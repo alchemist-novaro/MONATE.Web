@@ -90,7 +90,7 @@
         private static string GenerateRandom6DigitString()
         {
             Random random = new Random();
-            int number = random.Next(100000, 1000000); // Generates a number between 100000 and 999999
+            int number = random.Next(100000, 1000000);
             return number.ToString();
         }
     }

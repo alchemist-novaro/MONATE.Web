@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { IMaskInput } from 'react-imask';
 import { useLight } from '../globals/redux-store';
 
-export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, fontSize }) => {
+export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, fontSize, placeholder }) => {
     const lightMode = useLight();
 
     return (
@@ -19,6 +19,7 @@ export const MyTextField = ({ required, name, value, id, style, onChange, error,
             error={Boolean(error)}
             helperText={error}
             autoComplete={autoComplete}
+            placeholder={placeholder}
             InputProps={{
                 inputComponent: inputComponent,
             }}

@@ -16,16 +16,17 @@ import NavbarProvider from './components/navbar';
 import { initRegion, useSaveRegion } from './globals/redux-store';
 
 const App = (props) => {
-    sessionStorage.setItem('password', '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF');
-
     const saveRegion = useSaveRegion();
 
-    const region = sessionStorage.getItem('region');
+    const region = localStorage.getItem('region');
+    const password = localStorage.getItem('password');
     useEffect(() => {
         const fetchRegion = async () => {
+            if (password === null)
+                localStorage.setItem('password', '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF');
             if (region === null) {
                 const regionData = await initRegion();
-                sessionStorage.setItem('region', regionData.country);
+                localStorage.setItem('region', regionData.country);
                 saveRegion(regionData.country);
             }
         };
@@ -37,11 +38,11 @@ const App = (props) => {
             <NavbarProvider>
                 <Router>
                     <Routes>
-                        <Route exact path="/" element={<Dashboard />} />
-                        <Route exact path="/signup" element={<Sign signUp />} />
-                        <Route exact path="/login" element={<Sign />} />
-                        <Route exact path="/portfolio" element={<Portfolio />} />
-                        <Route exact path="*" element={<NotFound />} />
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/signup" element={<Sign signUp />} />
+                        <Route path="/login" element={<Sign />} />
+                        <Route path="/upload-portfolio" element={<Portfolio />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Router>
             </NavbarProvider>

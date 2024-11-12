@@ -16,16 +16,16 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
                 setSearchedItems([]);
 
             const initializedSerchedItems = items.filter(item =>
-                !selectedItems.some(selected => selected[1] === item[1])
+                !selectedItems.some(selected => selected.id === item.id)
             );
             setSearchedItems(initializedSerchedItems);
         }
         initializeSearchedItems();
-    }, []);
+    }, [items, selectedItems]);
 
     const removeItem = (item) => {
-        setSelectedItems(selectedItems.filter((_item) => _item[1] !== item[1]));
-        updateSearchedItems(searchQuery, selectedItems.filter((_item) => _item[1] !== item[1]));
+        setSelectedItems(selectedItems.filter((_item) => _item.id !== item.id));
+        updateSearchedItems(searchQuery, selectedItems.filter((_item) => _item.id !== item.id));
     };
 
     const onTextInputFocused = () => {
@@ -37,7 +37,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
     };
 
     const selectItem = (item) => {
-        if (!selectedItems.some(selected => selected[1] === item[1])) {
+        if (!selectedItems.some(selected => selected.id === item.id)) {
             setSelectedItems([...selectedItems, item]);
         }
         setSearchQuery('');
@@ -53,10 +53,19 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
 
     const updateSearchedItems = (query, currentSelectedItems) => {
         const filteredItems = items.filter(item =>
-            item[0].toLowerCase().includes(query.toLowerCase()) &&
-            !currentSelectedItems.some(selected => selected[1] === item[1])
+            item.name.toLowerCase().includes(query.toLowerCase()) &&
+            !currentSelectedItems.some(selected => selected.id === item.id)
         );
         setSearchedItems(filteredItems);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Backspace' && searchQuery === '') {
+            if (selectedItems.length > 0) {
+                const lastItem = selectedItems[selectedItems.length - 1];
+                removeItem(lastItem);
+            }
+        }
     };
 
     return (
@@ -72,7 +81,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
                     display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
                     border: `1px solid ${lightMode ? '#1f2f2f' : '#dfefef'}`
                 }}>
-                    &nbsp;&nbsp;{item[0]}&nbsp;
+                    &nbsp;&nbsp;{item.name}&nbsp;
                     <div style={{ cursor: 'pointer', height: '18px' }} onClick={() => removeItem(item)}>
                         <CloseIcon width='18px' height='18px' />
                     </div>
@@ -90,6 +99,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
                     onChange={handleSearchChange}
                     onFocus={onTextInputFocused}
                     onBlur={onTextInputBlurred}
+                    onKeyDown={handleKeyDown}
                     sx={{
                         width: '100%',
                         border: 'none',
@@ -102,7 +112,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
                 {(textInputFocused && searchedItems.length !== 0) && (
                     <div style={{
                         backgroundColor: lightMode ? '#d3e3e3' : '#1f2f2f',
-                        width: '300px',
+                        width: '230px',
                         border: '1px solid #7f8f8f', position: 'absolute',
                         display: 'flex', flexDirection: 'column',
                         maxHeight: '90px', overflowY: 'auto',
@@ -114,7 +124,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
                                 onMouseDown={() => selectItem(item)}
                                 style={{ cursor: 'pointer', padding: '5px' }}
                             >
-                                {item[0]}
+                                {item.name}
                             </div>
                         ))}
                     </div>

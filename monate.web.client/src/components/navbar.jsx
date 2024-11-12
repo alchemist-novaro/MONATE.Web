@@ -11,17 +11,17 @@ const NavbarProvider = ({ children }) => {
     const lightMode = useLight();
     const { showAlert } = useAlert();
 
-    const avatar = sessionStorage.getItem('avatar');
-    const firstName = sessionStorage.getItem('firstName');
-    const lastName = sessionStorage.getItem('lastName');
+    const avatar = localStorage.getItem('avatar');
+    const firstName = localStorage.getItem('firstName');
+    const lastName = localStorage.getItem('lastName');
     const [open, setOpen] = useState(false);
     const [userType, setUserType] = useState('');
 
     const showNavbar = async() => {
         setOpen(true);
 
-        const email = sessionStorage.getItem('email');
-        const token = sessionStorage.getItem('token');
+        const email = localStorage.getItem('email');
+        const token = localStorage.getItem('token');
         if (email && token) {
             const cryptor = new CryptionHelper();
             await cryptor.initialize();
@@ -59,12 +59,12 @@ const NavbarProvider = ({ children }) => {
 
     const onLogOut = () => {
         setOpen(false);
-        sessionStorage.clear();
+        localStorage.clear();
         window.location.href = '/';
     }
 
     const onAddPortfolio = () => {
-        window.location.href = '/portfolio';
+        window.location.href = '/upload-portfolio';
     }
 
     return (

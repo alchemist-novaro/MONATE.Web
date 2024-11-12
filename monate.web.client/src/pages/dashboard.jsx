@@ -40,8 +40,8 @@ const Dashboard = (props) => {
     }
 
     const validateToken = async () => {
-        const token = sessionStorage.getItem('token');
-        const email = sessionStorage.getItem('email');
+        const token = localStorage.getItem('token');
+        const email = localStorage.getItem('email');
         if (email && token) {
             const cryptor = new CryptionHelper();
             await cryptor.initialize();
@@ -65,7 +65,7 @@ const Dashboard = (props) => {
                 }
                 else {
                     const newToken = await cryptor.decrypt(data.token);
-                    sessionStorage.setItem('token', newToken);
+                    localStorage.setItem('token', newToken);
 
                     if (data.state === 'pending') {
                         showAlert({ severity: 'error', message: 'Your account is pending now. Please contact with support team.' });

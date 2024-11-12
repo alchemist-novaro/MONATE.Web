@@ -47,6 +47,14 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/category': {
+                target,
+                secure: false
+            },
+            '^/portfolio': {
+                target,
+                secure: false
+            },
         },
         port: 5173,
         https: {

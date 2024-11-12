@@ -113,23 +113,23 @@ const MailInfoControl = (props) => {
                 }
                 else {
                     const newToken = await cryptor.decrypt(data.token);
-                    sessionStorage.setItem('email', emailAddr);
-                    sessionStorage.setItem('token', newToken);
+                    localStorage.setItem('email', emailAddr);
+                    localStorage.setItem('token', newToken);
                     showAlert({ severity: 'success', message: 'Logged in successfully.' });
 
                     if (data.state === 'profile') {
-                        sessionStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
-                        sessionStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
-                        sessionStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
-                        sessionStorage.setItem('region', await cryptor.decrypt(data.region));
+                        localStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
+                        localStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
+                        localStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
+                        localStorage.setItem('region', await cryptor.decrypt(data.region));
                     }
                     if (data.state === 'success') {
-                        sessionStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
-                        sessionStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
-                        sessionStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
-                        sessionStorage.setItem('region', await cryptor.decrypt(data.region));
-                        sessionStorage.setItem('title', await cryptor.decrypt(data.title));
-                        sessionStorage.setItem('avatar', await cryptor.decrypt(data.avatar));
+                        localStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
+                        localStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
+                        localStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
+                        localStorage.setItem('region', await cryptor.decrypt(data.region));
+                        localStorage.setItem('title', await cryptor.decrypt(data.title));
+                        localStorage.setItem('avatar', await cryptor.decrypt(data.avatar));
                     }
 
                     onSuccess(data.state);

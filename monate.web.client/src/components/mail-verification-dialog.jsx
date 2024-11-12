@@ -61,8 +61,8 @@ const MailVerificationDialog = (props) => {
             else {
                 const token = await cryptor.decrypt(data.token);
 
-                sessionStorage.setItem('token', token);
-                sessionStorage.setItem('email', emailAddr);
+                localStorage.setItem('token', token);
+                localStorage.setItem('email', emailAddr);
 
                 showAlert({ severity: 'success', message: 'Verified successfully.' });
 

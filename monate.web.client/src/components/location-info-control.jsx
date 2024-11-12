@@ -8,7 +8,7 @@ import { useAlert } from './alerts';
 const LocationInfoControl = (props) => {
     const { editMode, onSuccess } = props;
 
-    const region = sessionStorage.getItem('region');
+    const region = localStorage.getItem('region');
 
     const { showAlert } = useAlert();
     const lightMode = useLight();
@@ -60,8 +60,8 @@ const LocationInfoControl = (props) => {
         const cryptor = new CryptionHelper();
         await cryptor.initialize();
 
-        const email = sessionStorage.getItem('email');
-        const token = sessionStorage.getItem('token');
+        const email = localStorage.getItem('email');
+        const token = localStorage.getItem('token');
 
         if (!firstName) {
             setFirstNameError('Fist name must be input.');
@@ -123,10 +123,10 @@ const LocationInfoControl = (props) => {
             }
             else {
                 const newToken = await cryptor.decrypt(data.token);
-                sessionStorage.setItem('token', newToken);
-                sessionStorage.setItem('firstName', firstName);
-                sessionStorage.setItem('lastName', lastName);
-                sessionStorage.setItem('state', state);
+                localStorage.setItem('token', newToken);
+                localStorage.setItem('firstName', firstName);
+                localStorage.setItem('lastName', lastName);
+                localStorage.setItem('state', state);
                 showAlert({ severity: 'success', message: 'Saved location successfully.' });
                 onSuccess(data.state);
             }

@@ -7,6 +7,7 @@ namespace MONATE.Web.Server.Controllers
     using MONATE.Web.Server.Logics;
     using MONATE.Web.Server.Data.Models;
     using MONATE.Web.Server.Data.Packets.UserInfo;
+    using System.Text;
 
     [ApiController]
     [Route("[controller]")]
@@ -323,9 +324,10 @@ namespace MONATE.Web.Server.Controllers
 
                     var _pageString = Globals.Cryptor.Decrypt(page.Page);
                     var _page = int.Parse(_pageString);
+                    var _query = Globals.Cryptor.Decrypt(page.Query);
 
                     var _ids = "";
-                    var _userList = await GetPermittedUsersAsync();
+                    var _userList = await GetPermittedUsersAsync(_query);
                     for (int idx = _page * 12; idx < _userList.Count; idx++)
                     {
                         _ids += _userList[idx].Id.ToString() + " ";
@@ -334,7 +336,8 @@ namespace MONATE.Web.Server.Controllers
                         _ids = _ids.Substring(0, _ids.Length - 1);
 
                     var _userIds = Globals.Cryptor.Encrypt(_ids);
-                    return Ok(new { userIds = _userIds });
+                    var _maxPage = Globals.Cryptor.Encrypt(((_userList.Count - 1) / 12 + 1).ToString());
+                    return Ok(new { userIds = _userIds, maxPage = _maxPage });
                 }
                 else
                 {
@@ -552,13 +555,47 @@ namespace MONATE.Web.Server.Controllers
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        private async Task<List<User>> GetPermittedUsersAsync()
+        private async Task<List<User>> GetPermittedUsersAsync(string? query)
         {
-            return await _context.Users
+            var users = await _context.Users
                 .Include(u => u.Profile)
                 .Include(u => u.Location)
-                .Where(u => u.Profile != null && u.Location != null && u.Permition == Permition.Approved)
+                .Include(u => u.Categories)
+                .Where(u => u.Permition == Permition.Approved)
                 .ToListAsync();
+
+            return users.Where(u => ValidateUser(u, query)).ToList();
         }
+
+        private bool ValidateUser(User u, string? query)
+        {
+            if (u.Profile == null || u.Location == null)
+            {
+                return false;
+            }
+
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(u.Location.FirstName + " " + u.Location.LastName)
+                         .Append(u.Profile.Title)
+                         .Append(u.Profile.Description);
+
+            if (u.UserType == UserType.Administrator)
+            {
+                stringBuilder.Append("Administrator");
+            }
+            else if (u.UserType == UserType.TeamMember)
+            {
+                stringBuilder.Append("MONATE");
+            }
+
+            foreach (var category in u.Categories)
+            {
+                stringBuilder.Append(category.Name);
+            }
+
+            return string.IsNullOrEmpty(query) || stringBuilder.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1;
+        }
+
     }
 }

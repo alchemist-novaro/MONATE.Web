@@ -12,7 +12,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MONATE.Web.Server.Migrations
 {
     [DbContext(typeof(MonateDbContext))]
-    [Migration("20241108125629_Database")]
+    [Migration("20241112060354_Database")]
     partial class Database
     {
         /// <inheritdoc />
@@ -112,6 +112,30 @@ namespace MONATE.Web.Server.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("MONATE.Web.Server.Data.Models.CustomNode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("GithubUrl")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomNodes");
+                });
+
             modelBuilder.Entity("MONATE.Web.Server.Data.Models.Endpoint", b =>
                 {
                     b.Property<int>("Id")
@@ -152,6 +176,7 @@ namespace MONATE.Web.Server.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DefaultValue")
+                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Path")

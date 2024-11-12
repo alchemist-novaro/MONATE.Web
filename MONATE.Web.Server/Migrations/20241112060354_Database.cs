@@ -26,6 +26,21 @@ namespace MONATE.Web.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomNodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    Title = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
+                    GithubUrl = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomNodes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Portfolios",
                 columns: table => new
                 {
@@ -303,7 +318,7 @@ namespace MONATE.Web.Server.Migrations
                     TypeId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     WorkflowId = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     Path = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    DefaultValue = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
+                    DefaultValue = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -436,6 +451,9 @@ namespace MONATE.Web.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "CategoryUser");
+
+            migrationBuilder.DropTable(
+                name: "CustomNodes");
 
             migrationBuilder.DropTable(
                 name: "InputValues");

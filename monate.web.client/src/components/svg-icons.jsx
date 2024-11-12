@@ -227,3 +227,27 @@ export function CloseIcon({ width, height, marginTop, marginLeft, style }) {
         </SvgIcon>
     );
 }
+
+export function BackIcon({ width, height, marginTop, marginLeft, style, disabled }) {
+    const lightMode = useLight();
+
+    return (
+        <SvgIcon style={{ ...style, width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
+            <svg fill={disabled ? '#7f8f8f' : (lightMode ? '#1f2f2f' : '#dfefef')} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 42">
+                <polygon points="31,38.32 13.391,21 31,3.68 28.279,1 8,21.01 28.279,41 " />
+            </svg>
+        </SvgIcon>
+    );
+}
+
+export function NextIcon({ width, height, marginTop, marginLeft, style, disabled }) {
+    const lightMode = useLight();
+
+    return (
+        <SvgIcon style={{ ...style, width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
+            <svg fill={disabled ? '#7f8f8f' : (lightMode ? '#1f2f2f' : '#dfefef')} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <polygon points="6.8,23.7 5.4,22.3 15.7,12 5.4,1.7 6.8,0.3 18.5,12" />
+            </svg>
+        </SvgIcon>
+    );
+}

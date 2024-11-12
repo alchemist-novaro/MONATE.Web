@@ -21,18 +21,7 @@ const Portfolio = (props) => {
     const [image, setImage] = useState('');
     const [imageError, setImageError] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
-    const [categories, setCategories] = useState([
-        ['ComfyUI', 1],
-        ['Stable Diffusion', 2],
-        ['ComfyUI', 3],
-        ['Stable Diffusion', 4],
-        ['ComfyUI', 5],
-        ['Stable Diffusion', 6],
-        ['ComfyUI', 7],
-        ['Stable Diffusion', 8],
-        ['ComfyUI', 9],
-        ['Stable Diffusion', 10],
-    ]);
+    const [categories, setCategories] = useState([]);
 
     const imageInputRef = useRef();
 
@@ -62,8 +51,8 @@ const Portfolio = (props) => {
             window.location.href = '/';
         };
         const validateToken = async () => {
-            const email = sessionStorage.getItem('email');
-            const token = sessionStorage.getItem('token');
+            const email = localStorage.getItem('email');
+            const token = localStorage.getItem('token');
             if (email && token) {
                 const cryptor = new CryptionHelper();
                 await cryptor.initialize();
@@ -102,8 +91,126 @@ const Portfolio = (props) => {
                 redirect();
             }
         }
+        const getCategories = async () => {
+            try {
+                const response = await fetch(`category`, {
+                    method: 'GET',
+                });
+                const data = await response.json();
+                setCategories(data.categories);
+            } catch (error) {
+                showAlert({ severity: 'error', message: 'Could not found server.' });
+                redirect();
+            }
+        }
         validateToken();
+        getCategories();
     }, []);
+
+    const redirect = () => {
+        var finalUrl = url;
+        if (!/^https?:\/\//i.test(finalUrl)) {
+            finalUrl = 'http://' + finalUrl;
+        }
+        window.open(finalUrl, '_blank');
+    }
+
+    const onUploadPortfolio = async () => {
+        const validate = async() => {
+            var validation = true;
+            if (!title) {
+                setTitleError('The title must be valid');
+                validation = false;
+            }
+            else {
+                setTitleError('');
+            }
+            if (!url) {
+                setUrlError('The url must be valid');
+                validation = false;
+            }
+            else {
+                setUrlError('');
+            }
+            if (!image) {
+                setImageError(true);
+                validation = false;
+            }
+            else {
+                setImageError('');
+            }
+
+            //if (validation) {
+            //    try {
+            //        let finalUrl = url;
+
+            //        if (!/^https?:\/\//i.test(finalUrl)) {
+            //            finalUrl = 'http://' + finalUrl;
+            //        }
+
+            //        const response = await fetch(finalUrl, { method: 'HEAD' });
+
+            //        if (response.ok) {
+            //            setUrlError('');
+            //        } else {
+            //            setUrlError('Url does not exist');
+            //            validation = false;
+            //        }
+            //    } catch (err) {
+            //        setUrlError('Url does not exist');
+            //        validation = false;
+            //    }
+            //}
+
+            return validation;
+        }
+
+        const validated = await validate();
+        if (!validated)
+            return;
+
+        const email = localStorage.getItem('email');
+        const token = localStorage.getItem('token');
+        if (email && token) {
+            const cryptor = new CryptionHelper();
+            await cryptor.initialize();
+            const categoryIds = selectedCategories.map(category => category.id);
+            const portfolioData = {
+                email: await cryptor.encrypt(email.toLowerCase()),
+                token: await cryptor.encrypt(token),
+                title: await cryptor.encrypt(title),
+                url: await cryptor.encrypt(url),
+                image: await cryptor.encrypt(image),
+                categoryIds: categoryIds
+            };
+            try {
+                const response = await fetch(`portfolio/uploadportfolio`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(portfolioData),
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showAlert({ severity: 'error', message: data.message });
+                }
+                else {
+                    const newToken = await cryptor.decrypt(data.token);
+                    localStorage.setItem('token', newToken);
+                    showAlert({ severity: 'success', message: 'Successfully uploaded portfolio.' });
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                showAlert({ severity: 'error', message: 'Could not found server.' });
+            }
+        }
+        else {
+            showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
+            window.location.href = '/login';
+        }
+    }
 
     return (
         <div className={lightMode ? 'body-light' : 'body-dark'}>
@@ -143,9 +250,9 @@ const Portfolio = (props) => {
                         />
                         <MyTextField
                             required
-                            name='Link'
+                            name='Url'
                             error={urlError}
-                            id='portfolio-link'
+                            id='portfolio-url'
                             style={{ marginTop: '3%', width: '70%' }}
                             onChange={onUrlchange}
                         />
@@ -177,33 +284,52 @@ const Portfolio = (props) => {
                 </div>
                 <div style={{ width: '40%' }}>
                     <div style={{
-                        width: '80%', height: '47%', borderRadius: '10%', backgroundColor: '#ffffff22',
-                        marginTop: '15vh', display: 'flex', flexDirection: 'column', alignItems: 'center'
+                        display: 'flex', flexDirection: 'column', borderRadius: '5%', width: '430px', marginLeft: '1%', marginRight: '1%',
+                        marginTop: '15vh', height: '370px', backgroundColor: lightMode ? '#1f2f2f22' : '#dfefef22', marginBottom: '20px',
                     }}>
                         {image ?
                             <img src={image} alt='preview' style={{
-                                width: '70%', height: '27vh', marginTop: '5vh',
+                                width: '90%', height: '60%', marginTop: '5%', marginLeft: '5%',
                                 borderRadius: '5%'
                             }} /> :
                             <div style={{
-                                width: '70%', height: '27vh', marginTop: '5vh',
-                                borderRadius: '5%', border: `1px solid ${imageError ? '#ff0000' : '#7f8f8f'}`, display: 'flex', flexDirection: 'row',
+                                width: '90%', height: '60%', marginTop: '5%',
+                                borderRadius: '5%', border: `1px solid #7f8f8f`, display: 'flex', flexDirection: 'row', marginLeft: '5%',
                                 justifyContent: 'center', alignItems: 'center'
                             }}>
                                 <div style={{ color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '2.5vh' }}>
                                     None
                                 </div>
                             </div>}
-                        <div style={{ display: 'flex', flexDirection: 'column', width: '70%' }} >
-                            <div style={{ color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '2.5vh', marginTop: '1vh', height: '2.7vh' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '5%', width: '90%' }} >
+                            <div style={{ color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '30px', height: '30px', marginTop: '3%' }}>
                                 {title}
                             </div>
                             <div style={{
-                                color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '2vh', height: '2.5vh', marginTop: '1vh',
+                                color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '20px', marginTop: '2%',
+                                display: 'flex', flexDirection: 'row', alignItems: 'center', cursor: 'pointer'
+                            }} onClick={redirect}>
+                                <LinkIcon width='25px' height='25px' />&nbsp;{url}
+                            </div>
+                            <div style={{
+                                color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '15px', marginTop: '2%',
                                 display: 'flex', flexDirection: 'row', alignItems: 'center'
                             }}>
-                                <LinkIcon width='2.5vh' height='2.5vh' />&nbsp;{url}
+                                {selectedCategories.map((category, index) => (
+                                    <div key={index} style={{
+                                        display: 'flex', justifyContent: 'center', alignItems: 'center',
+                                        backgroundColor: '#7f8f8f', color: lightMode ? '#1f2f2f' : '#dfefef',
+                                        borderRadius: '4px', padding: '2px', marginRight: '6px'
+                                    }}>
+                                        &nbsp;&nbsp;{category.name}&nbsp;&nbsp;
+                                    </div>
+                                ))}
                             </div>
+                        </div>
+                    </div>
+                    <div style={{ width: '450px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <div className={lightMode ? 'portfolio-button-light' : 'portfolio-button-dark'} onClick={onUploadPortfolio}>
+                            Upload
                         </div>
                     </div>
                 </div>

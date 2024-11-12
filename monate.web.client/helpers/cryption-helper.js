@@ -6,7 +6,7 @@ class CryptionHelper {
 
     async initialize() {
         await sodium.ready; // Ensure libsodium is ready
-        const passwordHex = sessionStorage.getItem('password');
+        const passwordHex = localStorage.getItem('password') ?? '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF';
         if (!passwordHex) {
             throw new Error("Password not found in session storage.");
         }

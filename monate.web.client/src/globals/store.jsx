@@ -3,11 +3,10 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 import reducer from './reducers';
-
-const encryptKey = "wkdwktks";
+import initialState from './initialState';
 
 const encryptor = encryptTransform({
-    secretKey: encryptKey,
+    secretKey: initialState.encryptKey,
     onError: (error) => {
         console.error('Encryption error:', error);
     },

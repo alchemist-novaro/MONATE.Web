@@ -1,3 +1,5 @@
+import initialState from "./initialState";
+
 export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_LIGHT_MODE = 'SET_LIGHT_MODE';
 export const SET_REGION = 'SET_REGION';
@@ -10,7 +12,7 @@ export const SET_TITLE = 'SET_TITLE';
 export const SET_AVATAR = 'SET_AVATAR';
 export const SET_KEY = 'SET_KEY';
 
-const reducer = (state, action) => {
+const reducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_PASSWORD:
             return {

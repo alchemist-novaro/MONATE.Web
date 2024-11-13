@@ -12,7 +12,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MONATE.Web.Server.Migrations
 {
     [DbContext(typeof(MonateDbContext))]
-    [Migration("20241112060354_Database")]
+    [Migration("20241113075908_Database")]
     partial class Database
     {
         /// <inheritdoc />

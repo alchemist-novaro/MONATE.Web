@@ -68,7 +68,7 @@ export const usePassword = () => {
 };
 
 export const useLightMode = () => {
-    return useSelector((state) => state.lighMode);
+    return useSelector((state) => state.lightMode);
 };
 
 export const useRegion = () => {

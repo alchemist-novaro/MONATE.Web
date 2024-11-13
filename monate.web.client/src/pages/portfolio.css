@@ -38,9 +38,9 @@
     cursor: pointer;
 }
 
-    .portfolio-button-light:hover {
-        background-color: #bfcfcf;
-    }
+.portfolio-button-light:hover {
+    background-color: #bfcfcf;
+}
 
 .portfolio-button-dark {
     width: 270px;
@@ -60,6 +60,6 @@
     cursor: pointer;
 }
 
-    .portfolio-button-dark:hover {
-        background-color: #2f3f3f;
-    }
+.portfolio-button-dark:hover {
+    background-color: #2f3f3f;
+}

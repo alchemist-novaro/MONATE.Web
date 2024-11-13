@@ -1,29 +1,19 @@
-import { useRegion } from '../globals/redux-store';
 import './display-region.css';
+import { useRegion } from '../globals/interface';
 
 const DisplayRegion = () => {
     const region = useRegion();
-    const regionStorage = localStorage.getItem('region');
 
     return (
         <div>
-            {regionStorage ? (
+            {region ? (
                 <div className='region-div'>
                     <img
-                        src={`https://flagcdn.com/w40/${regionStorage.toLowerCase()}.png`}
-                        alt={`Flag of ${regionStorage}`}
+                        src={`https://flagcdn.com/w40/${region.toLowerCase()}.png`}
+                        alt={`Flag of ${region}`}
                     />
                 </div>
-            ) : <div>
-                {region ? (
-                    <div className='region-div'>
-                        <img
-                            src={`https://flagcdn.com/w40/${region.toLowerCase()}.png`}
-                            alt={`Flag of ${region}`}
-                        />
-                    </div>
-                ) : <div />}
-            </div>}
+            ) : <div />}
         </div>
     );
 };

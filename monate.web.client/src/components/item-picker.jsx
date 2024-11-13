@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
-import { useLight } from '../globals/redux-store';
 import { CloseIcon } from './svg-icons';
+import { useLightMode } from '../globals/interface';
 import './item-picker.css';
 
 const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder }) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchedItems, setSearchedItems] = useState(items);
     const [textInputFocused, setTextInputFocused] = useState(false);
@@ -33,6 +33,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
     };
 
     const onTextInputBlurred = () => {
+        setSearchQuery('');
         setTimeout(() => setTextInputFocused(false), 150);
     };
 

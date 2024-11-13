@@ -5,19 +5,28 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { MyTextField } from '../components/my-controls';
-import { useEmail, useLight, usePassword } from '../globals/redux-store';
-import CryptionHelper from '../../helpers/cryption-helper';
-import { useAlert } from '../components/alerts';
+import { MyTextField } from './my-controls';
+import { useAlert } from './alerts';
+import {
+    useEmail, useSaveEmail,
+    useLightMode,
+    usePassword,
+    useSaveToken,
+} from '../globals/interface';
+import useCryptionHelper from '../../helpers/cryption-helper';
 
 const MailVerificationDialog = (props) => {
     const { onClose, onVerifySuccess, open } = props;
 
     const { showAlert } = useAlert();
 
+    const { encrypt, decrypt } = useCryptionHelper();
+
     const emailAddr = useEmail();
-    const lightMode = useLight();
+    const saveEmailAddr = useSaveEmail();
+    const lightMode = useLightMode();
     const password = usePassword();
+    const saveToken = useSaveToken();
 
     const [verifyCode, setVerifyCode] = useState('');
     const [error, setError] = useState('');
@@ -36,12 +45,10 @@ const MailVerificationDialog = (props) => {
         if (verifyCode.length !== 6)
             return;
 
-        const cryptor = new CryptionHelper();
-        await cryptor.initialize();
         const verifyData = {
-            email: await cryptor.encrypt(emailAddr.toLowerCase()),
-            password: await cryptor.encrypt(password),
-            code: await cryptor.encrypt(verifyCode),
+            email: await encrypt(emailAddr.toLowerCase()),
+            password: await encrypt(password),
+            code: await encrypt(verifyCode),
         };
 
         try {
@@ -59,10 +66,9 @@ const MailVerificationDialog = (props) => {
                 return;
             }
             else {
-                const token = await cryptor.decrypt(data.token);
-
-                localStorage.setItem('token', token);
-                localStorage.setItem('email', emailAddr);
+                const token = await decrypt(data.token);
+                saveToken(token);
+                saveEmailAddr(emailAddr);
 
                 showAlert({ severity: 'success', message: 'Verified successfully.' });
 

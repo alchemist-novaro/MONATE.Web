@@ -1,8 +1,8 @@
 import SvgIcon from '@mui/material/SvgIcon';
-import { useLight } from '../globals/redux-store';
+import { useLightMode } from '../globals/interface';
 
 export const MonateIcon = ({width, height}) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, transient: '.3s' }}>
@@ -49,7 +49,7 @@ export const GoogleIcon = ({width, height}) => {
 }
 
 export function AppleIcon({ width, height }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, transient: '.3s' }}>
@@ -65,7 +65,7 @@ export function AppleIcon({ width, height }) {
 }
 
 export function PortfolioIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -77,7 +77,7 @@ export function PortfolioIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function UsersIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -92,7 +92,7 @@ export function UsersIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function WorkflowIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -112,7 +112,7 @@ export function WorkflowIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function AboutUsIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -124,7 +124,7 @@ export function AboutUsIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function LocationIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -141,7 +141,7 @@ export function LocationIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function GithubIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -153,7 +153,7 @@ export function GithubIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function PhoneIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -165,7 +165,7 @@ export function PhoneIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function EmailIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -179,7 +179,7 @@ export function EmailIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function CopyrightIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -192,7 +192,7 @@ export function CopyrightIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function UploadIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -204,7 +204,7 @@ export function UploadIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function LinkIcon({ width, height, marginTop, marginLeft }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -216,7 +216,7 @@ export function LinkIcon({ width, height, marginTop, marginLeft }) {
 }
 
 export function CloseIcon({ width, height, marginTop, marginLeft, style }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{...style, width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -229,7 +229,7 @@ export function CloseIcon({ width, height, marginTop, marginLeft, style }) {
 }
 
 export function BackIcon({ width, height, marginTop, marginLeft, style, disabled }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ ...style, width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
@@ -241,7 +241,7 @@ export function BackIcon({ width, height, marginTop, marginLeft, style, disabled
 }
 
 export function NextIcon({ width, height, marginTop, marginLeft, style, disabled }) {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <SvgIcon style={{ ...style, width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>

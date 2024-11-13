@@ -1,14 +1,17 @@
 import { styled } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import { useLight, useSaveLight } from '../globals/redux-store';
+import {
+    useLightMode,
+    useSaveLightMode
+} from '../globals/interface';
 
 const ModeSwitch = (props) => {
-    const lightMode = useLight();
-    const saveLight = useSaveLight();
+    const lightMode = useLightMode();
+    const saveLightMode = useSaveLightMode();
 
     const handleChange = (event) => {
-        saveLight(!event.target.checked);
+        saveLightMode(!event.target.checked);
     };
 
     const LightModeSwitch = styled(Switch)(({ theme }) => ({

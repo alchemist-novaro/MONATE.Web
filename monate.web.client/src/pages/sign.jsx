@@ -1,21 +1,43 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLight } from '../globals/redux-store';
 import { MonateIcon } from '../components/svg-icons';
 import ModeSwitch from '../components/mode-switch';
 import MailVerificationDialog from '../components/mail-verification-dialog';
 import MailInfoControl from '../components/mail-info-control';
 import LocationInfoControl from '../components/location-info-control';
 import ProfileControl from '../components/profile-control';
-import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from '../components/alerts';
+import {
+    useLightMode,
+    useEmail,
+    useToken, useSaveToken,
+    useSaveFirstName,
+    useSaveLastName,
+    useSaveAvatar,
+    useSaveTitle,
+    useSaveRegion,
+    useSaveStateAddr,
+} from '../globals/interface';
+import useCryptionHelper from '../../helpers/cryption-helper';
 import './sign.css';
 
 const Sign = (props) => {
     const { signUp } = props;
 
     const { showAlert } = useAlert();
-    const lightMode = useLight();
+
+    const { encrypt, decrypt } = useCryptionHelper();
+
+    const lightMode = useLightMode();
+    const email = useEmail();
+    const token = useToken();
+    const saveToken = useSaveToken();
+    const saveFirstName = useSaveFirstName();
+    const saveLastName = useSaveLastName();
+    const saveAvatar = useSaveAvatar();
+    const saveTitle = useSaveTitle();
+    const saveRegion = useSaveRegion();
+    const saveStateAddr = useSaveStateAddr();
 
     const [openMailVerifyDialog, setOpenMailVerifyDialog] = useState(false);
     const [signMode, setSignMode] = useState('mail');
@@ -24,14 +46,10 @@ const Sign = (props) => {
 
     useEffect(() => {
         const validateToken = async () => {
-            const email = localStorage.getItem('email');
-            const token = localStorage.getItem('token');
             if (email && token) {
-                const cryptor = new CryptionHelper();
-                await cryptor.initialize();
                 const tokenData = {
-                    email: await cryptor.encrypt(email.toLowerCase()),
-                    token: await cryptor.encrypt(token),
+                    email: await encrypt(email.toLowerCase()),
+                    token: await encrypt(token),
                 };
                 try {
                     const response = await fetch(`user/validatetoken`, {
@@ -47,24 +65,20 @@ const Sign = (props) => {
                         showAlert({ severity: 'error', message: data.message });
                     }
                     else {
-                        const newToken = await cryptor.decrypt(data.token);
-                        localStorage.setItem('token', newToken);
+                        const newToken = await decrypt(data.token);
+                        saveToken(newToken);
 
                         showAlert({ severity: 'success', message: 'Logged in successfully.' });
 
-                        if (data.state === 'profile') {
-                            localStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
-                            localStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
-                            localStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
-                            localStorage.setItem('region', await cryptor.decrypt(data.region));
+                        if (data.state === 'profile' || data.state === 'success' || data.state === 'pending' || data.state === 'suspended') {
+                            saveFirstName(await decrypt(data.firstName));
+                            saveLastName(await decrypt(data.lastName));
+                            saveStateAddr(await decrypt(data.stateAddr));
+                            saveRegion(await decrypt(data.region));
                         }
                         if (data.state === 'success' || data.state === 'pending' || data.state === 'suspended') {
-                            localStorage.setItem('firstName', await cryptor.decrypt(data.firstName));
-                            localStorage.setItem('lastName', await cryptor.decrypt(data.lastName));
-                            localStorage.setItem('state', await cryptor.decrypt(data.stateAddr));
-                            localStorage.setItem('region', await cryptor.decrypt(data.region));
-                            localStorage.setItem('title', await cryptor.decrypt(data.title));
-                            localStorage.setItem('avatar', await cryptor.decrypt(data.avatar));
+                            saveTitle(await decrypt(data.title));
+                            saveAvatar(await decrypt(data.avatar));
                         }
 
                         handleSuccess(data.state);

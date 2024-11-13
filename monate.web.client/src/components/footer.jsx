@@ -1,8 +1,8 @@
 import { MonateIcon, GithubIcon, PhoneIcon, EmailIcon, CopyrightIcon } from './svg-icons';
-import { useLight } from '../globals/redux-store';
+import { useLightMode } from '../globals/interface';
 
 const Footer = () => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     return (
         <div style={{

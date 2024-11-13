@@ -1,19 +1,28 @@
 import { useState } from 'react';
-import Header from '../components/header.jsx';
-import { useLight } from '../globals/redux-store.jsx';
-import AnimatedBackgrounds from '../components/animated-backgrounds.jsx';
-import { useAlert } from '../components/alerts.jsx';
-import DashboardTabs from '../components/dashboard-tabs.jsx';
-import PortfolioControl from '../components/portfolio-control.jsx'
-import UserControl from '../components/user-control.jsx';
-import Footer from '../components/footer.jsx';
-import CryptionHelper from '../../helpers/cryption-helper.js';
-
+import Header from '../components/header';
+import AnimatedBackgrounds from '../components/animated-backgrounds';
+import { useAlert } from '../components/alerts';
+import DashboardTabs from '../components/dashboard-tabs';
+import PortfolioControl from '../components/portfolio-control'
+import UserControl from '../components/user-control';
+import Footer from '../components/footer';
+import useCryptionHelper from '../../helpers/cryption-helper';
+import {
+    useLightMode,
+    useEmail,
+    useToken, useSaveToken,
+} from '../globals/interface';
 import './dashboard.css';
 
 const Dashboard = (props) => {
-    const lightMode = useLight();
+    const lightMode = useLightMode();
+    const email = useEmail();
+    const token = useToken();
+    const saveToken = useSaveToken();
+
     const { showAlert } = useAlert();
+
+    const { encrypt, decrypt } = useCryptionHelper();
 
     const [currentPage, setCurrentPage] = useState('portfolios');
 
@@ -40,14 +49,10 @@ const Dashboard = (props) => {
     }
 
     const validateToken = async () => {
-        const token = localStorage.getItem('token');
-        const email = localStorage.getItem('email');
         if (email && token) {
-            const cryptor = new CryptionHelper();
-            await cryptor.initialize();
             const tokenData = {
-                email: await cryptor.encrypt(email.toLowerCase()),
-                token: await cryptor.encrypt(token),
+                email: await encrypt(email.toLowerCase()),
+                token: await encrypt(token),
             };
             try {
                 const response = await fetch(`user/validatetoken`, {
@@ -64,8 +69,8 @@ const Dashboard = (props) => {
                     return false;
                 }
                 else {
-                    const newToken = await cryptor.decrypt(data.token);
-                    localStorage.setItem('token', newToken);
+                    const newToken = await decrypt(data.token);
+                    saveToken(newToken);
 
                     if (data.state === 'pending') {
                         showAlert({ severity: 'error', message: 'Your account is pending now. Please contact with support team.' });

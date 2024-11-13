@@ -1,17 +1,33 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { MyTextField } from './my-controls';
-import { useLight } from '../globals/redux-store';
-import CryptionHelper from '../../helpers/cryption-helper';
 import { useAlert } from './alerts';
+import {
+    useLightMode,
+    useEmail,
+    useRegion,
+    useToken, useSaveToken,
+    useSaveStateAddr,
+    useSaveFirstName,
+    useSaveLastName,
+} from '../globals/interface';
+import useCryptionHelper from '../../helpers/cryption-helper';
 
 const LocationInfoControl = (props) => {
     const { editMode, onSuccess } = props;
 
-    const region = localStorage.getItem('region');
+    const { encrypt, decrypt } = useCryptionHelper();
+
+    const region = useRegion();
+    const email = useEmail();
+    const token = useToken();
+    const saveToken = useSaveToken();
+    const saveStateAddr = useSaveStateAddr();
+    const saveFirstName = useSaveFirstName();
+    const saveLastName = useSaveLastName();
 
     const { showAlert } = useAlert();
-    const lightMode = useLight();
+    const lightMode = useLightMode();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -57,12 +73,6 @@ const LocationInfoControl = (props) => {
     }
 
     const handleNext = async() => {
-        const cryptor = new CryptionHelper();
-        await cryptor.initialize();
-
-        const email = localStorage.getItem('email');
-        const token = localStorage.getItem('token');
-
         if (!firstName) {
             setFirstNameError('Fist name must be input.');
             return;
@@ -95,16 +105,16 @@ const LocationInfoControl = (props) => {
         else setZipCodeError('');
 
         const locationData = {
-            email: await cryptor.encrypt(email.toLowerCase()),
-            token: await cryptor.encrypt(token),
-            firstName: await cryptor.encrypt(firstName),
-            lastName: await cryptor.encrypt(lastName),
-            address1: await cryptor.encrypt(address1),
-            address2: await cryptor.encrypt(address2),
-            city: await cryptor.encrypt(city),
-            state: await cryptor.encrypt(state),
-            zipCode: await cryptor.encrypt(zipCode),
-            country: await cryptor.encrypt(region),
+            email: await encrypt(email.toLowerCase()),
+            token: await encrypt(token),
+            firstName: await encrypt(firstName),
+            lastName: await encrypt(lastName),
+            address1: await encrypt(address1),
+            address2: await encrypt(address2),
+            city: await encrypt(city),
+            state: await encrypt(state),
+            zipCode: await encrypt(zipCode),
+            country: await encrypt(region),
         }
 
         try {
@@ -122,11 +132,11 @@ const LocationInfoControl = (props) => {
                 return;
             }
             else {
-                const newToken = await cryptor.decrypt(data.token);
-                localStorage.setItem('token', newToken);
-                localStorage.setItem('firstName', firstName);
-                localStorage.setItem('lastName', lastName);
-                localStorage.setItem('state', state);
+                const newToken = await decrypt(data.token);
+                saveToken(newToken);
+                saveFirstName(firstName);
+                saveLastName(lastName);
+                saveStateAddr(state);
                 showAlert({ severity: 'success', message: 'Saved location successfully.' });
                 onSuccess(data.state);
             }

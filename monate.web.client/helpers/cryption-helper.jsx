@@ -1,23 +1,10 @@
-import { useState, useEffect } from 'react';
 import sodium from 'libsodium-wrappers-sumo';
 import initialState from '../src/globals/initialState';
 
 const useCryptionHelper = () => {
-    const [isInitialized, setIsInitialized] = useState(false);
-
-    const initialize = async () => {
-        await sodium.ready;
-        setIsInitialized(true);
-    };
-
-    useEffect(() => {
-        initialize();
-    }, []);
 
     const encrypt = async (plaintext) => {
-        if (!isInitialized) {
-            await initialize();
-        }
+        await sodium.ready;
         try {
             const key = sodium.from_hex(initialState.key);
             const iv = sodium.randombytes_buf(12);
@@ -38,9 +25,7 @@ const useCryptionHelper = () => {
     };
 
     const decrypt = async (cipherText) => {
-        if (!isInitialized) {
-            await initialize();
-        }
+        await sodium.ready;
         try {
             const key = sodium.from_hex(initialState.key);
             const iv = sodium.from_hex(cipherText.slice(0, 24));

@@ -589,13 +589,12 @@ namespace MONATE.Web.Server.Controllers
                 stringBuilder.Append("MONATE");
             }
 
-            foreach (var category in u.Categories)
+            if (u.Categories != null) foreach (var category in u.Categories)
             {
                 stringBuilder.Append(category.Name);
             }
 
             return string.IsNullOrEmpty(query) || stringBuilder.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1;
         }
-
     }
 }

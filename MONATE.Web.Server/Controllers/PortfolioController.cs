@@ -6,7 +6,7 @@
     using MONATE.Web.Server.Data.Packets.PortfolioInfo;
     using MONATE.Web.Server.Helpers;
     using MONATE.Web.Server.Logics;
-    using static System.Runtime.InteropServices.JavaScript.JSType;
+    using System.Text;
 
     [ApiController]
     [Route("[controller]")]
@@ -20,9 +20,9 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int page, string? queue)
+        public async Task<IActionResult> Get(int page, string? query)
         {
-            var _portfolios = await GetPortfoliosByQueueAsync(queue);
+            var _portfolios = await GetPortfoliosByQueryAsync(query);
             int _firstIndex = (page - 1) * 16;
             int _lastIndex = Math.Min(page * 16, _portfolios.Count);
             var _sendingData = new List<PortfolioResponseData>();
@@ -129,14 +129,6 @@
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        private async Task<List<Portfolio>> GetPortfoliosByQueueAsync(string? queue)
-        {
-            return await _context.Portfolios
-                .Include(p => p.Categories)
-                .Where(p => string.IsNullOrEmpty(queue) || p.Title.ToLower().IndexOf(queue.ToLower()) != -1)
-                .ToListAsync();
-        }
-
         private async Task<Category?> GetCategoryByIdAsync(int id)
         {
             return await _context.Categories
@@ -144,6 +136,30 @@
                 .Include(c => c.Endpoints)
                 .Include(c => c.Portfolios)
                 .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        private async Task<List<Portfolio>> GetPortfoliosByQueryAsync(string? query)
+        {
+            var portfolios = await _context.Portfolios
+                .Include(p => p.Categories)
+                .ToListAsync();
+
+            return portfolios.Where(p => ValidatePortfolio(p, query)).ToList();
+        }
+
+        private bool ValidatePortfolio(Portfolio p, string? query)
+        {
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(p.Title)
+                         .Append(p.Url);
+
+            if (p.Categories != null) foreach (var category in p.Categories)
+            {
+                stringBuilder.Append(category.Name);
+            }
+
+            return string.IsNullOrEmpty(query) || stringBuilder.ToString().IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1;
         }
     }
 }

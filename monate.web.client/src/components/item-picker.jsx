@@ -4,7 +4,7 @@ import { CloseIcon } from './svg-icons';
 import { useLightMode } from '../globals/interface';
 import './item-picker.css';
 
-const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder }) => {
+const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder, maxItems = 5 }) => {
     const lightMode = useLightMode();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchedItems, setSearchedItems] = useState(items);
@@ -89,7 +89,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
                     &nbsp;
                 </div>
             ))}
-            <div style={{ flexGrow: 1, marginLeft: '5px' }}>
+            {selectedItems.length !== maxItems && <div style={{ flexGrow: 1, marginLeft: '5px' }}>
                 <TextField
                     variant="standard"
                     placeholder={placeholder}
@@ -130,7 +130,7 @@ const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder
                         ))}
                     </div>
                 )}
-            </div>
+            </div>}
         </div>
     );
 };

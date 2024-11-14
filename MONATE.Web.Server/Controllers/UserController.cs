@@ -577,8 +577,7 @@ namespace MONATE.Web.Server.Controllers
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append(u.Location.FirstName + " " + u.Location.LastName)
-                         .Append(u.Profile.Title)
-                         .Append(u.Profile.Description);
+                         .Append(u.Profile.Title);
 
             if (u.UserType == UserType.Administrator)
             {

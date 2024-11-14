@@ -11,6 +11,11 @@ const Manager = (props) => {
                 display: 'flex', flexDirection: 'row', width: '100%', height: '100vh',
                 backgroundColor: lightMode ? '#cfdfdf' : '#0f1f1f'
             }}>
+                <div style={{ width: '350px', height: 'calc(100% - 72px)', marginTop: '72px', backgroundColor: lightMode ? '#00000011' : '#ffffff11' }}>
+                    <div className={lightMode ? 'tab-button-light' : 'tab-button-dark'} style={{ marginTop: '200px', marginLeft: '100px', width: '250px', }}>
+                        Users
+                    </div>
+                </div>
             </div>
             <Header />
         </div>

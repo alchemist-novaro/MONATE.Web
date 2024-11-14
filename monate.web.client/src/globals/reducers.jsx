@@ -10,7 +10,6 @@ export const SET_FIRST_NAME = 'SET_FIRST_NAME';
 export const SET_LAST_NAME = 'SET_LAST_NAME';
 export const SET_TITLE = 'SET_TITLE';
 export const SET_AVATAR = 'SET_AVATAR';
-export const SET_KEY = 'SET_KEY';
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {

@@ -17,9 +17,12 @@ import NavbarProvider from './components/navbar';
 import {
     useSaveRegion, useRegion,
 } from './globals/interface';
+//import useStorageHooks from './globals/storage-hooks';
 import initRegion from '../helpers/region-helper';
 
 const App = (props) => {
+    //useStorageHooks();
+
     const saveRegion = useSaveRegion();
     const region = useRegion();
 

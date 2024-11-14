@@ -130,6 +130,7 @@
     border-radius: 50%;
     background-color: deeppink;
     object-fit: cover;
+    color: white;
     border: 1px solid #28c;
 }
 

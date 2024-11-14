@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import { IMaskInput } from 'react-imask';
 import { useLightMode } from '../globals/interface';
 
-export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, fontSize, placeholder }) => {
+export const MyTextField = ({ required, name, value, id, style, onChange, error, inputComponent, type, autoComplete, disabled, placeholder }) => {
     const lightMode = useLightMode();
 
     return (
@@ -40,27 +40,13 @@ export const MyTextField = ({ required, name, value, id, style, onChange, error,
                 },
                 input: {
                     color: lightMode ? '#1f2f2f' : '#cfdfdf',
-                    fontSize: fontSize,
                 },
                 '& .MuiOutlinedInput-input.Mui-disabled': {
                     WebkitTextFillColor: '#7f8f8f',
                 },
                 '& .MuiInputLabel-root': {
                     color: '#7f8f8f',
-                    fontSize: fontSize,
                     fontWeight: 'bold',
-                },
-                '& .MuiInputLabel-root.Mui-focused': {
-                    color: lightMode ? '#1f2f2f' : '#cfdfdf',
-                    fontSize: '16px',
-                },
-                '& .MuiInputLabel-root.Mui-disabled': {
-                    color: '#7f8f8f',
-                    fontSize: '16px',
-                },
-                '& .MuiInputLabel-root.Mui-animated': {
-                    color: '#7f8f8f',
-                    fontSize: '16px',
                 },
             }}
         />

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/header';
-import { useEffect, useRef } from 'react';
 import { useAlert } from '../components/alerts';
 import { MyTextField } from '../components/my-controls';
 import { UploadIcon, LinkIcon } from '../components/svg-icons';
@@ -19,6 +19,8 @@ const Portfolio = (props) => {
     const token = useToken();
     const email = useEmail();
     const saveToken = useSaveToken();
+
+    const navigate = useNavigate();
 
     const { showAlert } = useAlert();
 
@@ -58,7 +60,7 @@ const Portfolio = (props) => {
 
     useEffect(() => {
         const redirect = () => {
-            window.location.href = '/';
+            navigate('/');
         };
         const validateToken = async () => {
             if (email && token) {
@@ -202,7 +204,7 @@ const Portfolio = (props) => {
                     const newToken = await decrypt(data.token);
                     saveToken(newToken);
                     showAlert({ severity: 'success', message: 'Successfully uploaded portfolio.' });
-                    window.location.href = '/';
+                    navigate('/');
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -210,7 +212,7 @@ const Portfolio = (props) => {
         }
         else {
             showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
-            window.location.href = '/login';
+            navigate('/login');
         }
     }
 

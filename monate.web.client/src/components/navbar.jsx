@@ -76,7 +76,6 @@ const NavbarProvider = ({ children }) => {
     }
 
     const onManageUsers = () => {
-        console.log('manage');
         window.location.href = '/manage-users';
     }
 

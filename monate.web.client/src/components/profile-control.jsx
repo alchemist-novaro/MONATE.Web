@@ -158,7 +158,6 @@ const ProfileControl = (props) => {
                 required
                 name='Title'
                 id='title'
-                fontSize='25px'
                 error={titleError}
                 onChange={handleTitleChange}
                 style={{ marginTop: 'calc(7vh - 12px)', width: '30vw' }}

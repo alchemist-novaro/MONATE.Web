@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,10 +16,10 @@ namespace MONATE.Web.Server.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Name = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,11 +30,11 @@ namespace MONATE.Web.Server.Migrations
                 name: "CustomNodes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Title = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    GithubUrl = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    GithubUrl = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,11 +45,11 @@ namespace MONATE.Web.Server.Migrations
                 name: "Portfolios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Title = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Url = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: false),
+                    ImagePath = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,14 +60,14 @@ namespace MONATE.Web.Server.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Email = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Password = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Token = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    UserType = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    ExpireDate = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    UserType = table.Column<int>(type: "integer", nullable: false),
+                    ExpireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Permition = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -77,11 +78,11 @@ namespace MONATE.Web.Server.Migrations
                 name: "ValueTypes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    Type = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Permition = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,8 +93,8 @@ namespace MONATE.Web.Server.Migrations
                 name: "CategoryPortfolio",
                 columns: table => new
                 {
-                    CategoriesId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    PortfoliosId = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    CategoriesId = table.Column<int>(type: "integer", nullable: false),
+                    PortfoliosId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,10 +117,10 @@ namespace MONATE.Web.Server.Migrations
                 name: "ApiTokens",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Token = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -136,8 +137,8 @@ namespace MONATE.Web.Server.Migrations
                 name: "CategoryUser",
                 columns: table => new
                 {
-                    CategoriesId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    UsersId = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    CategoriesId = table.Column<int>(type: "integer", nullable: false),
+                    UsersId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -160,13 +161,13 @@ namespace MONATE.Web.Server.Migrations
                 name: "Endpoints",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Name = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    ImagePath = table.Column<string>(type: "text", nullable: true),
+                    Permition = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -183,17 +184,17 @@ namespace MONATE.Web.Server.Migrations
                 name: "Locations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    FirstName = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    LastName = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    AddressLine1 = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    AddressLine2 = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    City = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    State = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    ZipCode = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Country = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    AddressLine1 = table.Column<string>(type: "text", nullable: false),
+                    AddressLine2 = table.Column<string>(type: "text", nullable: true),
+                    City = table.Column<string>(type: "text", nullable: false),
+                    State = table.Column<string>(type: "text", nullable: false),
+                    ZipCode = table.Column<int>(type: "integer", nullable: false),
+                    Country = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -210,11 +211,11 @@ namespace MONATE.Web.Server.Migrations
                 name: "Members",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    OwnerId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    MemberType = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    OwnerId = table.Column<int>(type: "integer", nullable: false),
+                    MemberType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,16 +238,16 @@ namespace MONATE.Web.Server.Migrations
                 name: "Profiles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    UserId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    AvatarPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Title = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    VideoPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    GithubUrl = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    Credit = table.Column<double>(type: "BINARY_DOUBLE", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    AvatarPath = table.Column<string>(type: "text", nullable: true),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    VideoPath = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    GithubUrl = table.Column<string>(type: "text", nullable: true),
+                    Credit = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -263,8 +264,8 @@ namespace MONATE.Web.Server.Migrations
                 name: "CategoryEndpoint",
                 columns: table => new
                 {
-                    CategoriesId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    EndpointsId = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    CategoriesId = table.Column<int>(type: "integer", nullable: false),
+                    EndpointsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,16 +288,16 @@ namespace MONATE.Web.Server.Migrations
                 name: "Workflows",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    EndpointId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Version = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Price = table.Column<double>(type: "BINARY_DOUBLE", nullable: false),
-                    GPURequirement = table.Column<double>(type: "BINARY_DOUBLE", nullable: false),
-                    Description = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    ImagePath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: true),
-                    WorkflowPath = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    Permition = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EndpointId = table.Column<int>(type: "integer", nullable: false),
+                    Version = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<double>(type: "double precision", nullable: false),
+                    GPURequirement = table.Column<double>(type: "double precision", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    ImagePath = table.Column<string>(type: "text", nullable: true),
+                    WorkflowPath = table.Column<string>(type: "text", nullable: false),
+                    Permition = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -313,12 +314,12 @@ namespace MONATE.Web.Server.Migrations
                 name: "InputValues",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    TypeId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    WorkflowId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Path = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    DefaultValue = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TypeId = table.Column<int>(type: "integer", nullable: false),
+                    WorkflowId = table.Column<int>(type: "integer", nullable: false),
+                    Path = table.Column<string>(type: "text", nullable: false),
+                    DefaultValue = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -341,11 +342,11 @@ namespace MONATE.Web.Server.Migrations
                 name: "OutputValues",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "NUMBER(10)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    TypeId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    WorkflowId = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    Path = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TypeId = table.Column<int>(type: "integer", nullable: false),
+                    WorkflowId = table.Column<int>(type: "integer", nullable: false),
+                    Path = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

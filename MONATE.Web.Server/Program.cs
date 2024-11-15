@@ -12,10 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var oracleConnectionString = builder.Configuration.GetConnectionString("OracleDb");
+var connectionString = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddDbContext<MonateDbContext>(options =>
 {
-    options.UseOracle(oracleConnectionString);
+    options.UseNpgsql(connectionString);
 });
 
 var app = builder.Build();

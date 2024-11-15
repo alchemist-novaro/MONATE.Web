@@ -58,4 +58,4 @@ jobs:
         with:
           branch: gh-pages
           folder: ./monate.web.client/dist
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DEPLOY_TOKEN }}

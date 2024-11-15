@@ -4,7 +4,7 @@ run-name: ${{ github.actor }} is deploying portfolio site
 on:
   push:
     branches:
-     - main
+     - master
 
 jobs:
   frontend: 

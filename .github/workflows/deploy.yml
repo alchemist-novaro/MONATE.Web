@@ -16,7 +16,7 @@ jobs:
       - name: Setting up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts'
+          node-version: '22'
 
       - name: Installing dependencies
         working-directory: ./monate.web.client

@@ -7,32 +7,6 @@ on:
      - master
 
 jobs:
-  frontend: 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setting up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-
-      - name: Installing dependencies
-        working-directory: ./monate.web.client
-        run: npm install
-
-      - name: Building frontend
-        working-directory: ./monate.web.client
-        run: npm run build
-
-      - name: Deploying frontend to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: ./monate.web.client/dist
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   backend-testing:
     runs-on: ubuntu-latest
     steps:
@@ -55,3 +29,33 @@ jobs:
       - name: Running backend tests
         working-directory: ./MONATE.Web.Server
         run: dotnet run
+
+  frontend: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setting up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Installing dependencies
+        working-directory: ./monate.web.client
+        run: npm install
+
+      - name: Creating certifications
+        working-directory: ./MONATE.Web.Server
+        run: dotnet dev-certs https --export-path "./monate.web.client/monate.web.client.pem" --format Pem --no-password
+
+      - name: Building frontend
+        working-directory: ./monate.web.client
+        run: npm run build
+
+      - name: Deploying frontend to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: ./monate.web.client/dist
+          token: ${{ secrets.GITHUB_TOKEN }}

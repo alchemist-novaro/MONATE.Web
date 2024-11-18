@@ -24,11 +24,15 @@ jobs:
 
       - name: Building backend
         working-directory: ./MONATE.Web.Server
-        run: dotnet build
+        run: |
+          dotnet build --configuration Release
+          dotnet publish -c Release -o "/home/runner/work/MONATE.Web/MONATE.Web/MONATE.Web.Server"
 
-      - name: Running backend tests
-        working-directory: ./MONATE.Web.Server
-        run: dotnet run
+      - name: Deploying backend
+        working-directory: /home/runner/work/MONATE.Web/MONATE.Web/MONATE.Web.Server
+        run: |
+          iisreset /stop
+          iisreset /start
 
   frontend: 
     runs-on: ubuntu-latest

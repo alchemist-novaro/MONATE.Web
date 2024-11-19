@@ -59,8 +59,8 @@ jobs:
       - name: Configure dotenv
         run: |
           mkdir -p ./publish
-          echo "${{ secrets.DOT_ENV }}" > ./.env
-        working-directory: .MONATE.Web.Server/publish
+          echo "${{ secrets.DOT_ENV }}" > ./publish/.env
+        working-directory: .MONATE.Web.Server
 
       - name: Copy backend to EC2
         run: |

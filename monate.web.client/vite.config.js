@@ -16,8 +16,8 @@ import { env } from 'process';
 //const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 //const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-const certFilePath = "/var/www/html/monate.web.client.pem";
-const keyFilePath = "/var/www/html/monate.web.client.key";
+const certFilePath = "./monate.web.client.pem";
+const keyFilePath = "./monate.web.client.key";
 
 if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     if (0 !== child_process.spawnSync('dotnet', [

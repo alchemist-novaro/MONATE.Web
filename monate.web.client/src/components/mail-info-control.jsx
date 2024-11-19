@@ -198,6 +198,7 @@ const MailInfoControl = (props) => {
                 }}
             >Submit</Button>
             <Button
+                disabled
                 varient='contained'
                 style={{
                     marginTop: 'calc(7vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',
@@ -212,6 +213,7 @@ const MailInfoControl = (props) => {
                 </div>
             </Button>
             <Button
+                disabled
                 varient='contained'
                 style={{
                     marginTop: 'calc(3vh - 12px)', width: '30vw', height: '5vh', fontSize: '2.4vh',

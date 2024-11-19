@@ -56,6 +56,10 @@ jobs:
           dotnet publish -c Release -o ./publish
         working-directory: ./MONATE.Web.Server
 
+      - name: Configure dotenv
+        run: echo "${{ secrets.DOT_ENV }}" > ./.env
+        working-directory: .MONATE.Web.Server/publish
+
       - name: Copy backend to EC2
         run: |
           scp -i ../monate.pem -r ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/backend

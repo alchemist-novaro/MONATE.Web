@@ -36,16 +36,16 @@
                 VerifyTrialCounts(email);
 
                 verifyCodeDict[email] = code;
-                Console.WriteLine(code);
             }
 
             using (var client = new SmtpClient(new ProtocolLogger("smtp.log")))
             {
                 try
                 {
-                    // client.Connect(mySmtpHost, mySmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
-                    // client.Authenticate(myEmail, myEmailPassword);
-                    // client.Send(message);
+                    client.Connect(mySmtpHost, mySmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                    client.Authenticate(myEmail, myEmailPassword);
+                    client.Send(message);
+
                     return true;
                 }
                 catch

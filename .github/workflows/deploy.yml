@@ -7,59 +7,50 @@ on:
      - master
 
 jobs:
-  backend-testing:
+  deploying:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Setting up .NET
+      - name: Setup node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+        
+      - name: Install dependencies for frontend
+        run: npm install
+        working-directory: ./monate.web.client
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./monate.web.client
+
+      - name: Copy frontend to EC2
+        run: scp -i ${{ secrets.EC2_SSH }} -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/var/html
+        working-directory: ./monate.web.client
+
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with: 
           dotnet-version: '8.0'
-
-      - name: Restore dependencies
-        working-directory: ./MONATE.Web.Server
-        run: dotnet restore
-
-      - name: Building backend
-        working-directory: ./MONATE.Web.Server
+      
+      - name: Build backend
         run: |
-          dotnet build --configuration Release
-          dotnet publish -c Release -o "/home/runner/work/MONATE.Web/MONATE.Web/MONATE.Web.Server"
-
-      - name: Deploying backend
-        working-directory: /home/runner/work/MONATE.Web/MONATE.Web/MONATE.Web.Server
-        run: |
-          iisreset /stop
-          iisreset /start
-
-  frontend: 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setting up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-
-      - name: Installing dependencies
-        working-directory: ./monate.web.client
-        run: npm install
-
-      - name: Creating certifications
+          dotnet restore
+          dotnet build
+          dotnet publish -c Release -o ./publish
         working-directory: ./MONATE.Web.Server
-        run: dotnet dev-certs https --export-path "/home/runner/work/MONATE.Web/MONATE.Web/monate.web.client/monate.web.client.pem" --format Pem --no-password
 
-      - name: Building frontend
-        working-directory: ./monate.web.client
-        run: npm run build
+      - name: Copy backend to EC2
+        run: scp -i ${{ secrets.EC2_SSH }} -r ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/publish
+        working-directory: ./MONATE.Web.Server
 
-      - name: Deploying frontend to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: ./monate.web.client/dist
-          token: ${{ secrets.DEPLOY_TOKEN }}
+      - name: Restart backend on EC2
+        run: |
+          ssh -i ${{ secrets.EC2_SSH }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart monate-api.service'
+
+      - name: Restart frontend on EC2
+        run: |
+          ssh -i ${{ secrets.EC2_SSH }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart nginx'

@@ -16,8 +16,8 @@ import { env } from 'process';
 //const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
 //const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-const certFilePath = "monate.web.client.pem";
-const keyFilePath = "monate.web.client.key";
+const certFilePath = "/var/www/html/monate.web.client.pem";
+const keyFilePath = "/var/www/html/monate.web.client.key";
 
 if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     if (0 !== child_process.spawnSync('dotnet', [
@@ -34,7 +34,7 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 }
 
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:5177';
+    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'https://localhost:5000';
 
 // https://vitejs.dev/config/
 export default defineConfig({

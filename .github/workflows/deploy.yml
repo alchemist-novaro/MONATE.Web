@@ -36,7 +36,7 @@ jobs:
 
       - name: Copy frontend to EC2
         run: |
-          scp -i ../monate.pem -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/var/html
+          scp -i ../monate.pem -r ./dist/* ubuntu@ec2-3-137-165-184.us-east-2.compute.amazonaws.com:/var/html
         working-directory: ./monate.web.client
       
       - name: Build backend

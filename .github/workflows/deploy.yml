@@ -34,9 +34,19 @@ jobs:
         run: npm run build
         working-directory: ./monate.web.client
 
+      - name: Setup SSH key for EC2 access
+        run: |
+          echo "${{ secrets.EC2_SSH }}" > ./monate.pem
+          chmod 600 ./monate.pem
+
+      - name: Add EC2 host key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.EC2_SERVER }} >> ~/.ssh/known_hosts
+
       - name: Copy frontend to EC2
         run: |
-          scp -i ../monate.pem -r ./dist/* ubuntu@ec2-3-137-165-184.us-east-2.compute.amazonaws.com:/var/html
+          scp -i ../monate.pem -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/var/html
         working-directory: ./monate.web.client
       
       - name: Build backend

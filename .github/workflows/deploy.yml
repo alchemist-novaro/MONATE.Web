@@ -25,7 +25,9 @@ jobs:
           dotnet-version: '8.0'
         
       - name: Install dependencies for frontend
-        run: npm install
+        run: |
+          npm install
+          npm audit fix
         working-directory: ./monate.web.client
 
       - name: Build frontend

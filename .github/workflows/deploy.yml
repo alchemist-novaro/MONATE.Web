@@ -35,7 +35,9 @@ jobs:
         working-directory: ./monate.web.client
 
       - name: Copy frontend to EC2
-        run: scp -i ${{ secrets.EC2_SSH }} -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/var/html
+        run: |
+          echo "${{ secrets.EC2_SSH }}" | ssh-add - <<< ""
+          scp -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/var/html
         working-directory: ./monate.web.client
       
       - name: Build backend
@@ -46,13 +48,17 @@ jobs:
         working-directory: ./MONATE.Web.Server
 
       - name: Copy backend to EC2
-        run: scp -i ${{ secrets.EC2_SSH }} -r ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/publish
+        run: |
+          echo "${{ secrets.EC2_SSH }}" | ssh-add - <<< ""
+          scp -r ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/publish
         working-directory: ./MONATE.Web.Server
 
       - name: Restart backend on EC2
         run: |
-          ssh -i ${{ secrets.EC2_SSH }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart monate-api.service'
+          echo "${{ secrets.EC2_SSH }}" | ssh-add - <<< ""
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart monate-api.service'
 
       - name: Restart frontend on EC2
         run: |
-          ssh -i ${{ secrets.EC2_SSH }} ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart nginx'
+          echo "${{ secrets.EC2_SSH }}" | ssh-add - <<< ""
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart nginx'

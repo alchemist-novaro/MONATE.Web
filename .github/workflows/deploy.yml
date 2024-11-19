@@ -46,7 +46,7 @@ jobs:
 
       - name: Copy frontend to EC2
         run: |
-          scp -i ../monate.pem -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/var/www/html
+          scp -i ../monate.pem -r ./dist/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/frontend
         working-directory: ./monate.web.client
       
       - name: Build backend
@@ -58,7 +58,7 @@ jobs:
 
       - name: Copy backend to EC2
         run: |
-          scp -i ../monate.pem -r ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/publish
+          scp -i ../monate.pem -r ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/backend
         working-directory: ./MONATE.Web.Server
 
       - name: Restart backend on EC2

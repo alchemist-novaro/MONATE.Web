@@ -64,7 +64,8 @@ jobs:
 
       - name: Copy backend to EC2
         run: |
-          scp -i ../monate.pem -r ./publish/.* ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/backend
+          scp -i ../monate.pem ./publish/.env ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/backend
+          scp -i ../monate.pem ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/backend
         working-directory: ./MONATE.Web.Server
 
       - name: Restart backend on EC2

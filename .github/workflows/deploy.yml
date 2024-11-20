@@ -75,15 +75,13 @@ jobs:
           ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo cp ~/publish/server_config/monate-api.service /etc/systemd/system/monate-api.service'
           ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo cp ~/publish/server_config/monate-frontend.service /etc/systemd/system/monate-frontend.service'
 
-      - name: Restart nginx on EC2
+      - name: Reload service infos
         run: |
           ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo nginx -t'
+          ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl daemon-reload'
+
+      - name: Restart services on EC2
+        run: |
           ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart nginx'
-
-      - name: Restart backend on EC2
-        run: |
           ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart monate-api.service'
-
-      - name: Restart frontend on EC2
-        run: |
           ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart monate-frontend.service'

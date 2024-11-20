@@ -280,7 +280,7 @@ const UploadEndpoint = (props) => {
                 <div style={{ width: '40%' }}>
                     <div style={{
                         display: 'flex', flexDirection: 'column', borderRadius: '5%', width: '430px', marginLeft: '1%', marginRight: '1%',
-                        marginTop: '15vh', height: '420px', backgroundColor: lightMode ? '#1f2f2f22' : '#dfefef22', marginBottom: '20px',
+                        marginTop: '15vh', height: '500px', backgroundColor: lightMode ? '#1f2f2f22' : '#dfefef22', marginBottom: '20px',
                     }}>
                         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
@@ -316,13 +316,13 @@ const UploadEndpoint = (props) => {
                                 />
                             }
                         </div>
-                        <div style={{ width: '85%', marginBottom: '20px' }}>
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <div style={{ marginLeft: '2%', fontSize: '30px', color: lightMode ? '#1f2f2f' : '#dfefef' }}>
+                        <div style={{ width: '100%', marginBottom: '20px', marginTop: '20px' }}>
+                            <div style={{ marginLeft: '15px', display: 'flex', flexDirection: 'row' }}>
+                                <div style={{ fontSize: '30px', color: lightMode ? '#1f2f2f' : '#dfefef', height: '30px' }}>
                                     {title}
                                 </div>
                             </div>
-                            <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ marginLeft: '15px', marginTop: '10px', display: 'flex', flexDirection: 'row' }}>
                                 {avatar ?
                                     <img
                                         src={avatar}
@@ -343,7 +343,7 @@ const UploadEndpoint = (props) => {
                                     {firstName + ' ' + lastName}
                                 </div>
                             </div>
-                            <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ marginLeft: '15px', marginTop: '10px', display: 'flex', flexDirection: 'row' }}>
                                 <EmailIcon width='20px' height='20px' />
                                 <div style={{ marginLeft: '2%', color: lightMode ? '#1f2f2f' : '#dfefef' }}>
                                     {email}

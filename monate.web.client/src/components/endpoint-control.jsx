@@ -148,7 +148,7 @@ const EndpointElement = ({ id }) => {
                 </div>
                 <div style={{
                     marginLeft: '15px', color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '15px', marginTop: '10px',
-                    display: 'flex', flexDirection: 'row', alignItems: 'center'
+                    display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '15px'
                 }}>
                     {categories.map((category, index) => (
                         <div key={index} style={{

@@ -92,8 +92,6 @@
 
                     var _newToken = TokenHelper.GeneralToken;
                     var _cryptedNewToken = Globals.Cryptor.Encrypt(_newToken);
-                    _user.Token = _newToken;
-                    _user.ExpireDate = DateTime.UtcNow.AddHours(1);
 
                     var _categories = new Category[portfolio.CategoryIds.Count];
                     for (int i = 0; i < _categories.Length; i++)
@@ -106,6 +104,8 @@
                         ImagePath = _filePath,
                         Categories = _categories,
                     });
+                    _user.Token = _newToken;
+                    _user.ExpireDate = DateTime.UtcNow.AddHours(1);
                     await _context.SaveChangesAsync();
 
                     return Ok(new { token = _cryptedNewToken });

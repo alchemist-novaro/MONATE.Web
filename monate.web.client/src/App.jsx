@@ -10,6 +10,7 @@ import './style.css';
 import Dashboard from './pages/dashboard';
 import NotFound from './pages/not-found';
 import Portfolio from './pages/portfolio';
+import UploadEndpoint from './pages/upload-endpoint';
 import Sign from './pages/sign';
 import Manager from './pages/manager';
 import AlertProvider from './components/alerts';
@@ -45,6 +46,7 @@ const App = (props) => {
                         <Route path="/signup" element={<Sign signUp />} />
                         <Route path="/login" element={<Sign />} />
                         <Route path="/upload-portfolio" element={<Portfolio />} />
+                        <Route path="/upload-endpoint" element={<UploadEndpoint />} />
                         <Route path="/manage-users" element={<Manager />} />
                         <Route path="/manage-endpoints" element={<Manager />} />
                         <Route path="/manage-custom-nodes" element={<Manager />} />

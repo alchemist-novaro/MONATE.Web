@@ -293,7 +293,7 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
-        [HttpPost("GetUsers", Name = "Post /Users/GetUsers")]
+        [HttpPost("GetUsers", Name = "Post /User/GetUsers")]
         public async Task<IActionResult> GetUsers(PageData page)
         {
             if (page == null || string.IsNullOrEmpty(page.Email) || string.IsNullOrEmpty(page.Token))
@@ -350,7 +350,7 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
-        [HttpPost("GetUser", Name = "Post /Users/GetUser")]
+        [HttpPost("GetUser", Name = "Post /User/GetUser")]
         public async Task<IActionResult> GetUser(UserData user)
         {
             if (user == null || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Token))
@@ -415,7 +415,7 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
-        [HttpPost("GetUserType", Name = "Post /Users/GetUserType")]
+        [HttpPost("GetUserType", Name = "Post /User/GetUserType")]
         public async Task<IActionResult> GetUserType(GeneralTokenData token)
         {
             if (token == null || string.IsNullOrEmpty(token.Email) || string.IsNullOrEmpty(token.Token))

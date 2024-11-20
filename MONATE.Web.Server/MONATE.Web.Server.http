@@ -29,3 +29,13 @@ GET {{MONATE.Web.Server_HostAddress}}/Portfolio/
 Accept: application/json
 
 ###
+
+POST {{MONATE.Web.Server_HostAddress}}/Endpoint/
+Accept: application/json
+
+###
+
+GET {{MONATE.Web.Server_HostAddress}}/Endpoint/
+Accept: application/json
+
+###

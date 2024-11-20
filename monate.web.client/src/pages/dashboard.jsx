@@ -3,7 +3,8 @@ import Header from '../components/header';
 import AnimatedBackgrounds from '../components/animated-backgrounds';
 import { useAlert } from '../components/alerts';
 import DashboardTabs from '../components/dashboard-tabs';
-import PortfolioControl from '../components/portfolio-control'
+import PortfolioControl from '../components/portfolio-control';
+import EndpointControl from '../components/endpoint-control';
 import UserControl from '../components/user-control';
 import Footer from '../components/footer';
 import useCryptionHelper from '../../helpers/cryption-helper';
@@ -102,6 +103,8 @@ const Dashboard = (props) => {
                     <PortfolioControl />}
                 {currentPage === 'users' &&
                     <UserControl />}
+                {currentPage === 'endpoints' &&
+                    <EndpointControl />}
                 <Footer />
             </div>
             <Header />

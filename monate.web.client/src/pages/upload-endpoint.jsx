@@ -316,7 +316,7 @@ const UploadEndpoint = (props) => {
                                 />
                             }
                         </div>
-                        <div style={{ width: '100%', marginBottom: '10px', marginTop: '20px' }}>
+                        <div style={{ width: '100%', marginBottom: '10px', marginTop: '10px' }}>
                             <div style={{ marginLeft: '15px', display: 'flex', flexDirection: 'row' }}>
                                 <div style={{ fontSize: '30px', color: lightMode ? '#1f2f2f' : '#dfefef', height: '30px' }}>
                                     {title}
@@ -351,7 +351,7 @@ const UploadEndpoint = (props) => {
                             </div>
                             <div style={{
                                 marginLeft: '15px', color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '15px', marginTop: '10px',
-                                display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '15px'
+                                display: 'flex', flexDirection: 'row', alignItems: 'center'
                             }}>
                                 {selectedCategories.map((category, index) => (
                                     <div key={index} style={{

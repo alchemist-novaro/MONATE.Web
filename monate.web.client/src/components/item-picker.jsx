@@ -4,7 +4,7 @@ import { CloseIcon } from './svg-icons';
 import { useLightMode } from '../globals/interface';
 import './item-picker.css';
 
-const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder, maxItems = 5 }) => {
+const ItemPicker = ({ style, items, selectedItems, setSelectedItems, placeholder, maxItems = 3 }) => {
     const lightMode = useLightMode();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchedItems, setSearchedItems] = useState(items);

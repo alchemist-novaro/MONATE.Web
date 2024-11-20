@@ -23,7 +23,7 @@ const EndpointElement = ({ id }) => {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
-    const [description, setDescription] = useState('');
+    const [categories, setCategories] = useState([]);
     const [endpointImage, setEndpointImage] = useState('');
     const [userType, setUserType] = useState('');
 
@@ -53,17 +53,17 @@ const EndpointElement = ({ id }) => {
                         const _userName = await decrypt(data.userName);
                         const _userEmail = await decrypt(data.userEmail);
                         const _userAvatar = await decrypt(data.userAvatar);
-                        const _description = await decrypt(data.description);
                         const _endpointImage = await decrypt(data.imageData);
                         const _userType = await decrypt(data.userType);
+                        const _categories = await decrypt(data.categories);
 
                         setTitle(_title);
                         setUserName(_userName);
                         setUserEmail(_userEmail);
                         setUserAvatar(_userAvatar);
                         setUserType(_userType);
-                        setDescription(_description);
                         setEndpointImage(_endpointImage);
+                        setCategories(_categories);
                     }
                 } catch (error) {
                     showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -113,13 +113,13 @@ const EndpointElement = ({ id }) => {
                     />
                 }
             </div>
-            <div style={{ width: '100%', marginBottom: '20px' }}>
+            <div style={{ width: '100%', marginBottom: '10px' }}>
                 <div style={{ marginLeft: '15px', display: 'flex', flexDirection: 'row' }}>
                     <div style={{ marginLeft: '2%', fontSize: '30px', color: lightMode ? '#1f2f2f' : '#dfefef', height: '30px' }}>
                         {title}
                     </div>
                 </div>
-                <div style={{ marginLeft: '15px', marginTop: '10px', display: 'flex', flexDirection: 'row' }}>
+                <div style={{ marginLeft: '15px', marginTop: '15px', display: 'flex', flexDirection: 'row' }}>
                     {userAvatar ?
                         <img
                             src={userAvatar}
@@ -145,6 +145,20 @@ const EndpointElement = ({ id }) => {
                     <div style={{ marginLeft: '2%', color: lightMode ? '#1f2f2f' : '#dfefef' }}>
                         {userEmail}
                     </div>
+                </div>
+                <div style={{
+                    marginLeft: '15px', color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '15px', marginTop: '10px',
+                    display: 'flex', flexDirection: 'row', alignItems: 'center'
+                }}>
+                    {categories.map((category, index) => (
+                        <div key={index} style={{
+                            display: 'flex', justifyContent: 'center', alignItems: 'center',
+                            backgroundColor: '#7f8f8f', color: lightMode ? '#1f2f2f' : '#dfefef',
+                            borderRadius: '4px', padding: '2px', marginRight: '6px'
+                        }}>
+                            &nbsp;&nbsp;{category}&nbsp;&nbsp;
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

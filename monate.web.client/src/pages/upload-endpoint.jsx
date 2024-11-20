@@ -316,13 +316,13 @@ const UploadEndpoint = (props) => {
                                 />
                             }
                         </div>
-                        <div style={{ width: '100%', marginBottom: '20px', marginTop: '20px' }}>
+                        <div style={{ width: '100%', marginBottom: '10px', marginTop: '20px' }}>
                             <div style={{ marginLeft: '15px', display: 'flex', flexDirection: 'row' }}>
                                 <div style={{ fontSize: '30px', color: lightMode ? '#1f2f2f' : '#dfefef', height: '30px' }}>
                                     {title}
                                 </div>
                             </div>
-                            <div style={{ marginLeft: '15px', marginTop: '10px', display: 'flex', flexDirection: 'row' }}>
+                            <div style={{ marginLeft: '15px', marginTop: '15px', display: 'flex', flexDirection: 'row' }}>
                                 {avatar ?
                                     <img
                                         src={avatar}
@@ -348,6 +348,20 @@ const UploadEndpoint = (props) => {
                                 <div style={{ marginLeft: '2%', color: lightMode ? '#1f2f2f' : '#dfefef' }}>
                                     {email}
                                 </div>
+                            </div>
+                            <div style={{
+                                marginLeft: '15px', color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '15px', marginTop: '10px',
+                                display: 'flex', flexDirection: 'row', alignItems: 'center'
+                            }}>
+                                {selectedCategories.map((category, index) => (
+                                    <div key={index} style={{
+                                        display: 'flex', justifyContent: 'center', alignItems: 'center',
+                                        backgroundColor: '#7f8f8f', color: lightMode ? '#1f2f2f' : '#dfefef',
+                                        borderRadius: '4px', padding: '2px', marginRight: '6px'
+                                    }}>
+                                        &nbsp;&nbsp;{category.name}&nbsp;&nbsp;
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

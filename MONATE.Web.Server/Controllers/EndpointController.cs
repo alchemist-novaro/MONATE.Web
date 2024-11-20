@@ -70,6 +70,13 @@
                         _userType = "administrator";
                     else if (_endpoint.User.UserType == UserType.TeamMember)
                         _userType = "team";
+                    var _categories = new List<string>();
+                    if (_endpoint.Categories != null)
+                    {
+                        var categories = _endpoint.Categories.ToArray();
+                        for (int j = 0; j < categories.Length; j++)
+                            _categories.Add(categories[j].Name);
+                    }
 
                     return Ok(new
                     {
@@ -80,6 +87,7 @@
                         userType = Globals.Cryptor.Encrypt(_userType),
                         description = _description,
                         imageData = Globals.Cryptor.Encrypt(_imageData),
+                        categories = _categories,
                     });
                 }
                 else

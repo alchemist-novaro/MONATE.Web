@@ -76,7 +76,7 @@ const EndpointElement = ({ id }) => {
     return (
         <div style={{
             display: 'flex', flexDirection: 'column', borderRadius: '5%', width: '430px', marginLeft: '1%', marginRight: '1%',
-            marginTop: '20px', height: '500px', backgroundColor: lightMode ? '#1f2f2f22' : '#dfefef22', marginBottom: '20px',
+            marginTop: '20px', height: '420px', backgroundColor: lightMode ? '#1f2f2f22' : '#dfefef22', marginBottom: '20px',
             alignItems: 'center', justifyContent: 'space-between',
         }}>
             <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -124,11 +124,11 @@ const EndpointElement = ({ id }) => {
                         <img
                             src={userAvatar}
                             alt='UserAvatar'
-                            style={{ width: '20px', height: '20px', borderRadius: '50%', border: '1px solid #28c' }}
+                            style={{ width: '18px', height: '18px', borderRadius: '50%', border: '1px solid #28c' }}
                         /> :
                         <div
                             style={{
-                                backgroundColor: 'deeppink', width: '20px', height: '20px',
+                                backgroundColor: 'deeppink', width: '18px', height: '18px',
                                 borderRadius: '50%', border: '1px solid #28c', objectFit: 'cover',
                                 textAlign: 'center', fontSize: '17px', color: 'white'
                             }}

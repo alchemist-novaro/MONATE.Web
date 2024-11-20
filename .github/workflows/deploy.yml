@@ -68,6 +68,18 @@ jobs:
           scp -i ../monate.pem -r ./publish/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/backend
         working-directory: ./MONATE.Web.Server
 
+      - name: Copy server config to EC2 and config server
+        run: |
+          scp -i ./monate.pem -r ./server_config/* ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }}:/home/${{ secrets.EC2_USER }}/publish/server_config
+          ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo cp ~/publish/server_config/default /etc/nginx/sites-available/default'
+          ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo cp ~/publish/server_config/monate-api.service /etc/systemd/system/monate-api.service'
+          ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo cp ~/publish/server_config/monate-frontend.service /etc/systemd/system/monate-frontend.service'
+
+      - name: Restart nginx
+        run: |
+          ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo nginx -t'
+          ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart nginx'
+
       - name: Restart backend on EC2
         run: |
           ssh -i ./monate.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_SERVER }} 'sudo systemctl restart monate-api.service'

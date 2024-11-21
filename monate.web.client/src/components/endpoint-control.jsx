@@ -133,7 +133,7 @@ const EndpointElement = ({ id }) => {
                                 textAlign: 'center', fontSize: '17px', color: 'white'
                             }}
                         >
-                            {userName[0].toUpperCase()}
+                            {userName && userName[0].toUpperCase()}
                         </div>
                     }
                     <div style={{ marginLeft: '2%', color: lightMode ? '#1f2f2f' : '#dfefef' }}>

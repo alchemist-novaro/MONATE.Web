@@ -81,9 +81,9 @@
         {
             verifyTrialCountDict[email] =
                 (!verifyTrialCountDict.ContainsKey(email)
-                || (DateTime.Now - verifyLastTrialDict[email]) > new TimeSpan(24, 0, 0))
+                || (DateTime.UtcNow - verifyLastTrialDict[email]) > new TimeSpan(24, 0, 0))
                 ? 0 : (verifyTrialCountDict[email] + 1);
-            verifyLastTrialDict[email] = DateTime.Now;
+            verifyLastTrialDict[email] = DateTime.UtcNow;
             if (verifyTrialCountDict[email] > 5)
                 throw new Exception("The trial has been exceed. Try after 24 hours.");
         }

@@ -224,7 +224,7 @@ const UserControl = (props) => {
                     const userIdsStr = await decrypt(data.userIds);
                     const maxPageStr = await decrypt(data.maxPage);
                     setMaxPage(parseInt(maxPageStr))
-                    setUserIds(userIdsStr.split(' '));
+                    setUserIds(userIdsStr === '' ? [] : userIdsStr.split(' '));
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });

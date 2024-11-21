@@ -15,7 +15,8 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("Database");
 builder.Services.AddDbContext<MonateDbContext>(options =>
 {
-    options.UseNpgsql(connectionString);
+    //options.UseNpgsql(connectionString);
+    options.UseOracle(connectionString);
 });
 
 var app = builder.Build();

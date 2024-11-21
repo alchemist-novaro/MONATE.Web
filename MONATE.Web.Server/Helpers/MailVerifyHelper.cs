@@ -42,9 +42,10 @@
             {
                 try
                 {
-                    client.Connect(mySmtpHost, mySmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
-                    client.Authenticate(myEmail, myEmailPassword);
-                    client.Send(message);
+                    Console.WriteLine(code);
+                    //client.Connect(mySmtpHost, mySmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+                    //client.Authenticate(myEmail, myEmailPassword);
+                    //client.Send(message);
 
                     return true;
                 }

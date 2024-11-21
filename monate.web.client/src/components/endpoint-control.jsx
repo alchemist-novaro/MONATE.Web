@@ -55,15 +55,19 @@ const EndpointElement = ({ id }) => {
                         const _userAvatar = await decrypt(data.userAvatar);
                         const _endpointImage = await decrypt(data.imageData);
                         const _userType = await decrypt(data.userType);
-                        const _categories = await decrypt(data.categories);
 
                         setTitle(_title);
                         setUserName(_userName);
                         setUserEmail(_userEmail);
                         setUserAvatar(_userAvatar);
-                        setUserType(_userType);
+                        if (_userType === 'administrator') {
+                            setUserType("Administrator")
+                        }
+                        else if (_userType === "team") {
+                            setUserType("MONATE");
+                        }
                         setEndpointImage(_endpointImage);
-                        setCategories(_categories);
+                        setCategories(data.categories);
                     }
                 } catch (error) {
                     showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -106,10 +110,10 @@ const EndpointElement = ({ id }) => {
                     <img
                         src={endpointImage}
                         alt='EndpointImage'
-                        style={{ width: '400px', height: '300px', borderRadius: '20px', marginTop: '30px', }}
+                        style={{ width: '400px', height: '300px', borderRadius: '20px', marginTop: '10px', }}
                     /> :
                     <div
-                        style={{ width: '400px', height: '300px', borderRadius: '20px', marginTop: '30px' }}
+                        style={{ width: '400px', height: '300px', borderRadius: '20px', marginTop: '10px' }}
                     />
                 }
             </div>
@@ -206,7 +210,7 @@ const EndpointControl = (props) => {
                     const endpointIdsStr = await decrypt(data.endpointIds);
                     const maxPageStr = await decrypt(data.maxPage);
                     setMaxPage(parseInt(maxPageStr))
-                    setEndpointIds(endpointIdsStr.split(' '));
+                    setEndpointIds(endpointIdsStr === '' ? [] : endpointIdsStr.split(' '));
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });

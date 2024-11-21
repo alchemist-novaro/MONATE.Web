@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAlert } from './alerts';
 import { EmailIcon, NextIcon, BackIcon } from './svg-icons';
 import { MyTextField } from './my-controls';
@@ -15,6 +16,7 @@ const EndpointElement = ({ id }) => {
     const email = useEmail();
     const token = useToken();
 
+    const navigate = useNavigate();
     const { showAlert } = useAlert();
 
     const { encrypt, decrypt } = useCryptionHelper();
@@ -77,12 +79,16 @@ const EndpointElement = ({ id }) => {
         getEndpoint();
     }, []);
 
+    const onEndpoint = async () => {
+        navigate(`/get-endpoint?id=${id}`);
+    }
+
     return (
         <div style={{
             display: 'flex', flexDirection: 'column', borderRadius: '5%', width: '430px', marginLeft: '1%', marginRight: '1%',
             marginTop: '20px', height: '500px', backgroundColor: lightMode ? '#1f2f2f22' : '#dfefef22', marginBottom: '20px',
             alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer'
-        }}>
+        }} onClick={onEndpoint}>
             <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
                     {userType === "Administrator" &&
@@ -176,6 +182,7 @@ const EndpointControl = (props) => {
     const email = useEmail();
     const token = useToken();
 
+    const navigate = useNavigate();
     const { showAlert } = useAlert();
     const { encrypt, decrypt } = useCryptionHelper();
 
@@ -241,6 +248,10 @@ const EndpointControl = (props) => {
         setCurrentPage(page);
     };
 
+    const onUploadEndpoint = async () => {
+        navigate(`/upload-endpoint`);
+    };
+
     useEffect(() => {
         getEndpoints();
     }, [currentPage, searchQuery]);
@@ -251,7 +262,9 @@ const EndpointControl = (props) => {
                 <MyTextField
                     placeholder='Search...'
                     id='portfolio-title'
-                    style={{ marginTop: '3%', width: '20vw' }}
+                    style={{
+                        marginTop: user ? '1.5%' : '3%', width: '20vw'
+                    }}
                     onChange={handleQueueChange}
                 />
                 <div disabled={currentPage === 1} className={lightMode ?
@@ -272,6 +285,11 @@ const EndpointControl = (props) => {
                         height: '50px', width: '50px', borderRadius: '50%', marginTop: '0.8vw', marginLeft: '0.2vw',
                         display: 'flex', justifyContent: 'center', alignItems: 'center'
                     }} onClick={onNextPage}><NextIcon width='35px' height='35px' disabled={currentPage === maxPage} marginLeft='5px' /></div>
+                {user && <div className={lightMode ? 'page-button-light' : 'page-button-dark'}
+                    style={{
+                        height: '50px', width: '300px', color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '30px', marginTop: '0.8vw', marginLeft: '5vw',
+                        display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', borderRadius: '15px',
+                    }} onClick={onUploadEndpoint}>Upload Endpoint</div>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', marginTop: '3vh', flexWrap: 'wrap', width: '100%', justifyContent: 'center' }}>
                 {endpointIds.map((endpointId, index) => (

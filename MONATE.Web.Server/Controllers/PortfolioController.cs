@@ -69,7 +69,7 @@
                 if (_user == null)
                     return BadRequest(new { message = "This user is not registered." });
 
-                if (_user.ExpireDate < DateTime.Now)
+                if (_user.ExpireDate < DateTime.UtcNow)
                 {
                     return BadRequest(new { message = "Your current token is expired. Please log in again." });
                 }

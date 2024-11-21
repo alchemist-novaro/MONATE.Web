@@ -38,7 +38,7 @@
                 if (_user == null)
                     return BadRequest(new { message = "This user is not registered." });
 
-                if (_user.ExpireDate < DateTime.Now)
+                if (_user.ExpireDate < DateTime.UtcNow)
                 {
                     return BadRequest(new { message = "Your current token is expired. Please log in again." });
                 }
@@ -78,6 +78,20 @@
                         for (int j = 0; j < categories.Length; j++)
                             _categories.Add(categories[j].Name);
                     }
+                    var _workflows = new List<WorkflowData>();
+                    if (_endpoint.Workflows != null)
+                    {
+                        var workflows = _endpoint.Workflows.ToArray();
+                        for (int j = 0; j < workflows.Length; j++)
+                            _workflows.Add(new WorkflowData
+                            {
+                                Id = workflows[j].Id,
+                                Version = workflows[j].Version,
+                                Price = workflows[j].Price,
+                                Image = System.IO.File.ReadAllText("Workflows\\" + workflows[j].ImagePath),
+                                Permition = (int)workflows[j].Permition,
+                            });
+                    }
 
                     return Ok(new
                     {
@@ -89,6 +103,7 @@
                         description = _description,
                         imageData = Globals.Cryptor.Encrypt(_imageData),
                         categories = _categories,
+                        workflows = _workflows,
                     });
                 }
                 else
@@ -119,7 +134,7 @@
                 if (_user == null)
                     return BadRequest(new { message = "This user is not registered." });
 
-                if (_user.ExpireDate < DateTime.Now)
+                if (_user.ExpireDate < DateTime.UtcNow)
                 {
                     return BadRequest(new { message = "Your current token is expired. Please log in again." });
                 }
@@ -176,7 +191,7 @@
                 if (_user == null)
                     return BadRequest(new { message = "This user is not registered." });
 
-                if (_user.ExpireDate < DateTime.Now)
+                if (_user.ExpireDate < DateTime.UtcNow)
                 {
                     return BadRequest(new { message = "Your current token is expired. Please log in again." });
                 }
@@ -234,7 +249,7 @@
                 if (_user == null)
                     return BadRequest(new { message = "This user is not registered." });
 
-                if (_user.ExpireDate < DateTime.Now)
+                if (_user.ExpireDate < DateTime.UtcNow)
                 {
                     return BadRequest(new { message = "Your current token is expired. Please log in again." });
                 }

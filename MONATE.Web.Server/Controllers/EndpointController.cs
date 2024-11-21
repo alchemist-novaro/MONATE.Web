@@ -62,7 +62,7 @@
                     var _userEmail = Globals.Cryptor.Encrypt(_endpoint.User.Email);
                     var _description = Globals.Cryptor.Encrypt(_endpoint.Description ?? "");
                     var _userAvatarPath = _endpoint.User.Profile.AvatarPath;
-                    var _userAvatarData = await System.IO.File.ReadAllTextAsync("Endpoints\\" + _userAvatarPath);
+                    var _userAvatarData = await System.IO.File.ReadAllTextAsync("Avatars\\" + _userAvatarPath);
                     var _imagePath = _endpoint.ImagePath;
                     var _imageData = await System.IO.File.ReadAllTextAsync("Endpoints\\" + _imagePath);
                     var _userType = "client";
@@ -245,9 +245,9 @@
                     var _image = Globals.Cryptor.Decrypt(endpoint.Image);
 
                     var _filePath = TokenHelper.ApiToken(_email);
-                    if (!Directory.Exists("Portfolios"))
-                        Directory.CreateDirectory("Portfolios");
-                    await System.IO.File.WriteAllTextAsync("Portfolios\\" + _filePath, _image);
+                    if (!Directory.Exists("Endpoints"))
+                        Directory.CreateDirectory("Endpoints");
+                    await System.IO.File.WriteAllTextAsync("Endpoints\\" + _filePath, _image);
 
                     var _newToken = TokenHelper.GeneralToken;
                     var _cryptedNewToken = Globals.Cryptor.Encrypt(_newToken);

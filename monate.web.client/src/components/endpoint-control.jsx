@@ -194,7 +194,7 @@ const EndpointControl = (props) => {
                 query: await encrypt(searchQuery),
             };
             try {
-                const response = await fetch(user ? `endpoint/getendpoints` : `endpoint/getendpointsbyuser`, {
+                const response = await fetch(user ? `endpoint/getendpointsbyuser` : `endpoint/getendpoints`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

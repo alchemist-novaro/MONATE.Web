@@ -194,7 +194,7 @@ const EndpointControl = (props) => {
                 query: await encrypt(searchQuery),
             };
             try {
-                const response = await fetch(user ? `endpoint/getendpoints` : `endpoint/getendpointsbyuser`, {
+                const response = await fetch(user ? `endpoint/getendpointsbyuser` : `endpoint/getendpoints`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -211,6 +211,8 @@ const EndpointControl = (props) => {
                     const maxPageStr = await decrypt(data.maxPage);
                     setMaxPage(parseInt(maxPageStr))
                     setEndpointIds(endpointIdsStr === '' ? [] : endpointIdsStr.split(' '));
+
+                    console.log(endpointIdsStr);
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });

@@ -54,11 +54,12 @@
                     var _id = int.Parse(_idStr);
 
                     var _endpoint = await GetEndpointByIdAsync(_id);
+                    var _u = await GetUserByEmailAsync(_endpoint.User.Email);
                     if (_endpoint == null)
                         return BadRequest(new { message = "Can't find endpoint with this id." });
 
                     var _title = Globals.Cryptor.Encrypt(_endpoint.Name);
-                    var _userName = Globals.Cryptor.Encrypt(_endpoint.User.Location.FirstName + " " + _endpoint.User.Location.LastName);
+                    var _userName = Globals.Cryptor.Encrypt(_u.Location.FirstName + " " + _u.Location.LastName);
                     var _userEmail = Globals.Cryptor.Encrypt(_endpoint.User.Email);
                     var _description = Globals.Cryptor.Encrypt(_endpoint.Description ?? "");
                     var _userAvatarPath = _endpoint.User.Profile.AvatarPath;
@@ -297,8 +298,6 @@
                 .Include(e => e.Workflows)
                 .Include(e => e.Categories)
                 .Include(e => e.User)
-                .Where(e => e.User != null && e.User.Location != null && e.User.Profile != null 
-                    && e.User.Permition == Permition.Approved && e.Permition == Permition.Approved)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
@@ -339,7 +338,12 @@
 
         private bool ValidateEndpoint(Endpoint e, string? query)
         {
-            if (e.User == null || e.User.Location == null || e.User.Profile == null)
+            var _user = _context.Users
+                .Include(u => u.Profile)
+                .Include(u => u.Location)
+                .FirstOrDefault(u => u.Email == e.User.Email);
+
+            if (_user == null || _user.Location == null || _user.Profile == null)
                 return false;
 
             var stringBuilder = new StringBuilder();

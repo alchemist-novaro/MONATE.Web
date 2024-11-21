@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useAlert } from './alerts';
-import { EmailIcon, PhoneIcon, NextIcon, BackIcon } from './svg-icons';
+import { EmailIcon, NextIcon, BackIcon } from './svg-icons';
 import { MyTextField } from './my-controls';
 import {
     useLightMode,
@@ -81,7 +81,7 @@ const EndpointElement = ({ id }) => {
         <div style={{
             display: 'flex', flexDirection: 'column', borderRadius: '5%', width: '430px', marginLeft: '1%', marginRight: '1%',
             marginTop: '20px', height: '500px', backgroundColor: lightMode ? '#1f2f2f22' : '#dfefef22', marginBottom: '20px',
-            alignItems: 'center', justifyContent: 'space-between',
+            alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer'
         }}>
             <div style={{width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
@@ -119,7 +119,7 @@ const EndpointElement = ({ id }) => {
             </div>
             <div style={{ width: '100%', marginBottom: '10px', marginTop: '10px' }}>
                 <div style={{ marginLeft: '15px', display: 'flex', flexDirection: 'row' }}>
-                    <div style={{ marginLeft: '2%', fontSize: '30px', color: lightMode ? '#1f2f2f' : '#dfefef', height: '30px' }}>
+                    <div style={{ fontSize: '30px', color: lightMode ? '#1f2f2f' : '#dfefef', height: '30px' }}>
                         {title}
                     </div>
                 </div>

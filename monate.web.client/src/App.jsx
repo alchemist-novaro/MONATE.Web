@@ -13,6 +13,7 @@ import Portfolio from './pages/portfolio';
 import UploadEndpoint from './pages/upload-endpoint';
 import Sign from './pages/sign';
 import Manager from './pages/manager';
+import MyEndpoints from './pages/my-endpoints';
 import AlertProvider from './components/alerts';
 import NavbarProvider from './components/navbar';
 import {
@@ -51,6 +52,7 @@ const App = (props) => {
                         <Route path="/manage-endpoints" element={<Manager />} />
                         <Route path="/manage-custom-nodes" element={<Manager />} />
                         <Route path="/manage-value-types" element={<Manager />} />
+                        <Route path="/my-endpoints" element={<MyEndpoints />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Router>

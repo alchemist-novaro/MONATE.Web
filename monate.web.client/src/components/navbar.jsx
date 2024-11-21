@@ -79,6 +79,10 @@ const NavbarProvider = ({ children }) => {
         window.location.href = '/manage-users';
     }
 
+    const onMyEndpoints = () => {
+        window.location.href = '/my-endpoints';
+    }
+
     return (
         <NavbarContext.Provider value={{ showNavbar }}>
             {children}
@@ -141,7 +145,7 @@ const NavbarProvider = ({ children }) => {
                         {userType && <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>
                             My Profile
                             </div>}
-                        {userType && <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'}>
+                        {userType && <div className={lightMode ? 'navbar-button-light' : 'navbar-button-dark'} onClick={onMyEndpoints}>
                             My Endpoints
                             </div>}
                         <br />

@@ -39,3 +39,23 @@ GET {{MONATE.Web.Server_HostAddress}}/Endpoint/
 Accept: application/json
 
 ###
+
+POST {{MONATE.Web.Server_HostAddress}}/ValueType/
+Accept: application/json
+
+###
+
+GET {{MONATE.Web.Server_HostAddress}}/ValueType/
+Accept: application/json
+
+###
+
+POST {{MONATE.Web.Server_HostAddress}}/Workflow/
+Accept: application/json
+
+###
+
+GET {{MONATE.Web.Server_HostAddress}}/Workflow/
+Accept: application/json
+
+###

@@ -27,5 +27,6 @@
         FLOAT = 1,
         STRING = 2,
         IMAGE = 3,
+        MULTILINE_STRING = 4,
     }
 }

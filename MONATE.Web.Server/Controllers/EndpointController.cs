@@ -9,6 +9,7 @@
     using System.Text;
     using MONATE.Web.Server.Data.Packets.PortfolioInfo;
     using MONATE.Web.Server.Helpers;
+    using MONATE.Web.Server.Data.Packets.CategoryInfo;
 
     [ApiController]
     [Route("[controller]")]
@@ -71,12 +72,18 @@
                         _userType = "administrator";
                     else if (_endpoint.User.UserType == UserType.TeamMember)
                         _userType = "team";
-                    var _categories = new List<string>();
+                    var _categories = new List<CategoryData>();
                     if (_endpoint.Categories != null)
                     {
-                        var categories = _endpoint.Categories.ToArray();
-                        for (int j = 0; j < categories.Length; j++)
-                            _categories.Add(categories[j].Name);
+                        var categories = _endpoint.Categories.ToList();
+                        for (int i = 0; i < categories.Count; i++)
+                        {
+                            _categories.Add(new CategoryData
+                            {
+                                Id = categories[i].Id,
+                                Name = categories[i].Name,
+                            });
+                        }
                     }
                     var _workflows = new List<WorkflowData>();
                     if (_endpoint.Workflows != null)
@@ -104,6 +111,7 @@
                         imageData = Globals.Cryptor.Encrypt(_imageData),
                         categories = _categories,
                         workflows = _workflows,
+                        permition = (int)_endpoint.Permition,
                     });
                 }
                 else

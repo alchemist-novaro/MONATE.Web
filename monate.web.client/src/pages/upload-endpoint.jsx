@@ -104,7 +104,7 @@ const UploadEndpoint = (props) => {
             }
             else {
                 showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
-                redirect();
+                navigate('/login');
             }
         }
         const getCategories = async () => {

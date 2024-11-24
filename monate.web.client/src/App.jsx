@@ -12,6 +12,8 @@ import NotFound from './pages/not-found';
 import Portfolio from './pages/portfolio';
 import UploadEndpoint from './pages/upload-endpoint';
 import GetEndpoint from './pages/get-endpoint';
+import UploadWorkflow from './pages/upload-workflow';
+import PreviewWorkflow from './pages/preview-workflow';
 import Sign from './pages/sign';
 import Manager from './pages/manager';
 import MyEndpoints from './pages/my-endpoints';
@@ -55,6 +57,8 @@ const App = (props) => {
                         <Route path="/manage-value-types" element={<Manager />} />
                         <Route path="/my-endpoints" element={<MyEndpoints />} />
                         <Route path="/get-endpoint" element={<GetEndpoint />} />
+                        <Route path="/upload-workflow" element={<UploadWorkflow />} />
+                        <Route path="/preview-workflow" element={<PreviewWorkflow />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Router>

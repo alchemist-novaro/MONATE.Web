@@ -62,6 +62,14 @@ export default defineConfig({
                 target,
                 secure: false
             },
+            '^/valuetype': {
+                target,
+                secure: false
+            },
+            '^/workflow': {
+                target,
+                secure: false
+            },
         },
         port: 5173,
         https: {

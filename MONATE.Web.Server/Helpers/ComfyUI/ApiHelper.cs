@@ -8,7 +8,7 @@
     {
         private static readonly HttpClient client = new HttpClient();
 
-        public static async Task<JObject?> QueuePrompt(string prompt, string clientId, string serverAddress)
+        public static async Task<JObject?> QueuePrompt(JObject prompt, string clientId, string serverAddress)
         {
             using (var client = new HttpClient())
             {

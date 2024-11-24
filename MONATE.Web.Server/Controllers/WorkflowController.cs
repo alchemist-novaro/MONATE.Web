@@ -74,7 +74,7 @@
                                 if (inputValue.Type == "IMAGE")
                                     await ApiHelper.UploadImage(inputValue.Image, inputValue.Value, _serverUrl);
                             }
-                            var promtIdData = await ApiHelper.QueuePrompt(JsonConvert.SerializeObject(_workflowObject), _clientId, _serverUrl);
+                            var promtIdData = await ApiHelper.QueuePrompt(_workflowObject, _clientId, _serverUrl);
                             string promptId = (string)promtIdData["prompt_id"];
                             WebSocketHelper.TrackProgress(ws, _workflowObject, promptId);
                         }

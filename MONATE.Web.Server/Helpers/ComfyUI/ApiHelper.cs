@@ -1,11 +1,21 @@
 ﻿namespace MONATE.Web.Server.Helpers.ComfyUI
 {
+    using MONATE.Web.Server.Logics;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using System.Net.Http;
     using System.Text;
+    using System.Web;
 
     public class ApiHelper
     {
+        public class OutputImage
+        {
+            public string FileName { get; set; }
+            public string Type { get; set; }
+            public object ImageData { get; set; }
+        }
+
         private static readonly HttpClient client = new HttpClient();
 
         public static async Task<JObject?> QueuePrompt(JObject prompt, string clientId, string serverAddress)
@@ -62,9 +72,30 @@
 
         public static async Task<byte[]> GetImageAsync(string filename, string subfolder, string folderType, string serverAddress)
         {
-            var url = $"http://{serverAddress}/view?filename={filename}&subfolder={subfolder}&type={folderType}";
+            var data = new Dictionary<string, string>
+            {
+                { "filename", filename },
+                { "subfolder", subfolder },
+                { "type", folderType }
+            };
+
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            foreach (var pair in data)
+            {
+                queryString[pair.Key] = pair.Value;
+            }
+
+            var url = $"http://{serverAddress}/view?{queryString.ToString()}";
             var response = await client.GetAsync(url);
-            return await response.Content.ReadAsByteArrayAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsByteArrayAsync();
+            }
+            else
+            {
+                throw new Exception($"Failed to get image: {response.StatusCode}");
+            }
         }
 
         public static async Task<dynamic> GetHistoryAsync(string promptId, string serverAddress)
@@ -73,6 +104,60 @@
             var response = await client.GetAsync(url);
             var responseContent = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<dynamic>(responseContent);
+        }
+
+        public static async Task<List<OutputImage>> DownloadImages(string clientId, string serverAddress, bool allowPreview = false)
+        {
+            var outputImages = new List<OutputImage>();
+            string promptId = "";
+            lock (Globals.globalLock)
+            {
+                if (Globals.PromptIds.ContainsKey(clientId))
+                    promptId = Globals.PromptIds[clientId];
+            }
+            if (promptId == null)
+                return new List<OutputImage>();
+
+            var history = await GetHistoryAsync(promptId, serverAddress);
+
+            if (history.ContainsKey(promptId))
+            {
+                var nodeOutputs = history[promptId]["outputs"];
+
+                foreach (var nodeId in nodeOutputs)
+                {
+                    var nodeOutput = nodeId.Value;
+                    var outputData = new Dictionary<string, object>();
+
+                    if (nodeOutput.ContainsKey("images"))
+                    {
+                        foreach (var image in nodeOutput["images"])
+                        {
+                            if (allowPreview && image["type"].ToString() == "temp")
+                            {
+                                var previewData = await GetImageAsync(image["filename"].ToString(), image["subfolder"].ToString(), image["type"].ToString(), serverAddress);
+                                outputData["image_data"] = previewData;
+                            }
+                            if (image["type"].ToString() == "output")
+                            {
+                                var imageData = await GetImageAsync(image["filename"].ToString(), image["subfolder"].ToString(), image["type"].ToString(), serverAddress);
+                                outputData["image_data"] = imageData;
+                            }
+
+                            outputData["file_name"] = image["filename"].ToString();
+                            outputData["type"] = image["type"].ToString();
+                            outputImages.Add(new OutputImage
+                            {
+                                FileName = image["filename"].ToString(),
+                                Type = image["type"].ToString(),
+                                ImageData = outputData.ContainsKey("image_data") ? outputData["image_data"] : null
+                            });
+                        }
+                    }
+                }
+            }
+
+            return outputImages;
         }
 
         public static async Task<dynamic> GetNodeInfoByClassAsync(string nodeClass, string serverAddress)

@@ -14,42 +14,6 @@ import useCryptionHelper from '../../helpers/cryption-helper';
 import './preview-workflow.css';
 
 const PreviewWorkflow = (props) => {
-    const [socket, setSocket] = useState(null);
-    const [message, setMessage] = useState('');
-    const [response, setResponse] = useState('');
-
-    useEffect(() => {
-        const ws = new WebSocket('ws://localhost:5177/comfyui');
-
-        ws.onopen = () => {
-            console.log('WebSocket connected');
-        };
-
-        ws.onmessage = (event) => {
-            setResponse(event.data);
-        };
-
-        ws.onclose = () => {
-            console.log('WebSocket disconnected');
-        };
-
-        ws.onerror = (error) => {
-            console.error('WebSocket error', error);
-        };
-
-        setSocket(ws);
-
-        return () => {
-            ws.close();
-        };
-    }, []);
-
-    const sendMessage = () => {
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(message);
-        }
-    };
-
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const id = queryParams.get('id');
@@ -75,7 +39,118 @@ const PreviewWorkflow = (props) => {
     const [outputIndex, setOutputIndex] = useState(0);
     const [serverUrl, setServerUrl] = useState('localhost:8188');
     const [uuid, setUuid] = useState('');
-        
+    const [disabledButton, setDisabledButton] = useState(false);
+    const [buttonText, setButtonText] = useState('');
+    const [lastStatus, setLastStatus] = useState('');
+    const [downloadedImages, setDownloadedImages] = useState([]);
+
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        const initializeWebsocket = () => {
+            const ws = new WebSocket('ws://localhost:5177/comfyui');
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+            };
+
+            ws.onmessage = (event) => {
+                console.log(event);
+                if (event.data === 'Uploading') {
+                    setButtonText('Uploading data...');
+                }
+                if (event.data === 'Prompting') {
+                    setButtonText('Uploading workflow...');
+                }
+                if (event.data === 'Working') {
+                    setLastStatus('w');
+                    setButtonText('Processing...');
+                }
+                if (event.data === 'Downloading') {
+                    if (lastStatus !== 'd') {
+                        downloadOutputs();
+                    }
+                    setLastStatus('d');
+                    setButtonText('Downloading...');
+                }
+                if (event.data === 'Error') {
+                    if (lastStatus !== 'e') {
+                        showAlert({ severity: 'error', message: 'Error ocurred in server side.' });
+                        setButtonText('');
+                        setDisabledButton(false);
+                    }
+                    setLastStatus('e');
+                }
+                if (event.data !== 'Error' && event.data !== 'None') {
+                    console.log("Sending message...");
+                    setTimeout(() => {
+                        console.log(uuid);
+                        sendMessage(uuid);
+                    }, 300);
+                }
+            }
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error', error);
+            };
+
+            setSocket(ws);
+
+            return () => {
+                ws.close();
+            };
+        }
+        initializeWebsocket();
+    }, []);
+
+    const downloadOutputs = async () => {
+        if (email && token) {
+            const clientIdData = {
+                email: await encrypt(email.toLowerCase()),
+                token: await encrypt(token),
+                clientId: await encrypt(uuid),
+                serverAddress: await encrypt(serverUrl),
+            };
+            try {
+                const response = await fetch(`workflow/downloadimages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(clientIdData),
+                });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showAlert({ severity: 'error', message: data.message });
+                    navigate('/');
+                }
+                else {
+                    console.log(data);
+                    setDisabledButton(false);
+                }
+            } catch (error) {
+                showAlert({ severity: 'error', message: 'Could not found server.' });
+                navigate('/');
+            }
+        }
+        else {
+            showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
+            navigate('/login');
+        }
+    }
+
+    const sendMessage = (message) => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log(message);
+            socket.send(message);
+        }
+    };
+            
     useEffect(() => {
         const getWorkflow = async () => {
             if (email && token) {
@@ -153,6 +228,8 @@ const PreviewWorkflow = (props) => {
 
     const handleRunWorkflow = async () => {
         if (email && token) {
+            setDisabledButton(true);
+
             const uuid = uuidv4();
             setUuid(uuid);
             const promptData = {
@@ -180,6 +257,7 @@ const PreviewWorkflow = (props) => {
                 else {
                     const _token = await decrypt(data.token);
                     saveToken(_token);
+                    sendMessage(uuid);
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -188,6 +266,7 @@ const PreviewWorkflow = (props) => {
         }
         else {
             showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
+            setDisabledButton(false);
             navigate('/login');
         }
     }
@@ -361,9 +440,14 @@ const PreviewWorkflow = (props) => {
                                 </div>
                             ))}
                         </div>
-                        <div className={lightMode ? 'workflow-button-light' : 'workflow-button-dark'} style={{ width: '300px', marginTop: '40px' }}
+                        <div disabled={disabledButton} className={lightMode ? 'workflow-button-light' : 'workflow-button-dark'}
+                            style={{
+                                width: '300px', marginTop: '40px',
+                                backgroundColor: disabledButton ? '#7f8f8f' : '',
+                                pointerEvents: disabledButton ? 'none' : 'auto',
+                            }}
                             onClick={handleRunWorkflow}>
-                            Prompt Workflow
+                            {buttonText ? buttonText : 'Run Workflow'}
                         </div>
                     </div>
                 </div>

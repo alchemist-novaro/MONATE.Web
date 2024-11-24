@@ -7,7 +7,6 @@
     using MONATE.Web.Server.Helpers;
     using MONATE.Web.Server.Helpers.ComfyUI;
     using MONATE.Web.Server.Logics;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System.IO;
     using System.Threading;
@@ -64,23 +63,44 @@
                         SetValue(_workflowObject, (string)inputValue.Path, (string)inputValue.Value);
                     }
 
+                    lock (Globals.globalLock)
+                    {
+                        Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.None;
+                    }
+
                     Thread thread = new Thread(new ThreadStart(async () =>
                     {
                         var ws = new WebSocket("ws://" + _serverUrl + "/ws?clientId=" + _clientId);
                         try
                         {
+                            lock (Globals.globalLock)
+                            {
+                                if (Globals.RunningWorkflowStatus.ContainsKey(_clientId))
+                                    Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.Uploading;
+                            }
                             foreach (WorkflowInputData inputValue in prompt.inputValues)
                             {
                                 if (inputValue.Type == "IMAGE")
                                     await ApiHelper.UploadImage(inputValue.Image, inputValue.Value, _serverUrl);
                             }
                             var promtIdData = await ApiHelper.QueuePrompt(_workflowObject, _clientId, _serverUrl);
+                            lock (Globals.globalLock)
+                            {
+                                if (Globals.RunningWorkflowStatus.ContainsKey(_clientId))
+                                    Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.Prompting;
+                            }
                             string promptId = (string)promtIdData["prompt_id"];
-                            WebSocketHelper.TrackProgress(ws, _workflowObject, promptId);
+                            lock (Globals.globalLock)
+                            {
+                                if (Globals.RunningWorkflowStatus.ContainsKey(_clientId))
+                                    Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.Working;
+                                Globals.PromptIds[_clientId] = promptId;
+                            }
+                            WebSocketHelper.TrackProgress(ws, _workflowObject, promptId, _clientId);
                         }
                         catch
                         {
-                            ;
+                            ws.Close();
                         }
                     }));
                     thread.Start();
@@ -91,7 +111,54 @@
                     _user.ExpireDate = DateTime.UtcNow.AddHours(1);
                     await _context.SaveChangesAsync();
 
-                    return Ok(new { token = _cryptedNewToken });
+                    return Ok(new { Token = _cryptedNewToken });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Your token is not registered." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("DownloadImages", Name = "Post /Workflow/DownloadImages")]
+        public async Task<IActionResult> DownloadImages([FromBody] ClientIdData clientId)
+        {
+            if (string.IsNullOrEmpty(clientId.Email) || string.IsNullOrEmpty(clientId.Token))
+            {
+                return BadRequest(new { message = "Your workflow data is not correct." });
+            }
+
+            try
+            {
+                var _email = Globals.Cryptor.Decrypt(clientId.Email);
+                var _token = Globals.Cryptor.Decrypt(clientId.Token);
+
+                var _user = await GetUserByEmailAsync(_email);
+                if (_user == null)
+                    return BadRequest(new { message = "This user is not registered." });
+
+                if (_user.ExpireDate < DateTime.UtcNow)
+                {
+                    return BadRequest(new { message = "Your current token is expired. Please log in again." });
+                }
+
+                if (_user.Permition != Permition.Approved)
+                {
+                    return BadRequest(new { message = "This method is not allowed with your account." });
+                }
+
+                if (_user.Token == _token)
+                {
+                    var _outputImages = new List<string>();
+                    var _clientId = Globals.Cryptor.Decrypt(clientId.ClientId);
+                    var _serverAddress = Globals.Cryptor.Decrypt(clientId.ServerAddress);
+                    var _images = await ApiHelper.DownloadImages(_clientId, _serverAddress);
+
+                    return Ok(new { Images = _images });
                 }
                 else
                 {
@@ -169,8 +236,8 @@
                     var _outputIndex = int.Parse(_workflow.Outputs.ToArray()[0].Path);
 
                     return Ok(new {
-                        version = _version,
-                        price = _price,
+                        Version = _version,
+                        Price = _price,
                         GPUUsage = _gpuUsage,
                         Description = _description,
                         EndpointName = _endpointName,
@@ -287,7 +354,7 @@
                     _user.ExpireDate = DateTime.UtcNow.AddHours(1);
                     await _context.SaveChangesAsync();
 
-                    return Ok(new { token = _cryptedNewToken });
+                    return Ok(new { Token = _cryptedNewToken });
                 }
                 else
                 {

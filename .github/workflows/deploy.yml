@@ -30,6 +30,12 @@ jobs:
           npm audit fix
         working-directory: ./monate.web.client
 
+      - name: Configure frontend dotenv
+        run: |
+          echo "${{ secrets.FRONT_END_DOTENV }}" > ./.env
+          chmod 666 ./.env
+        working-directory: ./monate.web.client
+
       - name: Build frontend
         run: npm run build
         working-directory: ./monate.web.client

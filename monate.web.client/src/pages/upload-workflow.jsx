@@ -265,8 +265,6 @@ const UploadWorkflow = (props) => {
             const _inputValueTypeIds = inputedPaths.map((inputedPath) => inputedPath.typeId);
             const _inputValueNames = inputedPaths.map((inputedPath) => inputedPath.name);
 
-            console.log(inputedPaths);
-
             const workflowData = {
                 email: await encrypt(email.toLowerCase()),
                 token: await encrypt(token),
@@ -282,7 +280,6 @@ const UploadWorkflow = (props) => {
                 inputValueNames: _inputValueNames,
             };
 
-            console.log(workflowData);
             try {
                 const response = await fetch(`workflow/uploadworkflow`, {
                     method: 'POST',

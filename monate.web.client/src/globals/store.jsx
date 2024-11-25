@@ -6,7 +6,7 @@ import reducer from './reducers';
 import initialState from './initialState';
 
 const encryptor = encryptTransform({
-    secretKey: initialState.encryptKey,
+    secretKey: process.env.ENCRYPTION_KEY,
     onError: (error) => {
         console.error('Encryption error:', error);
     },

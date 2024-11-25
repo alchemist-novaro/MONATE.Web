@@ -9,8 +9,6 @@ const initialState = {
     lastName: null,
     title: null,
     avatar: null,
-    key: '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
-    encryptKey: 'wkdwktks',
 };
 
 export default initialState;

@@ -264,3 +264,16 @@ export function AddIcon({ width, height, marginTop, marginLeft, style, disabled 
         </SvgIcon>
     );
 }
+
+export function AddValueTypeIcon({ width, height, marginTop, marginLeft, style, disabled }) {
+    const lightMode = useLightMode();
+
+    return (
+        <SvgIcon style={{ ...style, width: width, height: height, marginTop: marginTop, marginLeft: marginLeft }}>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 12L12 12M12 12L17 12M12 12V7M12 12L12 17" stroke={disabled ? '#7f8f8f' : (lightMode ? '#1f2f2f' : '#dfefef')} />
+                <circle cx="12" cy="12" r="9" stroke={disabled ? '#7f8f8f' : (lightMode ? '#1f2f2f' : '#dfefef')} />
+            </svg>
+        </SvgIcon>
+    );
+}

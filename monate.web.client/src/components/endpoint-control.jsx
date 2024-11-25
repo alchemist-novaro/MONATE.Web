@@ -70,6 +70,7 @@ const EndpointElement = ({ id }) => {
                         }
                         setEndpointImage(_endpointImage);
                         setCategories(data.categories);
+                        console.log(categories);
                     }
                 } catch (error) {
                     showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -166,7 +167,7 @@ const EndpointElement = ({ id }) => {
                             backgroundColor: '#7f8f8f', color: lightMode ? '#1f2f2f' : '#dfefef',
                             borderRadius: '4px', padding: '2px', marginRight: '6px'
                         }}>
-                            &nbsp;&nbsp;{category}&nbsp;&nbsp;
+                            &nbsp;&nbsp;{category.name}&nbsp;&nbsp;
                         </div>
                     ))}
                 </div>
@@ -222,6 +223,10 @@ const EndpointControl = (props) => {
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });
             }
+        }
+        else if (user) {
+            showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
+            navigate('/login');
         }
     };
 

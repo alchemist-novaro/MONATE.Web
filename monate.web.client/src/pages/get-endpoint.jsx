@@ -217,7 +217,7 @@ const GetEndpoint = (props) => {
                                 }}
                             />
                             <ItemPicker
-                                style={{ marginLeft: '50px', width: '89 0px', marginTop: '10px' }}
+                                style={{ marginLeft: '50px', width: '890px', marginTop: '10px' }}
                                 selectedItems={selectedCategories}
                                 setSelectedItems={setSelectedCategories}
                                 items={categories}

@@ -70,7 +70,6 @@ const EndpointElement = ({ id }) => {
                         }
                         setEndpointImage(_endpointImage);
                         setCategories(data.categories);
-                        console.log(categories);
                     }
                 } catch (error) {
                     showAlert({ severity: 'error', message: 'Could not found server.' });

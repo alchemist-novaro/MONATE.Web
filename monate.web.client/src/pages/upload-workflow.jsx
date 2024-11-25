@@ -265,6 +265,8 @@ const UploadWorkflow = (props) => {
             const _inputValueTypeIds = inputedPaths.map((inputedPath) => inputedPath.typeId);
             const _inputValueNames = inputedPaths.map((inputedPath) => inputedPath.name);
 
+            console.log(inputedPaths);
+
             const workflowData = {
                 email: await encrypt(email.toLowerCase()),
                 token: await encrypt(token),
@@ -273,12 +275,14 @@ const UploadWorkflow = (props) => {
                 workflow: await encrypt(workflow),
                 version: await encrypt(version),
                 price: await encrypt(price),
-                gPUUsage: await encrypt(gPURequirement),
+                gpuUsage: await encrypt(gPURequirement),
                 description: await encrypt(description),
                 inputValuePaths: _inputValuePaths,
                 inputValueTypeIds: _inputValueTypeIds,
                 inputValueNames: _inputValueNames,
             };
+
+            console.log(workflowData);
             try {
                 const response = await fetch(`workflow/uploadworkflow`, {
                     method: 'POST',
@@ -400,32 +404,35 @@ const UploadWorkflow = (props) => {
                                 <ColumnBox fontSize='20px' style={{ width: '500px', marginTop: '5px' }} items={inputPaths}
                                     placeholder='Input path of value here...' pickerWidth='470px'
                                     setSelectedItem={(item) => {
-                                        inputedPaths[index] = {
-                                            ...inputedPaths[index],
+                                        const newPaths = [...inputedPaths];
+                                        newPaths[index] = {
+                                            ...newPaths[index],
                                             path: item.name,
                                         }
-                                        setInputedPaths(inputedPaths);
+                                        setInputedPaths(newPaths);
                                     }} />
                                 <ColumnBox fontSize='20px' style={{ width: '190px', marginTop: '5px', marginLeft: '10px' }} items={valueTypes}
                                     placeholder='Value type...' pickerWidth='173px'
                                     setSelectedItem={(item) => {
-                                        inputedPaths[index] = {
-                                            ...inputedPaths[index],
+                                        const newPaths = [...inputedPaths];
+                                        newPaths[index] = {
+                                            ...newPaths[index],
                                             type: item.name,
                                             typeId: item.id,
                                         }
-                                        setInputedPaths(inputedPaths);
+                                        setInputedPaths(newPaths);
                                     }} />
                                 <MyTextField
                                     required
                                     style={{ marginTop: '5px', width: '190px', marginLeft: '10px' }}
                                     placeholder='Name'
                                     onChange={(e) => {
-                                        inputedPaths[index] = {
-                                            ...inputPaths[index],
+                                        const newPaths = [...inputedPaths];
+                                        newPaths[index] = {
+                                            ...newPaths[index],
                                             name: e.target.value,
                                         }
-                                        setInputedPaths(inputedPaths);
+                                        setInputedPaths(newPaths);
                                     }}
                                 />
                             </div>

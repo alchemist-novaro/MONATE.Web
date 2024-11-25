@@ -473,8 +473,8 @@ const PreviewWorkflow = (props) => {
                         <div style={{ width: '1000px', color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '25px', marginTop: '25px' }}>
                             Output Images
                         </div>
-                        {mainOutputImage && <img style={{ width: '1000px' }} src={mainOutputImage} />}
                         <div style={{ width: '1000px', height: '3px', backgroundColor: lightMode ? '#1f2f2f' : '#dfefef', marginTop: '5px' }} />
+                        {mainOutputImage && <img style={{ width: '1000px' }} src={mainOutputImage} />}
                         <div style={{
                             width: '1000px', marginTop: '20px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'
                         }}>

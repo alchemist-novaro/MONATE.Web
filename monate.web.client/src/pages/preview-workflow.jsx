@@ -65,7 +65,7 @@ const PreviewWorkflow = (props) => {
             setWebsocket(ws);
 
             ws.onopen = () => {
-                console.log('WebSocket connected');
+                ;
             };
 
             ws.onmessage = (event) => {
@@ -103,11 +103,11 @@ const PreviewWorkflow = (props) => {
             }
 
             ws.onclose = () => {
-                console.log('WebSocket disconnected');
+                ;
             };
 
             ws.onerror = (error) => {
-                console.error('WebSocket error', error);
+                ;
             };
 
             setSocket(ws);

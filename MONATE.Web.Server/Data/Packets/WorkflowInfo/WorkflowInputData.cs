@@ -5,7 +5,7 @@ namespace MONATE.Web.Server.Data.Packets.WorkflowInfo
         public string Path { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
-        public string Value { get; set; }
+        public object Value { get; set; }
         public string Image { get; set; }
     }
 }

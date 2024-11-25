@@ -338,61 +338,153 @@ const PreviewWorkflow = (props) => {
                         }}>
                             {inputValues.map((inputValue, index) => (
                                 <div key={index}>
-                                    {inputValue.type === 'INT' && <MyTextField
-                                        required
-                                        name={inputValue.name}
-                                        type='number'
-                                        onChange={(e) => {
-                                            const tmp = [...inputValues];
-                                            tmp[index] = {
-                                                ...tmp[index],
-                                                value: e.target.value,
-                                            }
-                                            setInputValues(tmp);
-                                        }}
-                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
-                                    />}
-                                    {inputValue.type === 'FLOAT' && <MyTextField
-                                        required
-                                        name={inputValue.name}
-                                        type='number'
-                                        onChange={(e) => {
-                                            const tmp = [...inputValues];
-                                            tmp[index] = {
-                                                ...tmp[index],
-                                                value: e.target.value,
-                                            }
-                                            setInputValues(tmp);
-                                        }}
-                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
-                                    />}
-                                    {inputValue.type === 'STRING' && <MyTextField
-                                        required
-                                        name={inputValue.name}
-                                        onChange={(e) => {
-                                            const tmp = [...inputValues];
-                                            tmp[index] = {
-                                                ...tmp[index],
-                                                value: e.target.value,
-                                            }
-                                            setInputValues(tmp);
-                                        }}
-                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
-                                    />}
-                                    {inputValue.type === 'MULTILINE_STRING' && <MyMultilineTextField
-                                        required
-                                        rows='3'
-                                        name={inputValue.name}
-                                        onChange={(e) => {
-                                            const tmp = [...inputValues];
-                                            tmp[index] = {
-                                                ...tmp[index],
-                                                value: e.target.value,
-                                            }
-                                            setInputValues(tmp);
-                                        }}
-                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
-                                    />}
+                                    {inputValue.type === 'INT' && 
+                                        <div
+                                            style={{
+                                                marginBottom: '20px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: '303px',
+                                                    height: '30px',
+                                                    borderRadius: '15px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    fontSize: '20px',
+                                                    color: lightMode ? '#1f2f2f' : '#dfefef',
+                                                }}
+                                            >
+                                                {inputValue.name}
+                                            </div>
+                                            <MyTextField
+                                                required
+                                                type='number'
+                                                onChange={(e) => {
+                                                    const tmp = [...inputValues];
+                                                    tmp[index] = {
+                                                        ...tmp[index],
+                                                        value: parseInt(e.target.value),
+                                                    }
+                                                    setInputValues(tmp);
+                                                }}
+                                                style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                            />
+                                        </div>}
+                                    {inputValue.type === 'FLOAT' &&
+                                        <div
+                                            style={{
+                                                marginBottom: '20px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: '303px',
+                                                    height: '30px',
+                                                    borderRadius: '15px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    fontSize: '20px',
+                                                    color: lightMode ? '#1f2f2f' : '#dfefef',
+                                                }}
+                                            >
+                                                {inputValue.name}
+                                            </div>
+                                            <MyTextField
+                                                required
+                                                type='number'
+                                                onChange={(e) => {
+                                                    const tmp = [...inputValues];
+                                                    tmp[index] = {
+                                                        ...tmp[index],
+                                                        value: parseFloat(e.target.value),
+                                                    }
+                                                    setInputValues(tmp);
+                                                }}
+                                                style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                            />
+                                        </div>}
+                                    {inputValue.type === 'STRING' && 
+                                        <div
+                                            style={{
+                                                marginBottom: '20px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: '303px',
+                                                    height: '30px',
+                                                    borderRadius: '15px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    fontSize: '20px',
+                                                    color: lightMode ? '#1f2f2f' : '#dfefef',
+                                                }}
+                                            >
+                                                {inputValue.name}
+                                            </div>
+                                            <MyTextField
+                                                required
+                                                onChange={(e) => {
+                                                    const tmp = [...inputValues];
+                                                    tmp[index] = {
+                                                        ...tmp[index],
+                                                        value: e.target.value,
+                                                    }
+                                                    setInputValues(tmp);
+                                                }}
+                                                style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                            />
+                                        </div>}
+                                    {inputValue.type === 'MULTILINE_STRING' && 
+                                        <div
+                                            style={{
+                                                marginBottom: '20px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: '303px',
+                                                    height: '30px',
+                                                    borderRadius: '15px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    fontSize: '20px',
+                                                    color: lightMode ? '#1f2f2f' : '#dfefef',
+                                                }}
+                                            >
+                                                {inputValue.name}
+                                            </div>
+                                            <MyMultilineTextField
+                                                required
+                                                rows='3'
+                                                onChange={(e) => {
+                                                    const tmp = [...inputValues];
+                                                    tmp[index] = {
+                                                        ...tmp[index],
+                                                        value: e.target.value,
+                                                    }
+                                                    setInputValues(tmp);
+                                                }}
+                                                style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                            />
+                                        </div>}
                                     {inputValue.type === 'IMAGE' && (
                                         <div
                                             style={{

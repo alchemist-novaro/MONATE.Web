@@ -60,7 +60,7 @@ namespace MONATE.Web.Server.Controllers
 
                     foreach (WorkflowInputData inputValue in prompt.inputValues)
                     {
-                        SetValue(_workflowObject, (string)inputValue.Path, (string)inputValue.Value);
+                        SetValue(_workflowObject, (string)inputValue.Path, inputValue.Value);
                     }
 
                     lock (Globals.globalLock)

@@ -101,6 +101,8 @@
                         catch
                         {
                             ws.Close();
+                            if (Globals.RunningWorkflowStatus.ContainsKey(_clientId))
+                                Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.Error;
                         }
                     }));
                     thread.Start();
@@ -157,6 +159,14 @@
                     var _clientId = Globals.Cryptor.Decrypt(clientId.ClientId);
                     var _serverAddress = Globals.Cryptor.Decrypt(clientId.ServerAddress);
                     var _images = await ApiHelper.DownloadImages(_clientId, _serverAddress);
+
+                    lock (Globals.globalLock)
+                    {
+                        if (Globals.RunningWorkflowStatus.ContainsKey(_clientId))
+                            Globals.RunningWorkflowStatus.Remove(_clientId);
+                        if (Globals.PromptIds.ContainsKey(_clientId))
+                            Globals.PromptIds.Remove(_clientId);
+                    }
 
                     return Ok(new { Images = _images });
                 }
@@ -298,7 +308,6 @@
                     var _inputValuePaths = workflow.InputValuePaths;
                     var _inputValueTypeIds = workflow.InputValueTypeIds;
                     var _inputValueNames = workflow.InputValueNames;
-                    var _outputIndex = int.Parse(Globals.Cryptor.Decrypt(workflow.OutputIndex));
 
                     var _endpoint = await GetEndpointByIdAsync(_endpointId);
 
@@ -339,16 +348,6 @@
 
                         await _context.InputValues.AddAsync(inputValue);
                     }
-
-                    var outputValue = new OutputValue
-                    {
-                        Type = await GetValueTypeByIdAsync(_inputValueTypeIds[0]),
-                        Workflow = _workflow,
-                        Path = _outputIndex.ToString(),
-                    };
-
-                    await _context.OutputValues.AddAsync(outputValue);
-                    await _context.SaveChangesAsync();
 
                     _user.Token = _newToken;
                     _user.ExpireDate = DateTime.UtcNow.AddHours(1);

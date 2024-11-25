@@ -14,6 +14,5 @@
         public string[] InputValuePaths { get; set; }
         public int[] InputValueTypeIds { get; set; }
         public string[] InputValueNames { get; set; }
-        public string OutputIndex { get; set; }
     }
 }

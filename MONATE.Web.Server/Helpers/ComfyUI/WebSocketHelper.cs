@@ -54,6 +54,7 @@
                 try
                 {
                     var message = e.Data;
+                    Console.WriteLine(message);
                     if (!string.IsNullOrEmpty(message))
                     {
                         var jsonMessage = JObject.Parse(message);
@@ -90,7 +91,7 @@
                                     finishedNodes.Add(node);
                                 }
 
-                                if (node == null && data["prompt_id"].ToString() == promptId)
+                                if (string.IsNullOrEmpty(node?.ToString()) && data["prompt_id"].ToString() == promptId)
                                 {
                                     ws.Close();
                                     lock (Globals.globalLock)

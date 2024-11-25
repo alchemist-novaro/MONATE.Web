@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -12,6 +12,7 @@ import { MyTextField, MyMultilineTextField } from '../components/my-controls';
 import { UploadIcon } from '../components/svg-icons';
 import useCryptionHelper from '../../helpers/cryption-helper';
 import './preview-workflow.css';
+import { setToken } from '../globals/reducers';
 
 const PreviewWorkflow = (props) => {
     const location = useLocation();
@@ -22,6 +23,8 @@ const PreviewWorkflow = (props) => {
     const token = useToken();
     const lightMode = useLightMode();
     const saveToken = useSaveToken();
+
+    const [uuid, setUUID] = useState(''); 
 
     const { encrypt, decrypt } = useCryptionHelper();
     const { showAlert } = useAlert();
@@ -38,24 +41,35 @@ const PreviewWorkflow = (props) => {
     const [inputValues, setInputValues] = useState([]);
     const [outputIndex, setOutputIndex] = useState(0);
     const [serverUrl, setServerUrl] = useState('localhost:8188');
-    const [uuid, setUuid] = useState('');
     const [disabledButton, setDisabledButton] = useState(false);
     const [buttonText, setButtonText] = useState('');
     const [lastStatus, setLastStatus] = useState('');
     const [downloadedImages, setDownloadedImages] = useState([]);
+    const [hookToken, setHookToken] = useState('');
+    const [mainOutputImage, setMainOutputImage] = useState('');
 
     const [socket, setSocket] = useState(null);
+    const [websocket, setWebsocket] = useState(null);
+
+    const hookRef = useRef({
+        uuid: uuid, socket: socket, hookToken: token, serverUrl: serverUrl, lastStatus: lastStatus
+    });
+    useEffect(() => {
+        hookRef.current = {
+            uuid: uuid, socket: socket, hookToken: hookToken, serverUrl: serverUrl, lastStatus: lastStatus
+        }
+    }, [uuid, socket, hookToken, serverUrl, lastStatus]);
 
     useEffect(() => {
         const initializeWebsocket = () => {
             const ws = new WebSocket('ws://localhost:5177/comfyui');
+            setWebsocket(ws);
 
             ws.onopen = () => {
                 console.log('WebSocket connected');
             };
 
             ws.onmessage = (event) => {
-                console.log(event);
                 if (event.data === 'Uploading') {
                     setButtonText('Uploading data...');
                 }
@@ -67,25 +81,24 @@ const PreviewWorkflow = (props) => {
                     setButtonText('Processing...');
                 }
                 if (event.data === 'Downloading') {
-                    if (lastStatus !== 'd') {
-                        downloadOutputs();
-                    }
                     setLastStatus('d');
-                    setButtonText('Downloading...');
+                    if (hookRef.current.lastStatus !== 'd') {
+                        downloadOutputs();
+                        setButtonText('Downloading...');
+                    }
                 }
                 if (event.data === 'Error') {
-                    if (lastStatus !== 'e') {
+                    setLastStatus('e');
+                    if (hookRef.current.lastStatus !== 'e') {
                         showAlert({ severity: 'error', message: 'Error ocurred in server side.' });
                         setButtonText('');
                         setDisabledButton(false);
                     }
-                    setLastStatus('e');
                 }
                 if (event.data !== 'Error' && event.data !== 'None') {
-                    console.log("Sending message...");
                     setTimeout(() => {
-                        console.log(uuid);
-                        sendMessage(uuid);
+                        const currentUuid = hookRef.current.uuid;
+                        sendMessage(currentUuid);
                     }, 300);
                 }
             }
@@ -102,18 +115,28 @@ const PreviewWorkflow = (props) => {
 
             return () => {
                 ws.close();
+                setSocket(null);
             };
         }
         initializeWebsocket();
     }, []);
 
+    const redirect = (url) => {
+        navigate(url);
+        setSocket(null);
+        if (websocket !== null)
+            websocket.close();
+        setWebsocket(null);
+    }
+
     const downloadOutputs = async () => {
+        console.log('download');
         if (email && token) {
             const clientIdData = {
                 email: await encrypt(email.toLowerCase()),
-                token: await encrypt(token),
-                clientId: await encrypt(uuid),
-                serverAddress: await encrypt(serverUrl),
+                token: await encrypt(hookRef.current.hookToken),
+                clientId: await encrypt(hookRef.current.uuid),
+                serverAddress: await encrypt(hookRef.current.serverUrl),
             };
             try {
                 const response = await fetch(`workflow/downloadimages`, {
@@ -126,28 +149,27 @@ const PreviewWorkflow = (props) => {
                 const data = await response.json();
 
                 if (!response.ok) {
-                    showAlert({ severity: 'error', message: data.message });
-                    navigate('/');
+                    showAlert({ severity: 'error', message: "Internal server error ocurred." });
                 }
                 else {
-                    console.log(data);
                     setDisabledButton(false);
+                    setButtonText('');
+                    setDownloadedImages(data.images);
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });
-                navigate('/');
+                redirect('/');
             }
         }
         else {
             showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
-            navigate('/login');
+            redirect('/login');
         }
     }
 
     const sendMessage = (message) => {
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            console.log(message);
-            socket.send(message);
+        if (hookRef.current.socket && hookRef.current.socket.readyState === WebSocket.OPEN) {
+            hookRef.current.socket.send(message);
         }
     };
             
@@ -171,7 +193,7 @@ const PreviewWorkflow = (props) => {
 
                     if (!response.ok) {
                         showAlert({ severity: 'error', message: data.message });
-                        navigate('/');
+                        redirect('/');
                     }
                     else {
                         const _version = await decrypt(data.version);
@@ -198,12 +220,12 @@ const PreviewWorkflow = (props) => {
                     }
                 } catch (error) {
                     showAlert({ severity: 'error', message: 'Could not found server.' });
-                    navigate('/');
+                    redirect('/');
                 }
             }
             else {
                 showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
-                navigate('/login');
+                redirect('/login');
             }
         }
         getWorkflow();
@@ -229,9 +251,10 @@ const PreviewWorkflow = (props) => {
     const handleRunWorkflow = async () => {
         if (email && token) {
             setDisabledButton(true);
+            setMainOutputImage('');
 
             const uuid = uuidv4();
-            setUuid(uuid);
+            setUUID(uuid);
             const promptData = {
                 email: await encrypt(email.toLowerCase()),
                 token: await encrypt(token),
@@ -252,22 +275,23 @@ const PreviewWorkflow = (props) => {
 
                 if (!response.ok) {
                     showAlert({ severity: 'error', message: data.message });
-                    navigate('/');
+                    redirect('/');
                 }
                 else {
                     const _token = await decrypt(data.token);
                     saveToken(_token);
+                    setHookToken(_token);
                     sendMessage(uuid);
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });
-                navigate('/');
+                redirect('/');
             }
         }
         else {
             showAlert({ severity: 'error', message: 'You are not logged in now. Please log in.' });
             setDisabledButton(false);
-            navigate('/login');
+            redirect('/login');
         }
     }
 
@@ -278,7 +302,7 @@ const PreviewWorkflow = (props) => {
                     display: 'flex', flexDirection: 'row', justifyContent: 'center',
                     width: '1400px', marginTop: '120px', marginBottom: '100px'
                 }}>
-                    <div style={{ width: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <div style={{ width: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <div style={{
                             width: '350px', height: '340px', backgroundColor: lightMode ? '#dfefef' : '#1f2f2f', alignItems: 'center',
                             border: '4px solid #7f8f8f', borderRadius: '10px', display: 'flex', flexDirection: 'column'
@@ -448,6 +472,81 @@ const PreviewWorkflow = (props) => {
                             }}
                             onClick={handleRunWorkflow}>
                             {buttonText ? buttonText : 'Run Workflow'}
+                        </div>
+                        <div style={{ width: '1000px', color: lightMode ? '#1f2f2f' : '#dfefef', fontSize: '25px', marginTop: '25px' }}>
+                            Output Images
+                        </div>
+                        {mainOutputImage && <img style={{ width: '1000px' }} src={mainOutputImage} />}
+                        <div style={{ width: '1000px', height: '3px', backgroundColor: lightMode ? '#1f2f2f' : '#dfefef', marginTop: '5px' }} />
+                        <div style={{
+                            width: '1000px', marginTop: '20px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'
+                        }}>
+                            {downloadedImages.map((downloadedImage, index) => (
+                                <div key={index}>
+                                    <div
+                                        style={{
+                                            marginBottom: '20px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                width: '320px',
+                                                height: '30px',
+                                                borderRadius: '15px',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                fontSize: '20px',
+                                                color: lightMode ? '#1f2f2f' : '#dfefef',
+                                            }}
+                                        >
+                                            {downloadedImage.fileName}
+                                        </div>
+                                        <div
+                                            htmlFor={`file-input-${index}`}
+                                            style={{
+                                                cursor: 'pointer',
+                                                marginLeft: '15px',
+                                                marginRight: '15px',
+                                                marginBottom: '20px',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                width: '320px',
+                                                height: '240px',
+                                                borderRadius: '15px',
+                                                border: '3px solid #7f8f8f',
+                                            }}
+                                            onClick={() => {
+                                                setMainOutputImage(`data:image/png;base64,${downloadedImage.imageData}`);
+                                            }}
+                                        >
+                                            {downloadedImage.imageData ? (
+                                                <img
+                                                    src={`data:image/png;base64,${downloadedImage.imageData}`}
+                                                    alt={`Image ${index}`}
+                                                    style={{ width: '320px', height: '240px', borderRadius: '12px' }}
+                                                />
+                                            ) : (
+                                                <div
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                    }}
+                                                >
+                                                    <UploadIcon width="30px" height="30px" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

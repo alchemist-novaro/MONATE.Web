@@ -106,7 +106,7 @@
             return JsonConvert.DeserializeObject<dynamic>(responseContent);
         }
 
-        public static async Task<List<OutputImage>> DownloadImages(string clientId, string serverAddress, bool allowPreview = false)
+        public static async Task<List<OutputImage>> DownloadImages(string clientId, string serverAddress, bool allowPreview = true)
         {
             var outputImages = new List<OutputImage>();
             string promptId = "";

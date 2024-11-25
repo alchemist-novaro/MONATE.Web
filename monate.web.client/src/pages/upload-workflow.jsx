@@ -38,8 +38,6 @@ const UploadWorkflow = (props) => {
     const [valueTypes, setValueTypes] = useState([]);
     const [inputPaths, setInputPaths] = useState([]);
     const [inputedPaths, setInputedPaths] = useState([]);
-    const [outputIndex, setOutputIndex] = useState('0');
-    const [outputIndexError, setOutputIndexError] = useState('');
     const [workflow, setWorkflow] = useState('');
 
     const { encrypt, decrypt } = useCryptionHelper();
@@ -231,11 +229,6 @@ const UploadWorkflow = (props) => {
                 setGPURequirementError('You must input GPU usage.');
             }
             else setGPURequirementError('');
-            if (outputIndex === '') {
-                validated = false;
-                setOutputIndexError('You must input output image number.');
-            }
-            else setOutputIndexError('');
 
             return validated;
         }
@@ -258,8 +251,7 @@ const UploadWorkflow = (props) => {
             try {
                 const _price = parseFloat(price);
                 const _gpu = parseFloat(gPURequirement);
-                const _index = parseInt(outputIndex);
-                if (_price < 0 || _gpu < 0 || _index < 0) {
+                if (_price < 0 || _gpu < 0) {
                     showAlert({ severity: 'error', message: 'Input values correctly.' });
                     return;
                 }
@@ -286,7 +278,6 @@ const UploadWorkflow = (props) => {
                 inputValuePaths: _inputValuePaths,
                 inputValueTypeIds: _inputValueTypeIds,
                 inputValueNames: _inputValueNames,
-                outputIndex: await encrypt(outputIndex),
             };
             try {
                 const response = await fetch(`workflow/uploadworkflow`, {
@@ -454,16 +445,6 @@ const UploadWorkflow = (props) => {
                             marginTop: '5px', backgroundColor: lightMode ? '#1f2f2f' : '#dfefef'
                         }} />
                     </div>
-                    <MyTextField
-                        required
-                        name='Output image number'
-                        type='number'
-                        value={outputIndex}
-                        error={outputIndexError}
-                        id='outputInex'
-                        style={{ marginTop: '10px', width: '900px' }}
-                        onChange={handleOutputIndexChange}
-                    />
                     <div className={lightMode ? 'workflow-button-light' : 'workflow-button-dark'} style={{ width: '300px' }}
                         onClick={handleSubmitWorkflow}>
                         Submit Workflow

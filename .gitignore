@@ -365,5 +365,7 @@ FodyWeavers.xsd
 /MONATE.Web.Server/Avatars/*
 /MONATE.Web.Server/Portfolios/*
 /MONATE.Web.Server/Endpoints/*
+/monate.web.client/.env
+/monate.web.client/dist/*
 /monate.web.client/monate.web.client.pem
 /monate.web.client/monate.web.client.key

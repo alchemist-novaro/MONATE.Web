@@ -6,7 +6,7 @@ const useCryptionHelper = () => {
     const encrypt = async (plaintext) => {
         await sodium.ready;
         try {
-            const key = sodium.from_hex(process.env.PASSWORD);
+            const key = sodium.from_hex(import.meta.env.VITE_PASSWORD);
             const iv = sodium.randombytes_buf(12);
             const assocData = sodium.randombytes_buf(16);
 

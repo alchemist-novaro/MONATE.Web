@@ -3,10 +3,9 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 import reducer from './reducers';
-import initialState from './initialState';
 
 const encryptor = encryptTransform({
-    secretKey: process.env.ENCRYPTION_KEY,
+    secretKey: import.meta.env.VITE_ENCRYPTION_KEY,
     onError: (error) => {
         console.error('Encryption error:', error);
     },

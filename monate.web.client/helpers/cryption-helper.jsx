@@ -27,7 +27,7 @@ const useCryptionHelper = () => {
     const decrypt = async (cipherText) => {
         await sodium.ready;
         try {
-            const key = sodium.from_hex(initialState.key);
+            const key = sodium.from_hex(import.meta.env.VITE_PASSWORD);
             const iv = sodium.from_hex(cipherText.slice(0, 24));
             const assocData = sodium.from_hex(cipherText.slice(24, 56));
             const encryptedData = sodium.from_hex(cipherText.slice(56));

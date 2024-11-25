@@ -54,7 +54,6 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
                 try
                 {
                     var message = e.Data;
-                    Console.WriteLine(message);
                     if (!string.IsNullOrEmpty(message))
                     {
                         var jsonMessage = JObject.Parse(message);

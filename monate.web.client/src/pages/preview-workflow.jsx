@@ -129,7 +129,6 @@ const PreviewWorkflow = (props) => {
     }
 
     const downloadOutputs = async () => {
-        console.log('download');
         if (email && token) {
             const clientIdData = {
                 email: await encrypt(email.toLowerCase()),

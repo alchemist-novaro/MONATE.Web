@@ -243,7 +243,6 @@
                             Type = _valueType.Type.ToString(),
                         });
                     }
-                    var _outputIndex = int.Parse(_workflow.Outputs.ToArray()[0].Path);
 
                     return Ok(new {
                         Version = _version,
@@ -255,7 +254,6 @@
                         WorkflowData = _workflowData,
                         EndpointImage = _endpointImage,
                         InputValues = _inputValues,
-                        OutputIndex = _outputIndex
                     });
                 }
                 else

@@ -39,7 +39,6 @@ const PreviewWorkflow = (props) => {
     const [workflowData, setWorkflowData] = useState('');
     const [endpointImage, setEndpointImage] = useState('');
     const [inputValues, setInputValues] = useState([]);
-    const [outputIndex, setOutputIndex] = useState(0);
     const [serverUrl, setServerUrl] = useState('localhost:8188');
     const [disabledButton, setDisabledButton] = useState(false);
     const [buttonText, setButtonText] = useState('');
@@ -205,7 +204,6 @@ const PreviewWorkflow = (props) => {
                         const _workflowData = await decrypt(data.workflowData);
                         const _endpointImage = await decrypt(data.endpointImage);
                         const _inputValues = await data.inputValues;
-                        const _outputIndex = await data.outputIndex;
 
                         setVersion(_version);
                         setPrice(parseFloat(_price));
@@ -216,7 +214,6 @@ const PreviewWorkflow = (props) => {
                         setWorkflowData(_workflowData);
                         setEndpointImage(_endpointImage);
                         setInputValues(_inputValues);
-                        setOutputIndex(_outputIndex);
                     }
                 } catch (error) {
                     showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -353,7 +350,7 @@ const PreviewWorkflow = (props) => {
                                             }
                                             setInputValues(inputValues);
                                         }}
-                                        style={{ width: '320px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}
                                     {inputValue.type === 'FLOAT' && <MyTextField
                                         required
@@ -366,7 +363,7 @@ const PreviewWorkflow = (props) => {
                                             }
                                             setInputValues(inputValues);
                                         }}
-                                        style={{ width: '320px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}
                                     {inputValue.type === 'STRING' && <MyTextField
                                         required
@@ -378,7 +375,7 @@ const PreviewWorkflow = (props) => {
                                             }
                                             setInputValues(inputValues);
                                         }}
-                                        style={{ width: '320px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}
                                     {inputValue.type === 'MULTILINE_STRING' && <MyMultilineTextField
                                         required
@@ -391,7 +388,7 @@ const PreviewWorkflow = (props) => {
                                             }
                                             setInputValues(inputValues);
                                         }}
-                                        style={{ width: '320px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
+                                        style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}
                                     {inputValue.type === 'IMAGE' && (
                                         <div
@@ -411,7 +408,7 @@ const PreviewWorkflow = (props) => {
                                             />
                                             <div
                                                 style={{
-                                                    width: '320px',
+                                                    width: '303px',
                                                     height: '30px',
                                                     borderRadius: '15px',
                                                     display: 'flex',
@@ -427,13 +424,13 @@ const PreviewWorkflow = (props) => {
                                                 htmlFor={`file-input-${index}`}
                                                 style={{
                                                     cursor: 'pointer',
-                                                    marginLeft: '15px',
-                                                    marginRight: '15px',
+                                                    marginLeft: '12px',
+                                                    marginRight: '12px',
                                                     marginBottom: '20px',
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     alignItems: 'center',
-                                                    width: '320px',
+                                                    width: '303px',
                                                     height: '240px',
                                                     borderRadius: '15px',
                                                     border: '3px solid #7f8f8f',
@@ -509,13 +506,13 @@ const PreviewWorkflow = (props) => {
                                             htmlFor={`file-input-${index}`}
                                             style={{
                                                 cursor: 'pointer',
-                                                marginLeft: '15px',
-                                                marginRight: '15px',
+                                                marginLeft: '12px',
+                                                marginRight: '12px',
                                                 marginBottom: '20px',
                                                 display: 'flex',
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                width: '320px',
+                                                width: '303px',
                                                 height: '240px',
                                                 borderRadius: '15px',
                                                 border: '3px solid #7f8f8f',
@@ -528,7 +525,7 @@ const PreviewWorkflow = (props) => {
                                                 <img
                                                     src={`data:image/png;base64,${downloadedImage.imageData}`}
                                                     alt={`Image ${index}`}
-                                                    style={{ width: '320px', height: '240px', borderRadius: '12px' }}
+                                                    style={{ width: '303px', height: '240px', borderRadius: '12px' }}
                                                 />
                                             ) : (
                                                 <div

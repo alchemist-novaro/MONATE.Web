@@ -61,7 +61,7 @@ const PreviewWorkflow = (props) => {
 
     useEffect(() => {
         const initializeWebsocket = () => {
-            const ws = new WebSocket('ws://localhost:5177/comfyui');
+            const ws = new WebSocket('ws://localhost:5000/comfyui');
             setWebsocket(ws);
 
             ws.onopen = () => {

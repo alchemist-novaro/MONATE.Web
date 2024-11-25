@@ -343,11 +343,12 @@ const PreviewWorkflow = (props) => {
                                         name={inputValue.name}
                                         type='number'
                                         onChange={(e) => {
-                                            inputValues[index] = {
-                                                ...inputValues[index],
+                                            const tmp = [...inputValues];
+                                            tmp[index] = {
+                                                ...tmp[index],
                                                 value: e.target.value,
                                             }
-                                            setInputValues(inputValues);
+                                            setInputValues(tmp);
                                         }}
                                         style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}
@@ -356,11 +357,12 @@ const PreviewWorkflow = (props) => {
                                         name={inputValue.name}
                                         type='number'
                                         onChange={(e) => {
-                                            inputValues[index] = {
-                                                ...inputValues[index],
+                                            const tmp = [...inputValues];
+                                            tmp[index] = {
+                                                ...tmp[index],
                                                 value: e.target.value,
                                             }
-                                            setInputValues(inputValues);
+                                            setInputValues(tmp);
                                         }}
                                         style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}
@@ -368,11 +370,12 @@ const PreviewWorkflow = (props) => {
                                         required
                                         name={inputValue.name}
                                         onChange={(e) => {
-                                            inputValues[index] = {
-                                                ...inputValues[index],
+                                            const tmp = [...inputValues];
+                                            tmp[index] = {
+                                                ...tmp[index],
                                                 value: e.target.value,
                                             }
-                                            setInputValues(inputValues);
+                                            setInputValues(tmp);
                                         }}
                                         style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}
@@ -381,11 +384,12 @@ const PreviewWorkflow = (props) => {
                                         rows='3'
                                         name={inputValue.name}
                                         onChange={(e) => {
-                                            inputValues[index] = {
-                                                ...inputValues[index],
+                                            const tmp = [...inputValues];
+                                            tmp[index] = {
+                                                ...tmp[index],
                                                 value: e.target.value,
                                             }
-                                            setInputValues(inputValues);
+                                            setInputValues(tmp);
                                         }}
                                         style={{ width: '303px', marginLeft: '15px', marginRight: '15px', marginBottom: '20px' }}
                                     />}

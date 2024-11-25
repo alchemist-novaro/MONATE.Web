@@ -81,7 +81,7 @@ namespace MONATE.Web.Server.Controllers
                             foreach (WorkflowInputData inputValue in prompt.inputValues)
                             {
                                 if (inputValue.Type == "IMAGE")
-                                    await ApiHelper.UploadImage(inputValue.Image, inputValue.Value, _serverUrl);
+                                    await ApiHelper.UploadImage(inputValue.Image, (string)inputValue.Value, _serverUrl);
                             }
                             var promtIdData = await ApiHelper.QueuePrompt(_workflowObject, _clientId, _serverUrl);
                             lock (Globals.globalLock)

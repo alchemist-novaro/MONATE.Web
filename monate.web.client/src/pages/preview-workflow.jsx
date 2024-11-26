@@ -270,7 +270,7 @@ const PreviewWorkflow = (props) => {
                 const data = await response.json();
 
                 if (!response.ok) {
-                    showAlert({ severity: 'error', message: data.message });
+                    showAlert({ severity: 'error', message: 'Internal server error ocurred.' });
                     redirect('/');
                 }
                 else {

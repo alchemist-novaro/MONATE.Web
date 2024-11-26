@@ -271,7 +271,6 @@ const PreviewWorkflow = (props) => {
 
                 if (!response.ok) {
                     showAlert({ severity: 'error', message: 'Internal server error ocurred.' });
-                    redirect('/');
                 }
                 else {
                     const _token = await decrypt(data.token);

@@ -7,6 +7,6 @@ namespace MONATE.Web.Server.Data.Packets.WorkflowInfo
         public string ServerUrl { get; set; }
         public string ClientId { get; set; }
         public string WorkflowData { get; set; }
-        public WorkflowInputData[] inputValues { get; set; }
+        public WorkflowInputData[] InputValues { get; set; }
     }
 }

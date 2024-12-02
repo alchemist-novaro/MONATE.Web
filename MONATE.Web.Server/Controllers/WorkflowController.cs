@@ -61,7 +61,7 @@ namespace MONATE.Web.Server.Controllers
                     var _serverUrl = Globals.Cryptor.Decrypt(prompt.ServerUrl);
                     var _clientId = Globals.Cryptor.Decrypt(prompt.ClientId);
 
-                    foreach (WorkflowInputData inputValue in prompt.inputValues)
+                    foreach (WorkflowInputData inputValue in prompt.InputValues)
                     {
                         SetValue(_workflowObject, (string)inputValue.Path, inputValue.Type, inputValue.Value);
                     }
@@ -81,7 +81,7 @@ namespace MONATE.Web.Server.Controllers
                                 if (Globals.RunningWorkflowStatus.ContainsKey(_clientId))
                                     Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.Uploading;
                             }
-                            foreach (WorkflowInputData inputValue in prompt.inputValues)
+                            foreach (WorkflowInputData inputValue in prompt.InputValues)
                             {
                                 if (inputValue.Type == "IMAGE")
                                     await ApiHelper.UploadImage(inputValue.Image, (string)inputValue.Value, _serverUrl);

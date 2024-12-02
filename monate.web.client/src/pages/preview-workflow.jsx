@@ -251,6 +251,7 @@ const PreviewWorkflow = (props) => {
 
             const uuid = uuidv4();
             setUUID(uuid);
+            console.log(inputValues);
             const promptData = {
                 email: await encrypt(email.toLowerCase()),
                 token: await encrypt(token),

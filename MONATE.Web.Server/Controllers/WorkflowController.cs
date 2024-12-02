@@ -32,8 +32,6 @@ namespace MONATE.Web.Server.Controllers
                 return BadRequest(new { message = "Your prompt data is not correct." });
             }
 
-            Console.WriteLine(JsonConvert.SerializeObject(prompt));
-
             try
             {
                 var _email = Globals.Cryptor.Decrypt(prompt.Email);
@@ -368,6 +366,7 @@ namespace MONATE.Web.Server.Controllers
         }
         static bool SetValue(JObject jsonObject, string path, string type, string value)
         {
+            Console.WriteLine(value);
             var pathParts = path.Split(". ", StringSplitOptions.RemoveEmptyEntries);
 
             string id = pathParts[0];

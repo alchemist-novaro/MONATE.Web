@@ -61,10 +61,8 @@ namespace MONATE.Web.Server.Controllers
 
                     foreach (WorkflowInputData inputValue in prompt.inputValues)
                     {
-                        SetValue(_workflowObject, (string)inputValue.Path, inputValue.Value);
+                        SetValue(_workflowObject, (string)inputValue.Path, inputValue.Type, inputValue.Value);
                     }
-
-                    Console.WriteLine(JsonConvert.SerializeObject(_workflowObject));
 
                     lock (Globals.globalLock)
                     {
@@ -366,7 +364,7 @@ namespace MONATE.Web.Server.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        static bool SetValue(JObject jsonObject, string path, object value)
+        static bool SetValue(JObject jsonObject, string path, string type, string value)
         {
             var pathParts = path.Split(". ", StringSplitOptions.RemoveEmptyEntries);
 
@@ -379,11 +377,14 @@ namespace MONATE.Web.Server.Controllers
 
             var inputs = currentObject["inputs"] as JObject;
 
-            Console.WriteLine(value.ToString());
-
             if (inputs != null && inputs.ContainsKey(valuePath))
             {
-                inputs[valuePath] = JToken.FromObject(value);
+                if (type == "INT")
+                    inputs[valuePath] = int.Parse(value);
+                else if (type == "FLOAT")
+                    inputs[valuePath] = float.Parse(value);
+                else 
+                    inputs[valuePath] = value;
             }
             else
             {

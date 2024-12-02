@@ -367,7 +367,7 @@ const PreviewWorkflow = (props) => {
                                                     const tmp = [...inputValues];
                                                     tmp[index] = {
                                                         ...tmp[index],
-                                                        value: parseInt(e.target.value),
+                                                        value: e.target.value,
                                                     }
                                                     setInputValues(tmp);
                                                 }}
@@ -404,7 +404,7 @@ const PreviewWorkflow = (props) => {
                                                     const tmp = [...inputValues];
                                                     tmp[index] = {
                                                         ...tmp[index],
-                                                        value: parseFloat(e.target.value),
+                                                        value: e.target.value,
                                                     }
                                                     setInputValues(tmp);
                                                 }}

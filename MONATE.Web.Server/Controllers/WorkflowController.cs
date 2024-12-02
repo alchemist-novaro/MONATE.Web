@@ -7,6 +7,7 @@ namespace MONATE.Web.Server.Controllers
     using MONATE.Web.Server.Helpers;
     using MONATE.Web.Server.Helpers.ComfyUI;
     using MONATE.Web.Server.Logics;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System.IO;
     using System.Threading;
@@ -62,6 +63,8 @@ namespace MONATE.Web.Server.Controllers
                     {
                         SetValue(_workflowObject, (string)inputValue.Path, inputValue.Value);
                     }
+
+                    Console.WriteLine(JsonConvert.SerializeObject(_workflowObject));
 
                     lock (Globals.globalLock)
                     {
@@ -375,6 +378,8 @@ namespace MONATE.Web.Server.Controllers
             string valuePath = valuePaths[1];
 
             var inputs = currentObject["inputs"] as JObject;
+
+            Console.WriteLine(value.ToString());
 
             if (inputs != null && inputs.ContainsKey(valuePath))
             {

@@ -32,6 +32,8 @@ namespace MONATE.Web.Server.Controllers
                 return BadRequest(new { message = "Your prompt data is not correct." });
             }
 
+            Console.WriteLine(JsonConvert.SerializeObject(prompt));
+
             try
             {
                 var _email = Globals.Cryptor.Decrypt(prompt.Email);

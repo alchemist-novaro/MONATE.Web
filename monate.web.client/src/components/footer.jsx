@@ -26,9 +26,9 @@ const Footer = () => {
                     <div style={{ marginLeft: '1vh', fontSize: '4vh', }}>
                         Contact us
                     </div>
-                    {/*<div style={{ marginLeft: '1vh', marginTop: '3vh', fontSize: '2.5vh', display: 'flex', flexDirection: 'row', justifyContent: 'left' }}>*/}
-                    {/*    <PhoneIcon height='3vh' width='3vh' />&nbsp;+1(201) 620-3178*/}
-                    {/*</div>*/}
+                    <div style={{ marginLeft: '1vh', marginTop: '3vh', fontSize: '2.5vh', display: 'flex', flexDirection: 'row', justifyContent: 'left' }}>
+                       <PhoneIcon height='3vh' width='3vh' />&nbsp;+1(201) 620-3178
+                    </div>
                     <div style={{ marginLeft: '1vh', marginTop: '1vh', fontSize: '2.5vh', display: 'flex', flexDirection: 'row', justifyContent: 'left' }}>
                         <EmailIcon height='3vh' width='3vh' />&nbsp;monate615@gmail.com
                     </div>

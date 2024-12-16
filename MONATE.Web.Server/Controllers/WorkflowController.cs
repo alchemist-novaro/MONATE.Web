@@ -131,8 +131,8 @@ namespace MONATE.Web.Server.Controllers
             }
         }
 
-        [HttpPost("DownloadImages", Name = "Post /Workflow/DownloadImages")]
-        public async Task<IActionResult> DownloadImages([FromBody] ClientIdData clientId)
+        [HttpPost("DownloadDatas", Name = "Post /Workflow/DownloadDatas")]
+        public async Task<IActionResult> DownloadDatas([FromBody] ClientIdData clientId)
         {
             if (string.IsNullOrEmpty(clientId.Email) || string.IsNullOrEmpty(clientId.Token))
             {
@@ -163,7 +163,7 @@ namespace MONATE.Web.Server.Controllers
                     var _outputImages = new List<string>();
                     var _clientId = Globals.Cryptor.Decrypt(clientId.ClientId);
                     var _serverAddress = Globals.Cryptor.Decrypt(clientId.ServerAddress);
-                    var _images = await ApiHelper.DownloadImages(_clientId, _serverAddress);
+                    var _datas = await ApiHelper.DownloadDatas(_clientId, _serverAddress);
 
                     lock (Globals.globalLock)
                     {
@@ -173,7 +173,7 @@ namespace MONATE.Web.Server.Controllers
                             Globals.PromptIds.Remove(_clientId);
                     }
 
-                    return Ok(new { Images = _images });
+                    return Ok(new { Datas = _datas });
                 }
                 else
                 {

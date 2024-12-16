@@ -137,7 +137,7 @@ const PreviewWorkflow = (props) => {
                 serverAddress: await encrypt(hookRef.current.serverUrl),
             };
             try {
-                const response = await fetch(`workflow/downloadimages`, {
+                const response = await fetch(`workflow/downloaddatas`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -152,7 +152,8 @@ const PreviewWorkflow = (props) => {
                 else {
                     setDisabledButton(false);
                     setButtonText('');
-                    setDownloadedDatas(data.images);
+                    console.log(data.datas);
+                    setDownloadedDatas(data.datas);
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });

@@ -108,7 +108,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             return JsonConvert.DeserializeObject<dynamic>(responseContent);
         }
 
-        public static async Task<List<OutputData>> DownloadImages(string clientId, string serverAddress, bool allowPreview = true)
+        public static async Task<List<OutputData>> DownloadDatas(string clientId, string serverAddress, bool allowPreview = true)
         {
             var outputDatas = new List<OutputData>();
             string promptId = "";

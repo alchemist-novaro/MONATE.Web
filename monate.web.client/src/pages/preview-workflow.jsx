@@ -268,7 +268,7 @@ const PreviewWorkflow = (props) => {
     const handleRunWorkflow = async () => {
         if (email && token) {
             setDisabledButton(true);
-            setMainOutputImage('');
+            setMainOutput({});
 
             const uuid = uuidv4();
             setUUID(uuid);

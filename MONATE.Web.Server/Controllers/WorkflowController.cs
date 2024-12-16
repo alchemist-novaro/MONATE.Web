@@ -102,8 +102,9 @@ namespace MONATE.Web.Server.Controllers
                             }
                             WebSocketHelper.TrackProgress(ws, _workflowObject, promptId, _clientId);
                         }
-                        catch
+                        catch (Exception error)
                         {
+                            Console.WriteLine(error.Message);
                             ws.Close();
                             if (Globals.RunningWorkflowStatus.ContainsKey(_clientId))
                                 Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.Error;

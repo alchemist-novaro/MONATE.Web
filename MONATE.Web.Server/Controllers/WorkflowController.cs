@@ -182,6 +182,7 @@ namespace MONATE.Web.Server.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new { message = ex.Message });
             }
         }

@@ -65,8 +65,6 @@ namespace MONATE.Web.Server.Controllers
                         SetValue(_workflowObject, (string)inputValue.Path, inputValue.Type, inputValue.Value);
                     }
 
-                    Console.WriteLine(JsonConvert.SerializeObject(_workflowObject));
-
                     lock (Globals.globalLock)
                     {
                         Globals.RunningWorkflowStatus[_clientId] = WorkingStatus.None;

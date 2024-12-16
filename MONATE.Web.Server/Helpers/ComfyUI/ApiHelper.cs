@@ -104,6 +104,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             var url = $"http://{serverAddress}/history/{promptId}";
             var response = await client.GetAsync(url);
             var responseContent = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseContent);
             return JsonConvert.DeserializeObject<dynamic>(responseContent);
         }
 

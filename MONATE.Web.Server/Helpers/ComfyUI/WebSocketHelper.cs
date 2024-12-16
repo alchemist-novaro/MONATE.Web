@@ -122,8 +122,9 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
                         }
                     }
                 }
-                catch
+                catch (Exception error)
                 {
+                    Console.WriteLine(error.Message);
                     ws.Close();
                     lock (Globals.globalLock)
                     {

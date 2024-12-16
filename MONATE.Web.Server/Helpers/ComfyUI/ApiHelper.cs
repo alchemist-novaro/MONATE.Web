@@ -133,7 +133,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
 
                     foreach (var outputs in nodeOutput)
                     {
-                        if (outputs.Key == "images" || outputs.Key == "gifs")
+                        if (outputs.Name == "images" || outputs.Name == "gifs")
                         {
                             foreach (var output in outputs.Value)
                             {

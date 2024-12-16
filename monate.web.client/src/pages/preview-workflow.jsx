@@ -43,9 +43,9 @@ const PreviewWorkflow = (props) => {
     const [disabledButton, setDisabledButton] = useState(false);
     const [buttonText, setButtonText] = useState('');
     const [lastStatus, setLastStatus] = useState('');
-    const [downloadedImages, setDownloadedImages] = useState([]);
+    const [downloadedDatas, setDownloadedDatas] = useState([]);
     const [hookToken, setHookToken] = useState('');
-    const [mainOutputImage, setMainOutputImage] = useState('');
+    const [mainOutput, setMainOutput] = useState({});
 
     const [socket, setSocket] = useState(null);
     const [websocket, setWebsocket] = useState(null);
@@ -152,7 +152,7 @@ const PreviewWorkflow = (props) => {
                 else {
                     setDisabledButton(false);
                     setButtonText('');
-                    setDownloadedImages(data.images);
+                    setDownloadedDatas(data.images);
                 }
             } catch (error) {
                 showAlert({ severity: 'error', message: 'Could not found server.' });
@@ -657,11 +657,12 @@ const PreviewWorkflow = (props) => {
                             Output Images
                         </div>
                         <div style={{ width: '1000px', height: '3px', backgroundColor: lightMode ? '#1f2f2f' : '#dfefef', marginTop: '5px' }} />
-                        {mainOutputImage && <img style={{ width: '1000px' }} src={mainOutputImage} />}
+                        {mainOutput && mainOutput.data && mainOutput.format.startsWith('image') && <img style={{ width: '1000px' }} src={mainOutput.data} />}
+                        {mainOutput && mainOutput.data && mainOutput.format.startsWith('video') && <video style={{ width: '1000px' }} src={mainOutput.data} />}
                         <div style={{
                             width: '1000px', marginTop: '20px', display: 'flex', flexDirection: 'row', flexWrap: 'wrap'
                         }}>
-                            {downloadedImages.map((downloadedImage, index) => (
+                            {downloadedDatas.map((downloadedData, index) => (
                                 <div key={index}>
                                     <div
                                         style={{
@@ -683,10 +684,9 @@ const PreviewWorkflow = (props) => {
                                                 color: lightMode ? '#1f2f2f' : '#dfefef',
                                             }}
                                         >
-                                            {downloadedImage.fileName}
+                                            {downloadedData.fileName}
                                         </div>
                                         <div
-                                            htmlFor={`file-input-${index}`}
                                             style={{
                                                 cursor: 'pointer',
                                                 marginLeft: '12px',
@@ -701,27 +701,24 @@ const PreviewWorkflow = (props) => {
                                                 border: '3px solid #7f8f8f',
                                             }}
                                             onClick={() => {
-                                                setMainOutputImage(`data:image/png;base64,${downloadedImage.imageData}`);
+                                                setMainOutput({ 
+                                                    data: `data:${downloadedData.format};base64,${downloadedData.data}`, 
+                                                    format: downloadedData.format,
+                                                });
                                             }}
                                         >
-                                            {downloadedImage.imageData ? (
+                                            {downloadedData.data && downloadedData.format.startsWith('image') && (
                                                 <img
-                                                    src={`data:image/png;base64,${downloadedImage.imageData}`}
+                                                    src={`data:${downloadedData.format};base64,${downloadedData.data}`}
                                                     alt={`Image ${index}`}
                                                     style={{ width: '303px', height: '240px', borderRadius: '12px' }}
                                                 />
-                                            ) : (
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        width: '100%',
-                                                        height: '100%',
-                                                    }}
-                                                >
-                                                    <UploadIcon width="30px" height="30px" />
-                                                </div>
+                                            )}
+                                            {downloadedData.data && downloadedData.format.startsWith('video') && (
+                                                <video
+                                                    src={`data:${downloadedData.format};base64,${downloadedData.data}`}
+                                                    style={{ width: '303px', height: '240px', borderRadius: '12px' }}
+                                                />
                                             )}
                                         </div>
                                     </div>

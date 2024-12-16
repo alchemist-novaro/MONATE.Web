@@ -9,11 +9,12 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
 
     public class ApiHelper
     {
-        public class OutputImage
+        public class OutputData
         {
             public string FileName { get; set; }
             public string Type { get; set; }
-            public object? ImageData { get; set; }
+            public string Format { get; set; }
+            public object? Data { get; set; }
         }
 
         private static readonly HttpClient client = new HttpClient();
@@ -71,7 +72,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             return await response.Content.ReadAsStringAsync();
         }
 
-        public static async Task<byte[]> GetImageAsync(string filename, string subfolder, string folderType, string serverAddress)
+        public static async Task<byte[]> GetDataAsync(string filename, string subfolder, string folderType, string serverAddress)
         {
             var data = new Dictionary<string, string>
             {
@@ -95,7 +96,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             }
             else
             {
-                throw new Exception($"Failed to get image: {response.StatusCode}");
+                throw new Exception($"Failed to get data: {response.StatusCode}");
             }
         }
 
@@ -104,13 +105,12 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             var url = $"http://{serverAddress}/history/{promptId}";
             var response = await client.GetAsync(url);
             var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(responseContent);
             return JsonConvert.DeserializeObject<dynamic>(responseContent);
         }
 
-        public static async Task<List<OutputImage>> DownloadImages(string clientId, string serverAddress, bool allowPreview = true)
+        public static async Task<List<OutputData>> DownloadImages(string clientId, string serverAddress, bool allowPreview = true)
         {
-            var outputImages = new List<OutputImage>();
+            var outputDatas = new List<OutputData>();
             string promptId = "";
             lock (Globals.globalLock)
             {
@@ -118,7 +118,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
                     promptId = Globals.PromptIds[clientId];
             }
             if (promptId == null)
-                return new List<OutputImage>();
+                return new List<OutputData>();
 
             var history = await GetHistoryAsync(promptId, serverAddress);
 
@@ -129,37 +129,37 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
                 foreach (var nodeId in nodeOutputs)
                 {
                     var nodeOutput = nodeId.Value;
-                    var outputData = new Dictionary<string, object>();
+                    var outputData = new OutputData();
 
-                    if (nodeOutput.ContainsKey("images"))
+                    foreach (var outputs in nodeOutput)
                     {
-                        foreach (var image in nodeOutput["images"])
+                        if (outputs.Key == "images" || outputs.Key == "gifs")
                         {
-                            if (allowPreview && image["type"].ToString() == "temp")
+                            foreach (var output in outputs.Value)
                             {
-                                var previewData = await GetImageAsync(image["filename"].ToString(), image["subfolder"].ToString(), image["type"].ToString(), serverAddress);
-                                outputData["image_data"] = previewData;
-                            }
-                            if (image["type"].ToString() == "output")
-                            {
-                                var imageData = await GetImageAsync(image["filename"].ToString(), image["subfolder"].ToString(), image["type"].ToString(), serverAddress);
-                                outputData["image_data"] = imageData;
-                            }
+                                if (allowPreview && output["type"].ToString() == "temp")
+                                {
+                                    var pData = await GetDataAsync(output["filename"].ToString(), output["subfolder"].ToString(), output["type"].ToString(), serverAddress);
+                                    outputData.Data = pData;
+                                }
+                                if (output["type"].ToString() == "output")
+                                {
+                                    var oData = await GetDataAsync(output["filename"].ToString(), output["subfolder"].ToString(), output["type"].ToString(), serverAddress);
+                                    outputData.Data = oData;
+                                }
 
-                            outputData["file_name"] = image["filename"].ToString();
-                            outputData["type"] = image["type"].ToString();
-                            outputImages.Add(new OutputImage
-                            {
-                                FileName = image["filename"].ToString(),
-                                Type = image["type"].ToString(),
-                                ImageData = outputData.ContainsKey("image_data") ? outputData["image_data"] : null
-                            });
+                                outputData.FileName = output["filename"].ToString();
+                                outputData.Type = output["type"].ToString();
+                                outputData.Format = output["format"].ToString();
+
+                                outputDatas.Add(outputData);
+                            }
                         }
                     }
                 }
             }
 
-            return outputImages;
+            return outputDatas;
         }
 
         public static async Task<dynamic?> GetNodeInfoByClassAsync(string nodeClass, string serverAddress)

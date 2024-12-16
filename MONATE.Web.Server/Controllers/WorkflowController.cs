@@ -82,8 +82,10 @@ namespace MONATE.Web.Server.Controllers
                             }
                             foreach (WorkflowInputData inputValue in prompt.InputValues)
                             {
-                                if (inputValue.Type == "IMAGE" || inputValue.Type == "VIDEO")
+                                if (inputValue.Type == "IMAGE")
                                     await ApiHelper.UploadImage(inputValue.Image, (string)inputValue.Value, _serverUrl);
+                                if (inputValue.Type == "VIDEO")
+                                    await ApiHelper.UploadImage(inputValue.Video, (string)inputValue.Value, _serverUrl);
                             }
                             var promtIdData = await ApiHelper.QueuePrompt(_workflowObject, _clientId, _serverUrl);
                             lock (Globals.globalLock)

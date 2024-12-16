@@ -60,12 +60,12 @@ namespace MONATE.Web.Server.Controllers
                     var _serverUrl = Globals.Cryptor.Decrypt(prompt.ServerUrl);
                     var _clientId = Globals.Cryptor.Decrypt(prompt.ClientId);
 
-                    Console.WriteLine(JsonConvert.SerializeObject(prompt));
-
                     foreach (WorkflowInputData inputValue in prompt.InputValues)
                     {
                         SetValue(_workflowObject, (string)inputValue.Path, inputValue.Type, inputValue.Value);
                     }
+
+                    Console.WriteLine(JsonConvert.SerializeObject(_workflowObject));
 
                     lock (Globals.globalLock)
                     {

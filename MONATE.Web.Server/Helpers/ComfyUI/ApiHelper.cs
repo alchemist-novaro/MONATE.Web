@@ -13,7 +13,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
         {
             public string FileName { get; set; }
             public string Type { get; set; }
-            public object ImageData { get; set; }
+            public object? ImageData { get; set; }
         }
 
         private static readonly HttpClient client = new HttpClient();
@@ -47,7 +47,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
                 {
                     var fileContent = new ByteArrayContent(Convert.FromBase64String(image.Split(',')[1]));
 
-                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");
+                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(image.Split(',')[0]);
 
                     form.Add(fileContent, "image", name);
 
@@ -98,7 +98,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             }
         }
 
-        public static async Task<dynamic> GetHistoryAsync(string promptId, string serverAddress)
+        public static async Task<dynamic?> GetHistoryAsync(string promptId, string serverAddress)
         {
             var url = $"http://{serverAddress}/history/{promptId}";
             var response = await client.GetAsync(url);
@@ -160,7 +160,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             return outputImages;
         }
 
-        public static async Task<dynamic> GetNodeInfoByClassAsync(string nodeClass, string serverAddress)
+        public static async Task<dynamic?> GetNodeInfoByClassAsync(string nodeClass, string serverAddress)
         {
             var url = $"http://{serverAddress}/object_info/{nodeClass}";
             var response = await client.GetAsync(url);

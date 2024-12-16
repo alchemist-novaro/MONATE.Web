@@ -227,9 +227,9 @@ const PreviewWorkflow = (props) => {
         getWorkflow();
     }, []);
 
-    const handleFileChange = (index, event) => {
+    const handleImageChange = (index, event) => {
         const file = event.target.files[0];
-        if (file) {
+        if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const updatedInputValues = [...inputValues];
@@ -241,6 +241,27 @@ const PreviewWorkflow = (props) => {
                 setInputValues(updatedInputValues);
             };
             reader.readAsDataURL(file);
+        } else {
+            showAlert({ severity: 'error', message: 'Please select only image file.' });
+        }
+    };
+
+    const handleVideoChange = (index, event) => {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('video/')) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const updatedInputValues = [...inputValues];
+                updatedInputValues[index] = {
+                    ...updatedInputValues[index],
+                    video: reader.result,
+                    value: file.name,
+                };
+                setInputValues(updatedInputValues);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            showAlert({ severity: 'error', message: 'Please select only video file.' });
         }
     };
 
@@ -497,9 +518,9 @@ const PreviewWorkflow = (props) => {
                                             <input
                                                 type="file"
                                                 accept="image/*"
-                                                id={`file-input-${index}`}
+                                                id={`image-input-${index}`}
                                                 style={{ display: 'none' }}
-                                                onChange={(e) => handleFileChange(index, e)}
+                                                onChange={(e) => handleImageChange(index, e)}
                                             />
                                             <div
                                                 style={{
@@ -516,7 +537,7 @@ const PreviewWorkflow = (props) => {
                                                 {inputValue.name}
                                             </div>
                                             <label
-                                                htmlFor={`file-input-${index}`}
+                                                htmlFor={`image-input-${index}`}
                                                 style={{
                                                     cursor: 'pointer',
                                                     marginLeft: '12px',
@@ -535,6 +556,73 @@ const PreviewWorkflow = (props) => {
                                                     <img
                                                         src={inputValues[index].image}
                                                         alt={`Image ${index}`}
+                                                        style={{ width: '320px', height: '240px', borderRadius: '12px' }}
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center',
+                                                            width: '100%',
+                                                            height: '100%',
+                                                        }}
+                                                    >
+                                                        <UploadIcon width="30px" height="30px" />
+                                                    </div>
+                                                )}
+                                            </label>
+                                        </div>
+                                    )}
+                                    {inputValue.type === 'VIDEO' && (
+                                        <div
+                                            style={{
+                                                marginBottom: '20px',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <input
+                                                type="file"
+                                                accept="video/*"
+                                                id={`video-input-${index}`}
+                                                style={{ display: 'none' }}
+                                                onChange={(e) => handleVideoChange(index, e)}
+                                            />
+                                            <div
+                                                style={{
+                                                    width: '303px',
+                                                    height: '30px',
+                                                    borderRadius: '15px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    fontSize: '20px',
+                                                    color: lightMode ? '#1f2f2f' : '#dfefef',
+                                                }}
+                                            >
+                                                {inputValue.name}
+                                            </div>
+                                            <label
+                                                htmlFor={`video-input-${index}`}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    marginLeft: '12px',
+                                                    marginRight: '12px',
+                                                    marginBottom: '20px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    width: '303px',
+                                                    height: '240px',
+                                                    borderRadius: '15px',
+                                                    border: '3px solid #7f8f8f',
+                                                }}
+                                            >
+                                                {inputValues[index].video ? (
+                                                    <video
+                                                        src={inputValues[index].video}
                                                         style={{ width: '320px', height: '240px', borderRadius: '12px' }}
                                                     />
                                                 ) : (

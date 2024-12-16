@@ -9,6 +9,7 @@ namespace MONATE.Web.Server.Controllers
     using MONATE.Web.Server.Logics;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using Org.BouncyCastle.Bcpg.Attr;
     using System.IO;
     using System.Threading;
     using WebSocketSharp;
@@ -81,7 +82,7 @@ namespace MONATE.Web.Server.Controllers
                             }
                             foreach (WorkflowInputData inputValue in prompt.InputValues)
                             {
-                                if (inputValue.Type == "IMAGE")
+                                if (inputValue.Type == "IMAGE" || inputValue.Type == "VIDEO")
                                     await ApiHelper.UploadImage(inputValue.Image, (string)inputValue.Value, _serverUrl);
                             }
                             var promtIdData = await ApiHelper.QueuePrompt(_workflowObject, _clientId, _serverUrl);

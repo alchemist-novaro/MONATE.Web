@@ -28,5 +28,6 @@
         STRING = 2,
         IMAGE = 3,
         MULTILINE_STRING = 4,
+        VIDEO = 5,
     }
 }

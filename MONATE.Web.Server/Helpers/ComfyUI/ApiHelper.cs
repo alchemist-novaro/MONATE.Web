@@ -47,7 +47,8 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
                 {
                     var fileContent = new ByteArrayContent(Convert.FromBase64String(image.Split(',')[1]));
 
-                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(image.Split(',')[0]);
+                    var _contentType = image[(image.IndexOf(':') + 1)..image.IndexOf(';')];
+                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(_contentType);
 
                     form.Add(fileContent, "image", name);
 

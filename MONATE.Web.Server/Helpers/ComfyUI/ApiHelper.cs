@@ -150,7 +150,7 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
 
                                 outputData.FileName = output["filename"].ToString();
                                 outputData.Type = output["type"].ToString();
-                                outputData.Format = output["format"] == null ? outputData.FileName[(outputData.FileName.LastIndexOf('.') + 1)..] : output["format"].ToString();
+                                outputData.Format = output["format"] == null ? $"image/{outputData.FileName[(outputData.FileName.LastIndexOf('.') + 1)..]}" : output["format"].ToString();
 
                                 outputDatas.Add(outputData);
                             }

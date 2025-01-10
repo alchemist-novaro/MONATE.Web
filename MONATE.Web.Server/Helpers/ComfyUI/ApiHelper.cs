@@ -120,7 +120,11 @@ namespace MONATE.Web.Server.Helpers.ComfyUI
             if (promptId == null)
                 return new List<OutputData>();
 
+            Console.WriteLine(clientId);
+
             var history = await GetHistoryAsync(promptId, serverAddress);
+
+            Console.WriteLine(history.ToString());
 
             if (history.ContainsKey(promptId))
             {

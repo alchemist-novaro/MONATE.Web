@@ -152,7 +152,6 @@ const PreviewWorkflow = (props) => {
                 else {
                     setDisabledButton(false);
                     setButtonText('');
-                    console.log(data.datas);
                     setDownloadedDatas(data.datas);
                 }
             } catch (error) {

@@ -44,9 +44,7 @@ const Dashboard = (props) => {
     }
     const onAboutUs = async () => {
         const permition = await validateToken();
-        if (permition) {
-            setCurrentPage('aboutus');
-        }
+        setCurrentPage('aboutus');
     }
 
     const validateToken = async () => {

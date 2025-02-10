@@ -19,23 +19,6 @@ const Footer = () => {
                         ONATE
                     </div>
                 </div>
-                <div style={{
-                    width: '30%', marginTop: '5vh', color: lightMode ? '#1f2f2f' : '#dfefef',
-                    display: 'flex', flexDirection: 'column',
-                }}>
-                    <div style={{ marginLeft: '1vh', fontSize: '4vh', }}>
-                        Contact us
-                    </div>
-                    <div style={{ marginLeft: '1vh', marginTop: '3vh', fontSize: '2.5vh', display: 'flex', flexDirection: 'row', justifyContent: 'left' }}>
-                       <PhoneIcon height='3vh' width='3vh' />&nbsp;+1(201) 620-3178
-                    </div>
-                    <div style={{ marginLeft: '1vh', marginTop: '1vh', fontSize: '2.5vh', display: 'flex', flexDirection: 'row', justifyContent: 'left' }}>
-                        <EmailIcon height='3vh' width='3vh' />&nbsp;monate615@gmail.com
-                    </div>
-                    <div style={{ marginLeft: '1vh', marginTop: '1vh', fontSize: '2.5vh', display: 'flex', flexDirection: 'row', justifyContent: 'left' }}>
-                        <GithubIcon height='3vh' width='3vh' />&nbsp;github.com/monate0615
-                    </div>
-                </div>
             </div>
             <div style={{ backgroundColor: lightMode ? '#1f2f2f' : '#dfefef', borderRadius: '50%', height: '3px', marginTop: '5vh' }} />
             <div style={{
